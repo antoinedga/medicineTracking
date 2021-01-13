@@ -1,0 +1,14 @@
+.big-text {
+    font-size: 10vw;
+    color: red;
+    padding-bottom: 0;
+    margin-bottom: 0;
+}
+p {
+    font-size: 1vw;
+    font-weight: bold;
+}
+
+.container-text {
+    padding: 16px 10px 16px 16px;
+}
