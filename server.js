@@ -6,13 +6,13 @@ require('./db/connectDB')
 const app = express()
 
 // import routes
-const authRoutes = require('./routes/auth')
+const routes = require('./routes')
 
 app.use(express.json())
 app.use(cors())
 
 // middlewares
-app.use('/api', authRoutes) 
+app.use('/api', routes) 
 
 const port = process.env.PORT
 
