@@ -8,6 +8,8 @@ const app = express()
 // import routes
 const routes = require('./routes')
 
+app.use(express.static('view/build'))
+
 app.use(express.json())
 app.use(cors())
 
