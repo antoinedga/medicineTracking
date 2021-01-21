@@ -8,7 +8,7 @@
     "start": "node server.js",
     "server": "nodemon server.js",
     "client": "npm start --prefix view",
-    "dev": "concurrently \"npm run server\" \"npm run view\""
+    "dev": "concurrently \"npm run server\" \"npm start --prefix view\""
   },
   "keywords": [],
   "author": "",
