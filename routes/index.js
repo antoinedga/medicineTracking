@@ -5,7 +5,7 @@ var adminRoute = require('./adminAuth')
 
 module.exports = () => {
   router.use('/user', userRoute())
-  router.use('/admin', zoneRoute())
+  router.use('/admin', adminRoute())
 
   return router
 }
