@@ -1,5 +1,5 @@
 
-import React,{ useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -13,6 +13,8 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { FormHelperText } from '@material-ui/core';
+import { useForm } from "react-hook-form";
+import {Input} from "@material-ui/core";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -37,22 +39,11 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignIn() {
     const classes = useStyles();
+    const { register, errors, handleSubmit, setError, clearErrors } = useForm({mode: 'onTouched'});
 
-    const [state, setState] = useState({
-        email: "",
-        password: ""
-    });
 
-    const handleInputChange = (event) => {
-        setState((prevProps) => ({
-            ...prevProps,
-            [event.target.name]: event.target.value
-        }));
-    };
-
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        console.log(state);
+    const onSubmit = () => {
+        alert('ww')
     };
 
     return (
@@ -65,24 +56,30 @@ export default function SignIn() {
                 <Typography component="h1" variant="h5">
                     Sign in
                 </Typography>
-                <form className={classes.form} noValidate>
-                    <div>
+                <form className={classes.form}  onSubmit={handleSubmit(onSubmit)} noValidate>
+
                         <TextField
                             variant="outlined"
                             margin="normal"
                             required
                             fullWidth
-                            id="email"
                             label="Email Address"
                             name="email"
                             autoComplete="email"
-                            autoFocus
                             varient="outlined"
-                            onChange={handleInputChange}
+                            inputRef={register({
+                                pattern: {
+                                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                                    message:
+                                        "Must be a Valid Email"
+                                },
+                                required: "Email Field cannot be empty"
+                            })}
                         />
-                        <FormHelperText style={{ visibility:  (state.email == "" && state.password != "") ? 'visible': 'hidden'}} >EMAIL NEEDS TO BE FILLED</FormHelperText>
-                    </div>
 
+                    <FormHelperText error={errors.email != undefined}>
+                        {errors?.email?.message}
+                    </FormHelperText>
                     <TextField
                         variant="outlined"
                         margin="normal"
@@ -93,10 +90,15 @@ export default function SignIn() {
                         type="password"
                         id="password"
                         autoComplete="current-password"
-                        onChange={handleInputChange}
+                        inputRef={register({
+                            required: "Password Field cannot be empty"
+                        })}
                     />
+                    <FormHelperText error={errors.password != undefined}>
+                        {errors?.password?.message}
+                    </FormHelperText>
 
-                     <FormHelperText style={{ visibility:  (state.email != "" && state.password == "") ? 'visible': 'hidden'}} >PASSWORD NEEDS TO BE FILLED</FormHelperText>
+
 
                     <FormControlLabel
                         control={<Checkbox value="remember" color="primary" />}

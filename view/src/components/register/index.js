@@ -100,6 +100,16 @@ export default function SignUp() {
                                 variant="outlined"
                                 required
                                 fullWidth
+                                id="invite-code"
+                                label="Invitation Code"
+                                name="invite"
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                variant="outlined"
+                                required
+                                fullWidth
                                 name="password"
                                 label="Password"
                                 type="password"
