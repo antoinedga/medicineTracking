@@ -13,6 +13,8 @@ import Container from '@material-ui/core/Container';
 import { useForm } from "react-hook-form";
 import {FormHelperText} from "@material-ui/core";
 import Copyright from '../copyRight'
+import Brand from '../../resources/logo_1.png'
+
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -46,9 +48,7 @@ export default function SignUp() {
         <Container component="main" maxWidth="xs">
             <CssBaseline />
             <div className={classes.paper}>
-                <Avatar className={classes.avatar}>
-                    <LockOutlinedIcon />
-                </Avatar>
+                <img className={classes.image} src={Brand}/>
                 <Typography component="h1" variant="h5">
                     Sign up
                 </Typography>
