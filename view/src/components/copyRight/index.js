@@ -15,3 +15,5 @@ function Copyright() {
         </Typography>
     );
 }
+
+export default Copyright;

@@ -15,7 +15,7 @@ import Container from '@material-ui/core/Container';
 import { FormHelperText } from '@material-ui/core';
 import { useForm } from "react-hook-form";
 import {Input} from "@material-ui/core";
-
+import Brand from '../../resources/logo_1.png'
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -35,6 +35,9 @@ const useStyles = makeStyles((theme) => ({
     submit: {
         margin: theme.spacing(3, 0, 2),
     },
+    image: {
+        padding: 16
+    }
 }));
 
 export default function SignIn() {
@@ -50,9 +53,7 @@ export default function SignIn() {
         <Container component="main" maxWidth="xs">
             <CssBaseline />
             <div className={classes.paper}>
-                <Avatar className={classes.avatar}>
-
-                </Avatar>
+                <img className={classes.image} src={Brand}/>
                 <Typography component="h1" variant="h5">
                     Sign in
                 </Typography>
