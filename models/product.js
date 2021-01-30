@@ -19,7 +19,11 @@ const productSchema = new mongoose.Schema({
     total_quantity: {
         type: Number,
         required: true
-    }
+    },
+    location: {
+    type: String,
+    required: true
+  },
 })
 
 module.exports = mongoose.model('Product', productSchema)

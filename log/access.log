@@ -1,44 +1,124 @@
-METHOD:GET | PATH: "/" | STATUS:200 | res-time 1.625 ms
-DATE: 21/Jan/2021:06:23:38 +0000 UTC Format
+METHOD:GET | PATH: "/api" | STATUS:- | res-time - ms
+DATE: 30/Jan/2021:14:45:14 +0000 UTC Format
 IP: ::1
 ________________________________________________________________________
-METHOD:GET | PATH: "/" | STATUS:200 | res-time 0.160 ms
-DATE: 21/Jan/2021:06:23:42 +0000 UTC Format
+METHOD:GET | PATH: "/api/inventory" | STATUS:- | res-time - ms
+DATE: 30/Jan/2021:14:45:17 +0000 UTC Format
 IP: ::1
 ________________________________________________________________________
-METHOD:GET | PATH: "/" | STATUS:200 | res-time 0.283 ms
-DATE: 21/Jan/2021:06:23:48 +0000 UTC Format
+METHOD:GET | PATH: "/api/inventory" | STATUS:- | res-time - ms
+DATE: 30/Jan/2021:14:47:31 +0000 UTC Format
 IP: ::1
 ________________________________________________________________________
-METHOD:GET | PATH: "/" | STATUS:200 | res-time 0.168 ms
-DATE: 21/Jan/2021:06:23:52 +0000 UTC Format
+METHOD:GET | PATH: "/api/inventory" | STATUS:- | res-time - ms
+DATE: 30/Jan/2021:14:55:11 +0000 UTC Format
 IP: ::1
 ________________________________________________________________________
-METHOD:GET | PATH: "/" | STATUS:200 | res-time 0.157 ms
-DATE: 21/Jan/2021:06:23:53 +0000 UTC Format
+METHOD:GET | PATH: "/api/inventory" | STATUS:200 | res-time 15.020 ms
+DATE: 30/Jan/2021:15:15:30 +0000 UTC Format
 IP: ::1
 ________________________________________________________________________
-METHOD:GET | PATH: "/" | STATUS:200 | res-time 0.157 ms
-DATE: 21/Jan/2021:06:23:54 +0000 UTC Format
+METHOD:GET | PATH: "/api/inventory" | STATUS:200 | res-time 64.229 ms
+DATE: 30/Jan/2021:15:17:50 +0000 UTC Format
 IP: ::1
 ________________________________________________________________________
-METHOD:GET | PATH: "/api/" | STATUS:500 | res-time 7.672 ms
-DATE: 22/Jan/2021:00:03:05 +0000 UTC Format
+METHOD:GET | PATH: "/api/inventory/test" | STATUS:200 | res-time 11.372 ms
+DATE: 30/Jan/2021:15:25:25 +0000 UTC Format
 IP: ::1
 ________________________________________________________________________
-METHOD:GET | PATH: "/api" | STATUS:500 | res-time 1.543 ms
-DATE: 22/Jan/2021:00:03:08 +0000 UTC Format
+METHOD:GET | PATH: "/api/inventory/" | STATUS:200 | res-time 422.943 ms
+DATE: 30/Jan/2021:15:26:30 +0000 UTC Format
 IP: ::1
 ________________________________________________________________________
-METHOD:GET | PATH: "/" | STATUS:200 | res-time 1.037 ms
-DATE: 22/Jan/2021:00:03:25 +0000 UTC Format
+METHOD:GET | PATH: "/api/inventory/" | STATUS:200 | res-time 52.553 ms
+DATE: 30/Jan/2021:15:26:54 +0000 UTC Format
 IP: ::1
 ________________________________________________________________________
-METHOD:GET | PATH: "/favicon.ico" | STATUS:404 | res-time 0.810 ms
-DATE: 22/Jan/2021:00:03:25 +0000 UTC Format
+METHOD:GET | PATH: "/api/inventory/" | STATUS:200 | res-time 54.397 ms
+DATE: 30/Jan/2021:15:27:18 +0000 UTC Format
 IP: ::1
 ________________________________________________________________________
-METHOD:GET | PATH: "/api" | STATUS:500 | res-time 6.607 ms
-DATE: 22/Jan/2021:00:04:24 +0000 UTC Format
+METHOD:GET | PATH: "/api/inventory/test" | STATUS:200 | res-time 3.680 ms
+DATE: 30/Jan/2021:15:28:05 +0000 UTC Format
+IP: ::1
+________________________________________________________________________
+METHOD:GET | PATH: "/api/inventory/" | STATUS:200 | res-time 52.407 ms
+DATE: 30/Jan/2021:15:28:56 +0000 UTC Format
+IP: ::1
+________________________________________________________________________
+METHOD:POST | PATH: "/api/inventory/" | STATUS:200 | res-time 499.312 ms
+DATE: 30/Jan/2021:15:37:04 +0000 UTC Format
+IP: ::1
+________________________________________________________________________
+METHOD:GET | PATH: "/api/inventory/" | STATUS:200 | res-time 56.427 ms
+DATE: 30/Jan/2021:15:37:14 +0000 UTC Format
+IP: ::1
+________________________________________________________________________
+METHOD:POST | PATH: "/api/inventory/" | STATUS:200 | res-time 112.256 ms
+DATE: 30/Jan/2021:15:37:45 +0000 UTC Format
+IP: ::1
+________________________________________________________________________
+METHOD:GET | PATH: "/api/inventory/" | STATUS:200 | res-time 52.763 ms
+DATE: 30/Jan/2021:15:37:49 +0000 UTC Format
+IP: ::1
+________________________________________________________________________
+METHOD:POST | PATH: "/api/inventory/" | STATUS:200 | res-time 144.971 ms
+DATE: 30/Jan/2021:15:38:59 +0000 UTC Format
+IP: ::1
+________________________________________________________________________
+METHOD:GET | PATH: "/api/inventory/" | STATUS:200 | res-time 60.994 ms
+DATE: 30/Jan/2021:15:39:02 +0000 UTC Format
+IP: ::1
+________________________________________________________________________
+METHOD:POST | PATH: "/api/inventory/" | STATUS:400 | res-time 21.976 ms
+DATE: 30/Jan/2021:15:41:25 +0000 UTC Format
+IP: ::1
+________________________________________________________________________
+METHOD:GET | PATH: "/api/inventory/" | STATUS:200 | res-time 64.321 ms
+DATE: 30/Jan/2021:15:42:00 +0000 UTC Format
+IP: ::1
+________________________________________________________________________
+METHOD:POST | PATH: "/api/inventory/" | STATUS:200 | res-time 81.791 ms
+DATE: 30/Jan/2021:15:42:07 +0000 UTC Format
+IP: ::1
+________________________________________________________________________
+METHOD:GET | PATH: "/api/inventory/" | STATUS:200 | res-time 57.832 ms
+DATE: 30/Jan/2021:15:42:11 +0000 UTC Format
+IP: ::1
+________________________________________________________________________
+METHOD:POST | PATH: "/api/inventory/" | STATUS:200 | res-time 113.187 ms
+DATE: 30/Jan/2021:15:42:47 +0000 UTC Format
+IP: ::1
+________________________________________________________________________
+METHOD:GET | PATH: "/api/inventory/" | STATUS:200 | res-time 54.113 ms
+DATE: 30/Jan/2021:15:42:51 +0000 UTC Format
+IP: ::1
+________________________________________________________________________
+METHOD:POST | PATH: "/api/inventory/" | STATUS:200 | res-time 154.054 ms
+DATE: 30/Jan/2021:15:50:42 +0000 UTC Format
+IP: ::1
+________________________________________________________________________
+METHOD:GET | PATH: "/api/inventory/" | STATUS:200 | res-time 56.153 ms
+DATE: 30/Jan/2021:15:50:44 +0000 UTC Format
+IP: ::1
+________________________________________________________________________
+METHOD:POST | PATH: "/api/inventory/" | STATUS:200 | res-time 151.067 ms
+DATE: 30/Jan/2021:15:59:23 +0000 UTC Format
+IP: ::1
+________________________________________________________________________
+METHOD:GET | PATH: "/api/inventory/" | STATUS:200 | res-time 59.046 ms
+DATE: 30/Jan/2021:15:59:26 +0000 UTC Format
+IP: ::1
+________________________________________________________________________
+METHOD:POST | PATH: "/api/inventory/" | STATUS:200 | res-time 215.181 ms
+DATE: 30/Jan/2021:16:04:37 +0000 UTC Format
+IP: ::1
+________________________________________________________________________
+METHOD:GET | PATH: "/api/inventory/" | STATUS:200 | res-time 59.245 ms
+DATE: 30/Jan/2021:16:04:40 +0000 UTC Format
+IP: ::1
+________________________________________________________________________
+METHOD:POST | PATH: "/api/inventory/" | STATUS:200 | res-time 212.616 ms
+DATE: 30/Jan/2021:16:17:22 +0000 UTC Format
 IP: ::1
 ________________________________________________________________________

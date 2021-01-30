@@ -52,7 +52,7 @@ app.get('/', (req, res) => {
 
 // middlewares
 
-app.use('/api', routes)
+app.use('/api', routes())
 
 const port = process.env.PORT || 8081;
 
