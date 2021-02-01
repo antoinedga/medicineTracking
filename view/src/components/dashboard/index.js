@@ -2,26 +2,30 @@ import React from "react";
 import clsx from 'clsx';
 import {
     Route,
-    Redirect,
+    Redirect, useRouteMatch,
 } from "react-router-dom";
+
 import {
     Container, AppBar, IconButton, Divider,
     List, ListItem, ListItemIcon, ListItemText,
-    Toolbar, Drawer, Typography
+    Toolbar, Drawer, Typography,
+    Tooltip, Grid, Select, MenuItem, FormHelperText
 } from '@material-ui/core'
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import MenuIcon from '@material-ui/icons/Menu';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
 import PeopleIcon from '@material-ui/icons/People';
 import ReceiptIcon from '@material-ui/icons/Receipt';
 import HomeIcon from '@material-ui/icons/Home';
 import StorefrontIcon from '@material-ui/icons/Storefront';
-import Tooltip from "@material-ui/core/Tooltip";
-
+import {Link} from 'react-router-dom';
+import Inventory from "./pages/inventory";
+import Orders from "./pages/orders";
+import Locations from './pages/locations'
+import Users from "./pages/users";
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
@@ -86,8 +90,11 @@ const useStyles = makeStyles((theme) => ({
     },
     content: {
         flexGrow: 1,
-        padding: theme.spacing(3),
+        padding: theme.spacing(4),
     },
+    location: {
+        paddingRight: '16px'
+    }
 
 }));
 
@@ -95,7 +102,9 @@ function Dashboard(props) {
     const classes = useStyles();
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
+    const [location, setLocation] = React.useState("");
     const [anchorEl, setAnchorEl] = React.useState(null);
+    let { path, url } = useRouteMatch();
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -105,7 +114,6 @@ function Dashboard(props) {
         setOpen(false);
     };
 
-
     const handleMenu = (event) => {
         setAnchorEl(event.currentTarget);
     };
@@ -113,6 +121,10 @@ function Dashboard(props) {
     const handleClose = () => {
         setAnchorEl(null);
     };
+
+    const handleLocationChange= (event) => {
+
+    }
 
     return (
         <>
@@ -145,6 +157,7 @@ function Dashboard(props) {
                         </div>
                     </Toolbar>
                 </AppBar>
+                {/*side menu on right side of the screen*/}
                 <Drawer
                     variant="permanent"
                     className={clsx(classes.drawer, {
@@ -166,16 +179,16 @@ function Dashboard(props) {
                     <Divider />
                     <List>
 
-                        <ListItem button>
-                            <ListItemIcon>
-                                <Tooltip title="Dashboard">
-                                    <HomeIcon />
-                                </Tooltip>
-                            </ListItemIcon>
-                            <ListItemText primary={"Dashboard"} />
+                        <ListItem button component={Link} to="/dashboard">
+                                <ListItemIcon>
+                                    <Tooltip title="Dashboard">
+                                        <HomeIcon />
+                                    </Tooltip>
+                                </ListItemIcon>
+                                <ListItemText primary={"Dashboard"} />
                         </ListItem>
 
-                        <ListItem button>
+                        <ListItem button component={Link} to="/dashboard/inventory">
                             <ListItemIcon>
                                 <Tooltip title="Inventory">
                                     <StorefrontIcon />
@@ -184,7 +197,7 @@ function Dashboard(props) {
                             <ListItemText primary={"Inventory"} />
                         </ListItem>
 
-                        <ListItem button>
+                        <ListItem button component={Link} to="/dashboard/orders">
                             <ListItemIcon>
                                 <Tooltip title="Order History">
                                     <ReceiptIcon />
@@ -193,7 +206,7 @@ function Dashboard(props) {
                             <ListItemText primary={"Order History"} />
                         </ListItem>
 
-                        <ListItem button>
+                        <ListItem button component={Link} to="/dashboard/users">
                             <ListItemIcon>
                                 <Tooltip title="User Management">
                                     <PeopleIcon />
@@ -202,7 +215,7 @@ function Dashboard(props) {
                             <ListItemText primary={"User Management"} />
                         </ListItem>
 
-                        <ListItem button>
+                        <ListItem button component={Link} to="/dashboard/locations" >
                             <ListItemIcon>
                                 <Tooltip title="Location Management">
                                     <LocationOnIcon/>
@@ -215,6 +228,33 @@ function Dashboard(props) {
                 </Drawer>
                 <main className={classes.content}>
                     <div className={classes.toolbar} />
+                        <Grid container direction="row" justify="flex-end">
+                            <Grid item className={classes.location}>
+                                <FormHelperText><h3>Location: </h3></FormHelperText>
+                            </Grid>
+                            <Grid item xs={2} >
+                                <Select
+                                    value={location}
+                                    onChange={handleLocationChange}
+                                    inputProps={{ 'aria-label': 'Without label' }}
+                                    fullWidth={true}
+                                    >
+                                    <MenuItem value={10}>Ten</MenuItem>
+                                </Select>
+                            </Grid>
+                        </Grid>
+                            <Route exact path={`${url}/inventory`}>
+                                <Inventory/>
+                            </Route>
+                            <Route exact path={`${url}/orders`}>
+                                <Orders/>
+                            </Route>
+                            <Route exact path={`${url}/locations`}>
+                                <Locations/>
+                            </Route>
+                            <Route exact path={`${url}/users`}>
+                                <Users/>
+                            </Route>
 
                 </main>
             </div>
