@@ -20,7 +20,7 @@ const inventorySchema = new Schema({
         {
             type: Schema.Types.ObjectId,
             required: true,
-            ref: 'product',
+            ref: 'item',
         }
     ],
   },
@@ -35,4 +35,4 @@ const inventorySchema = new Schema({
   }
 })
 
-module.exports = mongoose.model('inventory', inventorySchema,)
+module.exports = mongoose.model('inventory', inventorySchema)
