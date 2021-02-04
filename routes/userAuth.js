@@ -1,10 +1,29 @@
 const express = require('express')
-const router = express.Router()
+const router = require('express').Router()
+// const verifyToken = require('../middlewareVerification/tokenVerification')
 
 //import controller
-const { signup, login } = require('../controllers/userAuthController')
+const { get_registration, post_registration, get_login, post_login, get_forget, post_forget, get_reset, post_reset } = require('../controllers/userAuthController')
+//const { get_placeOrder, post_placeOrder } = require('../controllers/userFeatController')
 
-router.post('/signup', signup)
-router.post('/login', login)
+// Get and Post Routes to Registration Page
+router.get('/signup/:token', get_registration)
+router.post('/signup/:token', post_registration)
+
+// Get and Post Routes to Login Page
+router.get('/login', get_login)
+router.post('/login', post_login)
+
+// Get and Post Routes to Forget password Page
+router.get('/forget', get_forget)
+router.post('/forget', post_forget)
+
+// Get and Post Routes to Password Reset Page
+router.get('/reset/:token', get_reset)
+router.post('/reset/:token', post_reset)
+
+// Get and Post Routes to Placing an Order
+// router.get('/placeOrder', get_placeOrder)
+// router.post('/placeOrder', post_placeOrder)
 
 module.exports = router
