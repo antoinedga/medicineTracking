@@ -1,25 +1,19 @@
-const express = require('express')
 const router = require('express').Router()
-const verifyToken = require('../middlewareVerification/tokenVerification')
 
-//import controller
-const { get_registration, post_registration, get_login, post_login, get_forget, post_forget, get_reset, post_reset } = require('../controllers/userAuthController')
+//import admin controller
+const { get_admin_registration, post_admin_registration, get_admin_login, post_admin_Login, get_invitation, post_invitation  } = require('../controllers/adminAuthController')
+// const { invite } = require('../controllers/invite')
 
-// Get and Post Routes to Registration Page
-router.get('/signup/:token', get_registration)
-router.post('/signup/:token', post_registration)
+// Get and Post for Admin Registration
+router.post('/admin_registration', get_admin_registration)
+router.post('/admin_registration', post_admin_registration)
 
-// Get and Post Routes to Login Page
-router.get('/login', get_login)
-router.post('/login', post_login)
+// Get and Post for Admin Login
+router.get('/admin_login', get_admin_login)
+router.post('/admin_login', post_admin_Login)
 
-// Get and Post Routes to Forget password Page
-router.get('/forget', get_forget)
-router.post('/forget', post_forget)
-
-// Get and Post Routes to Password Reset Page
-router.get('/reset/:token', get_reset)
-router.post('/reset/:token', post_reset)
-// router.get('/placeOrder', verifyToken, placeOrder)
+// Get and Post for New User Invitations
+router.get('/admin_invite', get_invitation)
+router.post('/admin_invite', post_invitation)
 
 module.exports = router

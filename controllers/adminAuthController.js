@@ -3,8 +3,6 @@ const invitations = require('../models/invitations')
 const User = require('../models/user')
 const bcrypt = require("bcrypt")
 const jwt = require('jsonwebtoken')
-const async = require("async");
-const crypto = require("crypto");
 const { v1: uuidv1 } = require('uuid');
 const nodemailer = require('nodemailer')
 const SECRET_KEY = process.env.JWT_SECRETKEY
@@ -18,7 +16,7 @@ exports.get_admin_registration = (req, res) => {
 // Register Admin and encryption of password
 exports.post_admin_registration = (req, res) => {
     const {email, password} = req.body;
-    Admin.findOne({email}).exec((err, admin) => {
+    Admin.findOne({ email }).exec((err, admin) => {
         if(admin) {
             return res.status(400).json({error: 'Admin user with this email already exists.'})
         }
@@ -43,13 +41,13 @@ exports.post_admin_registration = (req, res) => {
     });
 }
 
-// Show Login Page
+// Show Admin Registration Page
 exports.get_admin_login = (req, res) => {
     //res.render("register"); 
     res.json('Admin Login Page')
 };
 
-// Post Login Page
+// Admin User
 exports.post_admin_Login = (req, res) => {
     var email = req.body.email
     Admin.findOne({ email }).exec((err, user) => {
@@ -81,7 +79,6 @@ exports.get_invitation = (req, res) => {
     res.json('Invitation Page')
 };
 
-// Post Invitation Page
 exports.post_invitation = (req, res) => {
   const invitation_id = uuidv1();
 

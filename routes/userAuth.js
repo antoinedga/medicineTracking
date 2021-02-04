@@ -4,7 +4,7 @@ const router = require('express').Router()
 
 //import controller
 const { get_registration, post_registration, get_login, post_login, get_forget, post_forget, get_reset, post_reset } = require('../controllers/userAuthController')
-//const { get_placeOrder, post_placeOrder } = require('../controllers/userFeatController')
+// const { get_placeOrder, post_placeOrder } = require('../controllers/userFeatController')
 
 // Get and Post Routes to Registration Page
 router.get('/signup/:token', get_registration)

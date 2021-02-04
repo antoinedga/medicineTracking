@@ -4,7 +4,7 @@ const product = require('./product')
 
 // Order Schema
 const orderSchema = new mongoose.Schema({
-    id: {
+    orderNumber: {
         type: String,
         required: true,
         default: uuidv4
