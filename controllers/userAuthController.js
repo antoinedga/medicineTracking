@@ -16,19 +16,20 @@ exports.get_registration = (req, res) => {
 
 // Register user and encryption of password
 exports.post_registration = (req, res) => {
-    const { email, password} = req.body;
-    Invitations.findOne({ invitation_token: req.params.token, resetPasswordExpires: { $gt: Date.now() } }, function(err, user) {
-      if(!user){
-        console.log('Error: Password reset token is invalid or has expired.')
-        // req.flash('error', 'Password reset token is invalid or has expired.');
-         return res.json('Error: Password reset token is invalid or has expired.')
-        // res.redirect('back');
+  const { email, password} = req.body;
+  Invitations.findOne({ invitation_token: req.params.token, resetPasswordExpires: { $gt: Date.now() } }, function(err, user) {
+    if(!user){
+      console.log('Error: Password reset token is invalid or has expired.')
+      // req.flash('error', 'Password reset token is invalid or has expired.');
+       return res.json('Error: Password reset token is invalid or has expired.')
+      // res.redirect('back');
+    }
+    User.findOne({ email }).exec((err, user) => {
+      if(err){
+        console.log('User already exists', err)
+        return res.json('User already exists')
       }
-      User.findOne({ email }).exec((err, user) => {
-        if(!user){
-          console.log('User already exists', err)
-          return res.json('User already exists')
-        }
+      else{
         bcrypt.hash(password, saltRounds, function(err, hash) {
             let register_user = new User({
                 name: req.body.name,
@@ -41,20 +42,20 @@ exports.post_registration = (req, res) => {
                     console.log('Error in signup: User already exist')
                     return res.json('Error in signup: User already exist')
                 }
+                Invitations.updateOne({ invitation_token : undefined, resetPasswordExpires : undefined }, function (err, result) {
+                  if(err){
+                    console.log('Err: ', err)
+                    return res.status(400), json({error: err})
+                  }       
+                }); 
                 console.log('Registration Successful!')
                 return res.json('Registration Successful!');
             })
-            Invitations.updateOne({ invitation_token : undefined, resetPasswordExpires : undefined }, function (err, result) {
-              if(err){
-                console.log('Err: ', err)
-                return res.status(400), json({error: err})
-              }       
-            }); 
         });
-      });
+      }
     });
+  });
 }
-
 // Show Login Form
 exports.get_login = (req, res) => {
     //res.render("register"); 

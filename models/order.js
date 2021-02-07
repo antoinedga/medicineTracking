@@ -1,23 +1,41 @@
 const mongoose = require('mongoose')
-const uuidv4 = requie('uuid/v4')
-const product = require('./product')
 
 // Order Schema
 const orderSchema = new mongoose.Schema({
     orderNumber: {
         type: String,
-        required: true,
-        default: uuidv4
+        required: true
     },
-    orderData: {
+    orderDate: {
         type: Date,
-        required: true,
-        default: Date.now
+        default: Date.now()
     },
-    order: {
-        type: [ product ],
-        required: true,
+    products: [
+        {
+            product_name: {
+                type: String,
+                required: true,
+                trim: true
+            },
+            manufacturer_name: {
+                type: String,
+                required: true,
+                trim: true
+            },
+            quantity: {
+                type: Number,
+                required: true
+            },
+            total_quantity: {
+                type: Number,
+                required: true
+            },
+        }
+    ],
+    user: { 
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'User',
     }
-})
+}, {timestamps: true})
 
 module.exports = mongoose.model('order', orderSchema )
