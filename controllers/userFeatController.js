@@ -41,4 +41,30 @@ exports.post_placeOrder = (req, res) => {
     });
 }
 
+// This function return Order details when user enters the Order Number.
+exports.view_storedOrder = (req, res) => {
+    try{
+        jwt.verify(req.token, SECRET_KEY, (err, authData) => {
+            if(err){
+                return res.json('Forbidden')
+            }
+            Order.findOne({ orderNumber: req.body.orderNumber }, function(err, order) {
+                if(err){
+                    console.log('No order found. Please check the order number and enter again.');
+                    return res.json('No order found. Please check the order number and enter again.');
+                }else{
+                    console.log("Order Number: " + order.orderNumber);
+                    console.log("Date: " + order.orderDate);
+                    console.log("Order Placed by: " + order.user_name);
+                    console.log("User id: " + order.user_id)
+                    console.log("Products: " + order.products);
+                    return res.json(order);
+                }
+            });
+        });
+    }catch(err){
+        console.log('Error: ', err)
+        return res.json('Error')
+    }
 
+}
