@@ -5,7 +5,7 @@ const { get_admin_registration, post_admin_registration, get_admin_login, post_a
 // const { invite } = require('../controllers/invite')
 
 // Get and Post for Admin Registration
-router.post('/admin_registration', get_admin_registration)
+router.get('/admin_registration', get_admin_registration)
 router.post('/admin_registration', post_admin_registration)
 
 // Get and Post for Admin Login

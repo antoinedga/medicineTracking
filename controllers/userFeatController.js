@@ -41,8 +41,21 @@ exports.post_placeOrder = (req, res) => {
     });
 }
 
-// This function return Order details when user enters the Order Number.
-exports.view_storedOrder = (req, res) => {
+// Get page when user enters the Order Number.
+exports.get_viewStoredOrder = (req, res) => {
+    jwt.verify(req.token, SECRET_KEY, (err, authData) => {
+        if(err){
+            return res.json('Error: ', err)
+        }else{
+            res.json({
+                message: 'Order Look'
+            })
+        }
+    });
+}
+
+// Post page when user enters the Order Number.
+exports.post_viewStoredOrder = (req, res) => {
     try{
         jwt.verify(req.token, SECRET_KEY, (err, authData) => {
             if(err){
@@ -68,3 +81,4 @@ exports.view_storedOrder = (req, res) => {
     }
 
 }
+
