@@ -8,11 +8,9 @@ const verifyToken = require('../middlewareVerification/tokenVerification')
 exports.get_placeOrder = (req, res) => {
     jwt.verify(req.token, SECRET_KEY, (err, authData) => {
         if(err){
-            return res.json('Error: ', err)
+            return res.json({response: false, message: 'An error occured', Content: null})
         }else{
-            res.json({
-                message: 'Place Order Page'
-            })
+            return res.json({response: true, message: 'Place Order Page', Content: null})
         }
     });
 }
@@ -20,7 +18,7 @@ exports.get_placeOrder = (req, res) => {
 exports.post_placeOrder = (req, res) => {
     jwt.verify(req.token, SECRET_KEY, (err, authData) => {
         if(err){
-            return res.json('Error: ', err)
+            return res.json({response: false, message: 'Forbidden', Content: null})
         }else{
             generate_orderNumber = uuidv1()
             let new_Order = new Order({
@@ -32,10 +30,10 @@ exports.post_placeOrder = (req, res) => {
             new_Order.save((err, success) => {
                 if(err){
                     console.log('Error creating order: ', err)
-                    return res.json('Error creating order')
+                    return res.json({response: false, message: 'Error placing an order. Try again.', Content: null})
                 }
                 console.log('Order Created Successfully')
-                return res.json('Order Created Successfully');
+                return res.json({response: true, message: 'Order Created Successfully', Content: success})
             })
         }
     });
@@ -45,11 +43,9 @@ exports.post_placeOrder = (req, res) => {
 exports.get_viewStoredOrder = (req, res) => {
     jwt.verify(req.token, SECRET_KEY, (err, authData) => {
         if(err){
-            return res.json('Error: ', err)
+            return res.json({response: false, message: 'Forbidden', Content: null})
         }else{
-            res.json({
-                message: 'Order Look'
-            })
+            return res.json({response: false, message: 'Order Lookup Page', Content: null})
         }
     });
 }
@@ -59,25 +55,25 @@ exports.post_viewStoredOrder = (req, res) => {
     try{
         jwt.verify(req.token, SECRET_KEY, (err, authData) => {
             if(err){
-                return res.json('Forbidden')
+                return res.json({response: false, message: 'Forbidden', Content: null})
             }
             Order.findOne({ orderNumber: req.body.orderNumber }, function(err, order) {
                 if(err){
                     console.log('No order found. Please check the order number and enter again.');
-                    return res.json('No order found. Please check the order number and enter again.');
+                    return res.json({response: false, message: 'No order found. Please check the order number and enter again.', Content: null})
                 }else{
                     console.log("Order Number: " + order.orderNumber);
                     console.log("Date: " + order.orderDate);
                     console.log("Order Placed by: " + order.user_name);
                     console.log("User id: " + order.user_id)
                     console.log("Products: " + order.products);
-                    return res.json(order);
+                    return res.json({response: true, message: 'View Order', Content: order})
                 }
             });
         });
     }catch(err){
         console.log('Error: ', err)
-        return res.json('Error')
+        return res.json({response: false, message: 'An error occured. Please Login again.', Content: null})
     }
 
 }

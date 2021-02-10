@@ -10,7 +10,7 @@ const SECRET_KEY = process.env.JWT_SECRETKEY
 // Show Admin Registration Page
 exports.get_admin_registration = (req, res) => {
     //res.render("register"); 
-    res.json('Admin Registration Page')
+    return res.json({response: true, message: 'Admin Registration Page', Content: null})
 };
 
 // Register Admin and encryption of password
@@ -18,7 +18,7 @@ exports.post_admin_registration = (req, res) => {
     const {email, password} = req.body;
     Admin.findOne({ email }).exec((err, admin) => {
         if(admin) {
-            return res.status(400).json({error: 'Admin user with this email already exists.'})
+            return res.json({response: false, message: 'Admin with email already exists', Content: null})
         }
         const saltRounds = 10
         bcrypt.hash(password, saltRounds, function(err, hash) {
@@ -31,11 +31,9 @@ exports.post_admin_registration = (req, res) => {
             register_admin.save((err, success) => {
                 if(err){
                     console.log('Error in signup: ', err)
-                    return res.status(400), json({error: err})
+                    return res.json({response: false, message: 'An error occured', Content: null})
                 }
-                res.json({
-                    message: 'Admin Registration Successful!'
-                })
+                return res.json({response: true, message: 'Registration Successful', Content: null})
             })
         })
     });
@@ -44,7 +42,7 @@ exports.post_admin_registration = (req, res) => {
 // Show Admin Registration Page
 exports.get_admin_login = (req, res) => {
     //res.render("register"); 
-    res.json('Admin Login Page')
+    return res.json({response: true, message: 'Admin Login Page', Content: null})
 };
 
 // Admin User
@@ -53,7 +51,7 @@ exports.post_admin_Login = (req, res) => {
     Admin.findOne({ email }).exec((err, user) => {
         if(err){
             console.log('Login err: ', err)
-            return res.status(400), json({error: err})
+            return res.json({response: false, message: 'An error occured', Content: null})
         }
         if(user == null){
             res.status(400).json({error: 'Admin user does not exist.'})
@@ -62,12 +60,12 @@ exports.post_admin_Login = (req, res) => {
             .then(function(result) {
                 if(user.email == req.body.email && result){
                     const token = jwt.sign({_id: user._id}, SECRET_KEY)
-                    res.json({message: 'Admin Login Successful!!', token})
+                    return res.json({response: true, message: 'Admin Login Successful', Content: token})
                 }else{
-                    res.json({message: 'Invalid Email or Password.'})
+                    return res.json({response: false, message: 'Invalid password.', Content: null})
                 }
             }).catch(err => {
-                console.log(err)
+                return res.json({response: false, message: 'Invalid password.', Content: null})
             });
         }
     });
@@ -76,7 +74,7 @@ exports.post_admin_Login = (req, res) => {
 // Show Invitation Page
 exports.get_invitation = (req, res) => {
     //res.render('forgot');
-    res.json('Invitation Page')
+    return res.json({response: true, message: 'Invitation Page', Content: null})
 };
 
 exports.post_invitation = (req, res) => {
@@ -92,9 +90,6 @@ exports.post_invitation = (req, res) => {
           console.log(err)
           return
       }
-      res.json({
-          message: 'Invitation Saved in db!'
-      }) 
   })
 
   response = {
@@ -107,7 +102,7 @@ exports.post_invitation = (req, res) => {
       subject: 'Invitation for Registration',
       text: 'This is an invitation to register yourself.\n\n' +
       'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
-      'http://' + req.headers.host + '/api_user/signup/' + invitation_id + '\n\n'
+      'http://' + req.headers.host + '/api/user/signup/' + invitation_id + '\n\n'
   };
 
   const transporter = nodemailer.createTransport({
@@ -120,12 +115,10 @@ exports.post_invitation = (req, res) => {
 
   transporter.sendMail(mailOptions, (err, res) => {
       if (err) {
-          return console.log(err)
+        return res.json({response: false, message: 'An error occured', Content: null})
       } else {
           console.log('Invitation has been sent to email Successfully!')
-          res.json({
-              message: 'Invitation has been sent to email Successfully!'
-          })
+          return res.json({response: true, message: 'An email has been send with an invitation code', Content: null})
       }
   })
 };

@@ -11,7 +11,7 @@ const saltRounds = 10
 // Show Register Form
 exports.get_registration = (req, res) => {
     //res.render("register"); 
-    res.json('Register Page')
+    return res.json({response: true, message: 'Register Page', Content: null})
  };
 
 // Register user and encryption of password
@@ -21,13 +21,13 @@ exports.post_registration = (req, res) => {
     if(!user){
       console.log('Error: Password reset token is invalid or has expired.')
       // req.flash('error', 'Password reset token is invalid or has expired.');
-       return res.json('Error: Password reset token is invalid or has expired.')
+      return res.json({response: false, message: 'Password reset token is invalid or has expired', Content: null})
       // res.redirect('back');
     }
     User.findOne({ email }).exec((err, user) => {
       if(err){
         console.log('User already exists', err)
-        return res.json('User already exists')
+        return res.json({response: false, message: 'User already exists', Content: null})
       }
       else{
         bcrypt.hash(password, saltRounds, function(err, hash) {
@@ -39,17 +39,14 @@ exports.post_registration = (req, res) => {
             //console.log(register_user)
             register_user.save((err, success) => {
                 if(err){
-                    console.log('Error in signup: User already exist')
-                    return res.json('Error in signup: User already exist')
+                  return res.json({response: false, message: 'User already exists', Content: null})
                 }
                 Invitations.updateOne({ invitation_token : undefined, resetPasswordExpires : undefined }, function (err, result) {
                   if(err){
-                    console.log('Err: ', err)
                     return res.status(400), json({error: err})
                   }       
                 }); 
-                console.log('Registration Successful!')
-                return res.json('Registration Successful!');
+                return res.json({response: true, message: 'Registration Successful', Content: null})
             })
         });
       }
@@ -60,7 +57,7 @@ exports.post_registration = (req, res) => {
 // Show Login Form
 exports.get_login = (req, res) => {
     //res.render("register"); 
-    res.json({response: true, message: 'Login Page.', token: null})
+    res.json({response: true, message: 'Login Page.', Content: null})
  };
 
 // Login User
@@ -68,23 +65,21 @@ exports.post_login = (req, res) => {
     var email = req.body.email
     User.findOne({ email }).exec((err, user) => {
         if(err){
-            console.log('Login err: ', err)
-            return res.status(400), json({response: false, message: 'Login Error.', token: null})
+            return res.status(400), json({response: false, message: 'Login Error.', Content: null})
         }
         if(user == null){
-            res.status(400).json({response: false, message: 'User with this email does not exist', token: null})
+            res.status(400).json({response: false, message: 'User with this email does not exist', Content: null})
         }else{
             bcrypt.compare(req.body.password, user.password)
             .then(function(result) {
                 if(user.email == req.body.email && result){
                     const token = jwt.sign({_id: user._id}, SECRET_KEY)
-                    res.json({response: true, message: 'Login Successful', token: token})
+                    res.json({response: true, message: 'Login Successful', Content: token})
                 }else{
-                    res.json({response: false, message: 'Password is incorrect', token: token})
+                    res.json({response: false, message: 'Password is incorrect', Content: null})
                 }
             }).catch(err => {
-                console.log(err)
-                res.json({response: false, message: 'Password is incorrect', token: null})
+                res.json({response: false, message: 'Password is incorrect', Content: null})
             });
         }
     });
@@ -93,7 +88,7 @@ exports.post_login = (req, res) => {
 // Show Forget Password page
 exports.get_forget = (req, res) => {
   //res.render('forgot');
-  res.json('Forget Page')
+  return res.json({response: true, message: 'Forget Password Page', Content: null})
 };
 
 // Forget Password page
@@ -110,7 +105,7 @@ exports.post_forget = (req, res, next) => {
         if (!user) {
             console.log('Error: No account with that email address exists.')
           //req.flash('error', 'No account with that email address exists.');
-          return res.json('error: No account with that email address exists.');
+          return res.json({response: false, message: 'User does not exists', Content: null})
           // res.redirect('/forgot');
         }
 
@@ -141,7 +136,7 @@ exports.post_forget = (req, res, next) => {
       };
       transporter.sendMail(mailOptions, function(err) {
         console.log('mail sent');
-        return res.json('Mail sent.') 
+        return res.json({response: true, message: 'Mail sent', Content: null})
         // req.flash('success', 'An e-mail has been sent to ' + user.email + ' with further instructions.');
         // done(err, 'done');
       });
@@ -149,7 +144,7 @@ exports.post_forget = (req, res, next) => {
   ], function(err) {
     if (err) return next(err);
     // res.redirect('/forgot');
-    res.json(err);
+    return res.json({response: false, message: 'An error occured', Content: null})
   });
 };
 
@@ -159,10 +154,10 @@ exports.get_reset = (req, res) =>{
     if (!user) {
         console.log('Error: Password reset token is invalid or has expired.')
       // req.flash('error', 'Password reset token is invalid or has expired.');
-      return res.json('Error: Password reset token is invalid or has expired.') 
+      return res.json({response: false, message: 'Password reset token is invalid or has expired', Content: null})
       // res.redirect('/forgot');
     }
-    res.json('Password Reset Page.')
+    return res.json({response: true, message: 'Password Reset Page', Content: null})
     // res.render('api_user/reset/', {token: req.params.token});
   });
 };
@@ -175,7 +170,7 @@ exports.post_reset = (req, res) => {
         if (!user) {
             res.json('Error: Password reset token is invalid or has expired.')
             // req.flash('error', 'Password reset token is invalid or has expired.');
-          return res.json('Error: Password reset token is invalid or has expired.')
+            return res.json({response: false, message: 'Password reset token is invalid or has expired', Content: null})
           // res.redirect('back');
         }
         if(req.body.new_password === req.body.confirm_password) {
@@ -188,21 +183,22 @@ exports.post_reset = (req, res) => {
             user.updateOne({ password : req.body.new_password, resetPasswordExpires : undefined, resetPasswordToken : undefined }, function (err, result) {
               if(err){
                       console.log('Err: ', err)
-                      return res.status(400), json({error: err})
+                      return res.json({response: false, message: 'An error occured', Content: null})
               }else{
                 console.log('Password Updated!');
-                res.json('Password Updated.')
+                return res.json({response: true, message: 'Password updated', Content: null})
               }         
             }); 
           });
         }else {
           console.log('Error: Passwords do not match')
           // req.flash("error", "Passwords do not match.");
-          return res.json('Error: Passwords do not match')// res.redirect('back');
+          return res.json({response: false, message: 'Passwords do not match', Content: null})
+          // res.redirect('back');
         }
       });
     },
   ], function(err) {
-        res.json(err);
+    return res.json({response: true, message: 'An error occured', Content: null})
   });
 };
