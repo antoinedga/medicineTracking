@@ -56,10 +56,11 @@ exports.post_registration = (req, res) => {
     });
   });
 }
+
 // Show Login Form
 exports.get_login = (req, res) => {
     //res.render("register"); 
-    res.json('Login Page')
+    res.json({response: true, message: 'Login Page.', token: null})
  };
 
 // Login User
@@ -68,21 +69,22 @@ exports.post_login = (req, res) => {
     User.findOne({ email }).exec((err, user) => {
         if(err){
             console.log('Login err: ', err)
-            return res.status(400), json({error: err})
+            return res.status(400), json({response: false, message: 'Login Error.', token: null})
         }
         if(user == null){
-            res.status(400).json({error: 'User does not exist.'})
+            res.status(400).json({response: false, message: 'User does not exist.', token: null})
         }else{
             bcrypt.compare(req.body.password, user.password)
             .then(function(result) {
                 if(user.email == req.body.email && result){
                     const token = jwt.sign({_id: user._id}, SECRET_KEY)
-                    res.json({message: 'Login Successful!!', token})
+                    res.json({response: true, message: 'Login Successful', token: token})
                 }else{
-                    res.json({message: 'Invalid Email or Password.'})
+                    res.json({response: false, message: 'Invalid Email or Password', token: token})
                 }
             }).catch(err => {
                 console.log(err)
+                res.json({response: false, message: 'Error', token: null})
             });
         }
     });
