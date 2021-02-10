@@ -72,7 +72,7 @@ exports.post_login = (req, res) => {
             return res.status(400), json({response: false, message: 'Login Error.', token: null})
         }
         if(user == null){
-            res.status(400).json({response: false, message: 'User does not exist.', token: null})
+            res.status(400).json({response: false, message: 'User with this email does not exist', token: null})
         }else{
             bcrypt.compare(req.body.password, user.password)
             .then(function(result) {
@@ -80,11 +80,11 @@ exports.post_login = (req, res) => {
                     const token = jwt.sign({_id: user._id}, SECRET_KEY)
                     res.json({response: true, message: 'Login Successful', token: token})
                 }else{
-                    res.json({response: false, message: 'Invalid Email or Password', token: token})
+                    res.json({response: false, message: 'Password is incorrect', token: token})
                 }
             }).catch(err => {
                 console.log(err)
-                res.json({response: false, message: 'Error', token: null})
+                res.json({response: false, message: 'Password is incorrect', token: null})
             });
         }
     });
