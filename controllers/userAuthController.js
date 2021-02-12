@@ -73,7 +73,7 @@ exports.post_login = (req, res) => {
             bcrypt.compare(req.body.password, user.password)
             .then(function(result) {
                 if(user.email == req.body.email && result){
-                    const token = jwt.sign({_id: user._id}, SECRET_KEY)
+                    const token = jwt.sign({ user: user }, SECRET_KEY)
                     res.json({response: true, message: 'Login Successful', Content: token})
                 }else{
                     res.json({response: false, message: 'Password is incorrect', Content: null})

@@ -25,7 +25,8 @@ exports.post_placeOrder = (req, res) => {
                 orderNumber: generate_orderNumber,
                 orderDate: Date.now(),
                 products: req.body.products,
-                user: authData._id
+                user_name: authData.user.name,
+                user_id: authData.user._id,
             });
             new_Order.save((err, success) => {
                 if(err){
