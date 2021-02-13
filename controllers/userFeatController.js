@@ -79,3 +79,52 @@ exports.post_viewStoredOrder = (req, res) => {
 
 }
 
+exports.get_updateOrder = (req, res) => {
+    jwt.verify(req.token, SECRET_KEY, (err, authData) => {
+        if(err){
+            return res.json('Error: ', err)
+        }else{
+            res.json({
+                message: 'Update Order Page'
+            })
+        }
+    });
+} 
+
+// This function updates Order by the order number.
+exports.put_updateOrder = (req, res) => {
+    try{
+        jwt.verify(req.token, SECRET_KEY, (err, authData) => {
+            if(err){
+                return res.json('Forbidden')
+            }
+            Order.findOne({ orderNumber: req.params.orderNumber }, (err, order) => {
+                if(err){
+                    console.log(err)
+                    return res.json({result: false, message: 'An err occured', content: null})
+                }else{
+                    if(!order){
+                        return res.json({result: false, message: 'No order found. Check and enter the order number again.', content: null})
+                    }
+                    Order.updateOne(
+                        { "orderNumber": req.params.orderNumber , "products.product_name": req.body.product_name },
+                        { 
+                            $set: { "products.$.total_quantity": req.body.total_quantity } 
+                        }, (err, updateOrder) => {
+                            if(err){
+                                console.log(err)
+                                return res.json({result: false, message: 'An err occured', content: null})
+                            }else{
+                                console.log(updateOrder)
+                                return res.json({result: true, message: 'Order updated', content: updateOrder})
+                           }
+                    });
+                    
+                }
+            }) 
+        });
+    }catch(err){
+        console.log('Error: ', err)
+        return res.json('Error')
+    }
+}
