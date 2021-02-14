@@ -3,7 +3,6 @@ const { v1: uuidv1 } = require('uuid');
 const Order = require('../models/order')
 const jwt = require('jsonwebtoken')
 const SECRET_KEY = process.env.JWT_SECRETKEY
-const verifyToken = require('../middlewareVerification/tokenVerification')
 
 exports.get_placeOrder = (req, res) => {
     jwt.verify(req.token, SECRET_KEY, (err, authData) => {
@@ -63,11 +62,7 @@ exports.post_viewStoredOrder = (req, res) => {
                     console.log('No order found. Please check the order number and enter again.');
                     return res.json({response: false, message: 'No order found. Please check the order number and enter again.', Content: null})
                 }else{
-                    console.log("Order Number: " + order.orderNumber);
-                    console.log("Date: " + order.orderDate);
-                    console.log("Order Placed by: " + order.user_name);
-                    console.log("User id: " + order.user_id)
-                    console.log("Products: " + order.products);
+                    console.log(order);
                     return res.json({response: true, message: 'View Order', Content: order})
                 }
             });
@@ -118,8 +113,7 @@ exports.put_updateOrder = (req, res) => {
                                 console.log(updateOrder)
                                 return res.json({result: true, message: 'Order updated', content: updateOrder})
                            }
-                    });
-                    
+                    });  
                 }
             }) 
         });
