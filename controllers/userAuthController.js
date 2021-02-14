@@ -14,6 +14,18 @@ exports.get_registration = (req, res) => {
     return res.json({response: true, message: 'Register Page', Content: null})
  };
 
+ // create test user 
+ function test() {
+    bcrypt.hash('123qwe', saltRounds, function(err, hash) {
+      let register_user = new User({
+          name: 'test',
+          email: 'test',
+          password: hash
+      });
+      register_user.save()
+  });
+ }
+
 // Register user and encryption of password
 exports.post_registration = (req, res) => {
   const { email, password} = req.body;

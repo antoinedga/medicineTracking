@@ -20,6 +20,14 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    roles: {
+        type: [
+            {
+                type: mongoose.Schema.Types.ObjectId, 
+                ref: 'role',
+            }
+        ],
+    },
     resetPasswordToken: String,
     resetPasswordExpires: Date,
 }, {timestamps: true})

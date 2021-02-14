@@ -1,0 +1,25 @@
+item insertion                      once per item
+item lookup                             
+    find by id                      has item - scanning QR code, check-in/check-out of inventory or check description
+    find by name                    doesn't have item - search inventory
+
+    attached info
+        status
+        location
+        description
+        eaches
+    find item in location
+package lookup
+    find by id
+        items
+        status
+        location
+
+name
+permissions
+inventories
+list of products
+
+Product:
+    name: string
+    location: <mlc>/<base>/<inv1>/<in2v>...

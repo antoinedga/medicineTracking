@@ -3,7 +3,6 @@ var Inventory = require('../../models/Inventory')
 
 
 exports.getAll = (req, res) => {
-    console.log("inventory/getall")
     if (process.env.NODE_ENV === config.dev) {
       Inventory.find({}, (err, inventories) => {
         if (err) {
