@@ -1,0 +1,74 @@
+[
+    {
+        "id": "c5211942-bcbb-4e48-b0f9-7ddef61c115b",
+        "brand": "blue",
+        "name": "Hester",
+        "quantity": 0
+    },
+    {
+        "id": "28fc36fc-6cb0-43d1-a725-04ea3daa3354",
+        "brand": "brown",
+        "name": "Angeline",
+        "quantity": 0
+    },
+    {
+        "id": "6564bdcf-f5a9-4dc8-b5db-9936024b1154",
+        "brand": "blue",
+        "name": "Kerr",
+        "quantity": 0
+    },
+    {
+        "id": "3b983f91-9bb3-49e1-9c0d-e9372890f342",
+        "brand": "brown",
+        "name": "Woods",
+        "quantity": 0
+    },
+    {
+        "id": "b9e91c17-5954-4a89-88bd-f02b380c8ae8",
+        "brand": "brown",
+        "name": "Petty",
+        "quantity": 0
+    },
+    {
+        "id": "f1a62f7b-364d-441d-8b66-42283f2c2b1b",
+        "brand": "green",
+        "name": "Mcfarland",
+        "quantity": 0
+    },
+    {
+        "id": "a2f44fa7-e442-4157-ba9e-0f1b3da2e787",
+        "brand": "brown",
+        "name": "Rowland",
+        "quantity": 0
+    },
+    {
+        "id": "a1000018-6f10-4006-8436-e1bb25d31981",
+        "brand": "green",
+        "name": "Burt",
+        "quantity": 0
+    },
+    {
+        "id": "22dfdba4-a944-472c-86dd-07ba391c3607",
+        "brand": "green",
+        "name": "Noble",
+        "quantity": 0
+    },
+    {
+        "id": "6968509c-be20-470e-85d1-f1f8e7875518",
+        "brand": "green",
+        "name": "Tia",
+        "quantity": 0
+    },
+    {
+        "id": "4c38801f-f30c-4a40-8a10-e4a55bbc6c60",
+        "brand": "blue",
+        "name": "Mcmillan",
+        "quantity": 0
+    },
+    {
+        "id": "82db5b27-4107-4a6b-b180-78fe497ffebd",
+        "brand": "green",
+        "name": "Wise",
+        "quantity": 0
+    }
+]
