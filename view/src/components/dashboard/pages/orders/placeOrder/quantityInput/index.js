@@ -1,5 +1,5 @@
 import React from 'react'
-import { TextField, Button } from "@material-ui/core"
+import { TextField, Button, withWidth } from "@material-ui/core"
 
 export default function QuantityInput(props) {
 

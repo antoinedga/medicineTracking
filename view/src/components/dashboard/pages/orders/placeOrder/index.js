@@ -13,8 +13,6 @@ import materialIcon from '../../../../material-table-icon'
 import Quantity from './quantityInput'
 import { useForm } from "react-hook-form";
 
-const json = require('./text.json');
-
 const useStyles = makeStyles((theme) => ({
     appBar: {
         position: 'relative',
@@ -36,7 +34,7 @@ export default function FullScreenDialog() {
     const classes = useStyles();
     const [order, setOrder] = useState(new Map());
     const [open, setOpen] = useState(false);
-    const [data, setData] = useState([{ name: 'Mehmet', surname: 'Baran', birthYear: 0, birthCity: 63 }, { name: 'Mehmet', surname: 'Baran', birthYear: 0, birthCity: 63 }, { name: 'Mehmet', surname: 'Baran', birthYear: 0, birthCity: 63 }])
+    const [data, setData] = useState([{ name: 'a', surname: 'Baran', birthYear: 0, birthCity: 63 }, { name: 'b', surname: 'Baran', birthYear: 0, birthCity: 63 }, { name: 'c', surname: 'Baran', birthYear: 0, birthCity: 63 }, { name: 'a', surname: 'Baran', birthYear: 0, birthCity: 63 }, { name: 'b', surname: 'Baran', birthYear: 0, birthCity: 63 }, { name: 'c', surname: 'Baran', birthYear: 0, birthCity: 63 }, { name: 'a', surname: 'Baran', birthYear: 0, birthCity: 63 }, { name: 'b', surname: 'Baran', birthYear: 0, birthCity: 63 }, { name: 'c', surname: 'Baran', birthYear: 0, birthCity: 63 }, { name: 'a', surname: 'Baran', birthYear: 0, birthCity: 63 }, { name: 'b', surname: 'Baran', birthYear: 0, birthCity: 63 }, { name: 'c', surname: 'Baran', birthYear: 0, birthCity: 63 }])
     const { register, handleSubmit, watch, errors } = useForm();
 
     const handleClickOpen = () => {
@@ -47,28 +45,44 @@ export default function FullScreenDialog() {
         setOpen(false);
     };
 
+    const addItem = (key, value) => {
+        setOrder(prev => new Map([...prev, [key, value]]))
+    }
 
+    const upsertItem = (key, value) => {
+        setOrder((prev) => new Map(prev).set(key, value));
+    }
 
+    const deleteItem = (key) => {
+        setOrder((prev) => {
+            const newState = new Map(prev);
+            newState.delete(key);
+            return newState;
+        });
+    }
 
     // HANDLES CHANNGES ON INNOPUT ON THE ROW OF THE PRODUCT,
-    const handleOnChange = index => e => {
+    const handleOnChange = row => e => {
         let quantity = parseInt(e.target.value);
+        let index = row.tableData.id;
         let newArr = [...data]; // copying the old datas array
+
 
         if (quantity > 0) {
 
-            newArr[index].birthYear = quantity
+            newArr[index].birthYear = quantity;
+            if (order.has(index)) {
+                upsertItem(index, newArr[index]);
+            } else {
+                addItem(index, newArr[index])
+            }
 
-            setOrder(order.set(index, {
-                quantity: quantity,
-                name: newArr[index].name,
-            }));
-            console.log(newArr) // replace e.target.value with whatever you want to change it to
+            //  console.log(newArr) // replace e.target.value with whatever you want to change it to
         } else {
             newArr[index].birthYear = quantity
-            setOrder(data.filter((item, itemIndex) => index !== itemIndex))
+            deleteItem(index)
         }
-
+        orderToArray();
         setData(newArr);
 
     }
@@ -77,12 +91,16 @@ export default function FullScreenDialog() {
 
         let newArr = [...data]; // copying the old datas array
         newArr[itemIndex].birthYear = 0; // SET THE QUANTITY TO ZERO
-        console.log(newArr) // replace e.target.value with whatever you want to change it to
-        setOrder(order.delete(itemIndex))
         setData(newArr);
+        deleteItem(itemIndex)
     }
 
     const handleSubmitEvent = (data, e) => { console.log(data, e) };
+
+    const orderToArray = () => {
+
+        return [...order.values()];
+    }
 
     return (
         <div>
@@ -103,8 +121,13 @@ export default function FullScreenDialog() {
                 <DialogContent>
                     <div>
                         <Grid container spacing={1}>
-                            <Grid item xs={6}>
+                            <Grid item xs={4} >
                                 <MaterialTable icons={materialIcon}
+                                    localization={{
+                                        body: {
+                                            emptyDataSourceMessage: "No Item added for Order"
+                                        }
+                                    }}
                                     columns={[
                                         {
                                             field: 'name',
@@ -113,43 +136,54 @@ export default function FullScreenDialog() {
 
                                         },
                                         {
-                                            field: 'birthYear',
+                                            field: 'quantity',
                                             title: 'Quantity',
                                             type: 'numeric'
                                             ,
                                             defaultSort: 'desc',
-                                            searchable: false
+                                            searchable: false,
 
                                         }
                                     ]}
-                                    data={() => Array.from(order.values())}
-                                    title="List of Products"
+                                    data={orderToArray()}
+                                    title="List of Products for Order"
 
                                     options={{
                                         sorting: false,
                                         search: false,
+                                        paging: false,
+                                        maxBodyHeight: 500,
+                                        headerStyle: { position: "sticky", top: 0 }
                                     }}
 
                                 />
                             </Grid>
-                            <Grid item xs={6}>
+                            <Grid item xs={8} style={{ height: 500, overflowY: 'auto' }}>
                                 <MaterialTable icons={materialIcon}
+                                    localization={{
+                                        body: {
+                                            emptyDataSourceMessage: "No Item added for Order",
+
+                                        }
+                                    }}
+
+
                                     columns={[
                                         {
                                             field: 'name',
                                             title: "Name",
-                                            type: "string"
-
+                                            type: "string",
+                                            cellStyle: { width: '25%' }
                                         },
                                         {
                                             field: 'birthYear',
                                             title: 'Quantity',
                                             render: rowData => {
-                                                return < Quantity onChange={handleOnChange(rowData.tableData.id)} name={rowData.name} itemID={rowData.birthYear} clearItem={handleZeroOutItem(rowData.tableData.id)} quantity={rowData.birthYear} />
+                                                return < Quantity onChange={handleOnChange(rowData)} name={rowData.name} itemID={rowData.birthYear} clearItem={handleZeroOutItem(rowData.tableData.id)} quantity={rowData.birthYear} />
                                             },
                                             defaultSort: 'desc',
-                                            searchable: false
-
+                                            searchable: false,
+                                            cellStyle: { width: '25%' },
                                         }
                                     ]}
                                     data={data}
@@ -157,7 +191,10 @@ export default function FullScreenDialog() {
 
                                     options={{
                                         sorting: true,
+                                        fixedColumns: true,
+                                        paging: false,
                                     }}
+
 
                                 />
                             </Grid>

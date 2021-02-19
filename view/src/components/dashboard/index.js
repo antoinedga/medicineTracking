@@ -2,11 +2,11 @@ import React from "react";
 import clsx from 'clsx';
 import {
     Route,
-    Redirect, useRouteMatch,
+    useRouteMatch,
 } from "react-router-dom";
 
 import {
-    Container, AppBar, IconButton, Divider,
+    AppBar, IconButton, Divider,
     List, ListItem, ListItemIcon, ListItemText,
     Toolbar, Drawer, Typography,
     Tooltip, Grid, Select, MenuItem, FormHelperText
@@ -21,7 +21,7 @@ import PeopleIcon from '@material-ui/icons/People';
 import ReceiptIcon from '@material-ui/icons/Receipt';
 import HomeIcon from '@material-ui/icons/Home';
 import StorefrontIcon from '@material-ui/icons/Storefront';
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Inventory from "./pages/inventory";
 import Orders from "./pages/orders";
 import Locations from './pages/locations'
@@ -122,7 +122,7 @@ function Dashboard(props) {
         setAnchorEl(null);
     };
 
-    const handleLocationChange= (event) => {
+    const handleLocationChange = (event) => {
 
     }
 
@@ -180,12 +180,12 @@ function Dashboard(props) {
                     <List>
 
                         <ListItem button component={Link} to="/dashboard">
-                                <ListItemIcon>
-                                    <Tooltip title="Dashboard">
-                                        <HomeIcon />
-                                    </Tooltip>
-                                </ListItemIcon>
-                                <ListItemText primary={"Dashboard"} />
+                            <ListItemIcon>
+                                <Tooltip title="Dashboard">
+                                    <HomeIcon />
+                                </Tooltip>
+                            </ListItemIcon>
+                            <ListItemText primary={"Dashboard"} />
                         </ListItem>
 
                         <ListItem button component={Link} to="/dashboard/inventory">
@@ -218,7 +218,7 @@ function Dashboard(props) {
                         <ListItem button component={Link} to="/dashboard/locations" >
                             <ListItemIcon>
                                 <Tooltip title="Location Management">
-                                    <LocationOnIcon/>
+                                    <LocationOnIcon />
                                 </Tooltip>
                             </ListItemIcon>
                             <ListItemText primary={"Location Management"} />
@@ -228,33 +228,33 @@ function Dashboard(props) {
                 </Drawer>
                 <main className={classes.content}>
                     <div className={classes.toolbar} />
-                        <Grid container direction="row" justify="flex-end">
-                            <Grid item className={classes.location}>
-                                <FormHelperText><h3>Location: </h3></FormHelperText>
-                            </Grid>
-                            <Grid item xs={2} >
-                                <Select
-                                    value={location}
-                                    onChange={handleLocationChange}
-                                    inputProps={{ 'aria-label': 'Without label' }}
-                                    fullWidth={true}
-                                    >
-                                    <MenuItem value={10}>Ten</MenuItem>
-                                </Select>
-                            </Grid>
+                    <Grid container direction="row" justify="flex-end">
+                        <Grid item className={classes.location}>
+                            <FormHelperText><h3>Location: </h3></FormHelperText>
                         </Grid>
-                            <Route exact path={`${url}/inventory`}>
-                                <Inventory/>
-                            </Route>
-                            <Route exact path={`${url}/orders`}>
-                                <Orders/>
-                            </Route>
-                            <Route exact path={`${url}/locations`}>
-                                <Locations/>
-                            </Route>
-                            <Route exact path={`${url}/users`}>
-                                <Users/>
-                            </Route>
+                        <Grid item xs={2} >
+                            <Select
+                                value={location}
+                                onChange={handleLocationChange}
+                                inputProps={{ 'aria-label': 'Without label' }}
+                                fullWidth={true}
+                            >
+                                <MenuItem value={10}>Ten</MenuItem>
+                            </Select>
+                        </Grid>
+                    </Grid>
+                    <Route exact path={`${url}/inventory`}>
+                        <Inventory />
+                    </Route>
+                    <Route exact path={`${url}/orders`}>
+                        <Orders />
+                    </Route>
+                    <Route exact path={`${url}/locations`}>
+                        <Locations />
+                    </Route>
+                    <Route exact path={`${url}/users`}>
+                        <Users />
+                    </Route>
 
                 </main>
             </div>

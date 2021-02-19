@@ -1,4 +1,4 @@
-import React, {useState , useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import MaterialTable from "material-table";
 
 import AddBox from '@material-ui/icons/AddBox';
@@ -19,6 +19,7 @@ import ViewColumn from '@material-ui/icons/ViewColumn';
 
 import ViewDetail from './viewDetail'
 import DeleteDialog from './deleteDialog'
+import ImportExcel from './importExcel'
 const tableIcons = {
     Add: AddBox,
     Check: Check,
@@ -66,48 +67,50 @@ export default function Inventory(props) {
         setDeleteOpen(false);
     };
 
-    return(
+    return (
         <>
             <h3>Inventory</h3>
+            <div>
+                <ImportExcel />
+            </div>
+            <MaterialTable
+                columns={[
+                    { title: 'Brand', field: 'brand' },
+                    { title: 'Drug', field: 'drug' },
+                    { title: 'Quantity', field: 'quantity', type: "numeric" }
+                ]}
+                data={
+                    [
+                        { brand: 'uwu', drug: 'uwu', quantity: 69 },
+                    ]
+                }
+                icons={tableIcons}
 
-                <MaterialTable
-                    columns={[
-                        { title: 'Brand', field: 'brand' },
-                        { title: 'Drug', field: 'drug' },
-                        { title: 'Quantity', field: 'quantity', type: "numeric"}
-                    ]}
-                    data={
-                        [
-                            {brand: 'uwu', drug: 'uwu', quantity: 69 },
-                        ]
-                    }
-                    icons={tableIcons}
+                options={{
+                    exportButton: true
+                }}
 
-                    options={{
-                        exportButton: true
-                    }}
-
-                    actions={[
-                        {
-                            icon: tableIcons.Edit,
-                            tooltip: 'View Detail ',
-                            onClick: (event, rowData) => {
-                                handleDetailOpen(rowData);
-                            }
-                        },
-                        {
-                            icon: tableIcons.Delete,
-                            tooltip: 'Delete Item',
-                            onClick: (event, rowData) => {
-                                handleDeleteOpen(rowData);
-                            }
+                actions={[
+                    {
+                        icon: tableIcons.Edit,
+                        tooltip: 'View Detail ',
+                        onClick: (event, rowData) => {
+                            handleDetailOpen(rowData);
                         }
-                    ]}
-                />
+                    },
+                    {
+                        icon: tableIcons.Delete,
+                        tooltip: 'Delete Item',
+                        onClick: (event, rowData) => {
+                            handleDeleteOpen(rowData);
+                        }
+                    }
+                ]}
+            />
 
-            <ViewDetail onClose={handleDetailClose} open={openDetail} data={detailData}/>
+            <ViewDetail onClose={handleDetailClose} open={openDetail} data={detailData} />
 
-            <DeleteDialog onClose={handleDeleteClose} open={openDelete} data={deleteData}/>
+            <DeleteDialog onClose={handleDeleteClose} open={openDelete} data={deleteData} />
         </>
     );
 }
