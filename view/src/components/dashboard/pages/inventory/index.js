@@ -16,10 +16,13 @@ import Remove from '@material-ui/icons/Remove';
 import SaveAlt from '@material-ui/icons/SaveAlt';
 import Search from '@material-ui/icons/Search';
 import ViewColumn from '@material-ui/icons/ViewColumn';
+import { Grid } from '@material-ui/core'
 
 import ViewDetail from './viewDetail'
 import DeleteDialog from './deleteDialog'
 import ImportExcel from './importExcel'
+import AddInventory from './addInventory'
+
 const tableIcons = {
     Add: AddBox,
     Check: Check,
@@ -70,9 +73,20 @@ export default function Inventory(props) {
     return (
         <>
             <h3>Inventory</h3>
-            <div>
-                <ImportExcel />
-            </div>
+            <Grid container
+                direction="row"
+                alignItems="center"
+                justify="flex-start"
+            >
+                <Grid container items padding={1}>
+                    <Grid items xs={4}>
+                        <AddInventory />
+                    </Grid>
+                    <Grid items xs={4}>
+                        <ImportExcel />
+                    </Grid>
+                </Grid>
+            </Grid>
             <MaterialTable
                 columns={[
                     { title: 'Brand', field: 'brand' },

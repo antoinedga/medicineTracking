@@ -1,38 +1,40 @@
 
 import React from "react";
-import {BrowserRouter as Router, Switch, Route} from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Login from "./components/login"
 import NoMatch from "./components/noMatch/noMatch";
 import Register from "./components/register"
 import Dashboard from "./components/dashboard"
+import "bootstrap/dist/css/bootstrap.min.css";
+import "shards-ui/dist/css/shards.min.css"
 
 function App() {
-  return (
-      <Router>
+    return (
+        <Router>
             <Switch>
                 <Route exact path="/">
-                    <Login/>
+                    <Login />
                 </Route>
 
                 <Route exact path="/login">
-                    <Login/>
+                    <Login />
                 </Route>
 
                 <Route exact path="/register">
-                    <Register/>
+                    <Register />
                 </Route>
 
                 <Route path="/dashboard">
-                    <Dashboard/>
+                    <Dashboard />
                 </Route>
 
                 <Route path="*">
-                    <NoMatch/>
+                    <NoMatch />
                 </Route>
 
             </Switch>
-      </Router>
-  );
+        </Router>
+    );
 }
 
 export default App;

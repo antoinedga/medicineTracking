@@ -140,48 +140,46 @@ export default function FullScreenDialog() {
             <Button variant="outlined" color="primary" onClick={handleClickOpen}>
                 Import CSV/XLVS
             </Button>
-            <div>
-                <Dialog fullScreen open={open} onClose={handleDialogClose} TransitionComponent={Transition} disableBackdropClick>
-                    <AppBar className={classes.appBar}>
-                        <Toolbar>
-                            <Typography variant="h6" className={classes.title}>
-                                New Inventory Upload
+            <Dialog fullScreen open={open} onClose={handleDialogClose} TransitionComponent={Transition} disableBackdropClick>
+                <AppBar className={classes.appBar}>
+                    <Toolbar>
+                        <Typography variant="h6" className={classes.title}>
+                            New Inventory Upload
                         </Typography>
-                            <Button autoFocus color="inherit" onClick={handleDialogClose}>
-                                <CloseIcon />
-                            </Button>
-                        </Toolbar>
-                    </AppBar>
-                    <DialogContent>
-                        <Grid className="container">
-                            <div {...getRootProps({ style })}>
-                                <input {...getInputProps()} />
-                                <p>Drag 'n' drop some files here, or click to select files</p>
-                                <em>(Only .csv, .xlsx, and .xls files will be accepted)</em>
-                            </div>
-                        </Grid>
-                        <div style={{ margin: 16, fontSize: 26 }}>
-                            {currentFiles}
+                        <Button autoFocus color="inherit" onClick={handleDialogClose}>
+                            <CloseIcon />
+                        </Button>
+                    </Toolbar>
+                </AppBar>
+                <DialogContent>
+                    <Grid className="container">
+                        <div {...getRootProps({ style })}>
+                            <input {...getInputProps()} />
+                            <p>Drag 'n' drop some files here, or click to select files</p>
+                            <em>(Only .csv, .xlsx, and .xls files will be accepted)</em>
                         </div>
-                        <DialogActions>
-                            <Button variant="contained" onClick={clearFile} size="large" endIcon={<ClearIcon />} className={classes.cancel}>
-                                Clear
+                    </Grid>
+                    <div style={{ margin: 16, fontSize: 26 }}>
+                        {currentFiles}
+                    </div>
+                    <DialogActions>
+                        <Button variant="contained" onClick={clearFile} size="large" endIcon={<ClearIcon />} className={classes.cancel}>
+                            Clear
                             </Button>
-                            <Button variant="contained" onClick={handleSubmit} size="large" endIcon={<PublishIcon />} className={classes.submit}>
-                                Submit
+                        <Button variant="contained" onClick={handleSubmit} size="large" endIcon={<PublishIcon />} className={classes.submit}>
+                            Submit
                             </Button>
-                        </DialogActions>
-                        <Snackbar open={openSnackbar} autoHideDuration={6000} >
-                            <Alert onClose={() => setSnackBar(false)} severity="success">
-                                Successfully removed file!
+                    </DialogActions>
+                    <Snackbar open={openSnackbar} autoHideDuration={6000} >
+                        <Alert onClose={() => setSnackBar(false)} severity="success">
+                            Successfully removed file!
                             </Alert>
-                        </Snackbar>
-                    </DialogContent>
-                    <Backdrop className={classes.backdrop} open={loading}>
-                        <CircularProgress color="inherit" />
-                    </Backdrop>
-                </Dialog>
-            </div>
+                    </Snackbar>
+                </DialogContent>
+                <Backdrop className={classes.backdrop} open={loading}>
+                    <CircularProgress color="inherit" />
+                </Backdrop>
+            </Dialog>
         </>
     );
 }
