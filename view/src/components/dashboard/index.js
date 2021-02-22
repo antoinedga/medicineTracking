@@ -22,10 +22,12 @@ import ReceiptIcon from '@material-ui/icons/Receipt';
 import HomeIcon from '@material-ui/icons/Home';
 import StorefrontIcon from '@material-ui/icons/Storefront';
 import { Link } from 'react-router-dom';
+import HomePage from './pages/MainPage'
 import Inventory from "./pages/inventory";
 import Orders from "./pages/orders";
 import Locations from './pages/locations'
 import Users from "./pages/users";
+import NoLocationAccess from './pages/noAccessPage'
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
@@ -94,16 +96,20 @@ const useStyles = makeStyles((theme) => ({
     },
     location: {
         paddingRight: '16px'
+    },
+    header: {
+        color: "white"
     }
 
 }));
 
+
 function Dashboard(props) {
+
     const classes = useStyles();
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
-    const [location, setLocation] = React.useState("");
-    const [anchorEl, setAnchorEl] = React.useState(null);
+    const [location, setLocation] = React.useState("None");
     let { path, url } = useRouteMatch();
 
     const handleDrawerOpen = () => {
@@ -114,16 +120,8 @@ function Dashboard(props) {
         setOpen(false);
     };
 
-    const handleMenu = (event) => {
-        setAnchorEl(event.currentTarget);
-    };
-
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
-
     const handleLocationChange = (event) => {
-
+        setLocation(event.target.value)
     }
 
     return (
@@ -149,8 +147,8 @@ function Dashboard(props) {
                             <MenuIcon />
                         </IconButton>
 
-                        <Typography variant="h6">
-                            Mini variant drawer
+                        <Typography className={classes.header} variant="h6">
+                            Medicine Tracking
                         </Typography>
                         <div className={classes.appName}>
                             USER
@@ -238,24 +236,21 @@ function Dashboard(props) {
                                 onChange={handleLocationChange}
                                 inputProps={{ 'aria-label': 'Without label' }}
                                 fullWidth={true}
+                                displayEmpty={true}
                             >
-                                <MenuItem value={10}>Ten</MenuItem>
+                                <MenuItem>
+                                    something
+                                </MenuItem>
+
                             </Select>
                         </Grid>
                     </Grid>
-                    <Route exact path={`${url}/inventory`}>
-                        <Inventory />
-                    </Route>
-                    <Route exact path={`${url}/orders`}>
-                        <Orders />
-                    </Route>
-                    <Route exact path={`${url}/locations`}>
-                        <Locations />
-                    </Route>
-                    <Route exact path={`${url}/users`}>
-                        <Users />
-                    </Route>
 
+                    <Route exact path={`${url}/`} render={() => (location == "None") ? <NoLocationAccess /> : <HomePage />} />
+                    <Route exact path={`${url}/inventory`} render={() => (location == "None") ? <NoLocationAccess /> : <Inventory />} />
+                    <Route exact path={`${url}/orders`} render={() => (location == "None") ? <NoLocationAccess /> : <Orders />} />
+                    <Route exact path={`${url}/locations`} render={() => (location == "None") ? <NoLocationAccess /> : <Locations />} />
+                    <Route exact path={`${url}/users`} render={() => (location == "None") ? <NoLocationAccess /> : <Users />} />
                 </main>
             </div>
         </>

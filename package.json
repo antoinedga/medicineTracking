@@ -12,6 +12,7 @@
   },
   "keywords": [],
   "author": "",
+  "proxy": "http://localhost:3000",
   "license": "ISC",
   "dependencies": {
     "accesscontrol": "^2.2.1",
