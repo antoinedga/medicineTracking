@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import MaterialTable from "material-table";
-
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 import AddBox from '@material-ui/icons/AddBox';
 import ArrowUpward from '@material-ui/icons/ArrowUpward';
 import Check from '@material-ui/icons/Check';
@@ -43,14 +43,33 @@ const tableIcons = {
     ViewColumn: ViewColumn
 };
 
+const useStyles = makeStyles((theme) => ({
+    buttonRow: {
+        marginBottom: 10,
+    },
+    root: {
+        "& .MuiPaper-root": {
+
+            boxShadow: "none !important",
+            border: "2px solid rgb(69,69,69) ",
+            borderBottom: "0px"
+        },
+        "& .MuiTableRow-root": {
+            borderBottom: "2px solid rgb(69,69,69) "
+        }
+    }
+}));
+
 export default function Inventory(props) {
 
 
     const [openDelete, setDeleteOpen] = useState(false);
     const [deleteData, setDeleteData] = useState({});
-
     const [detailData, setDetailData] = useState({});
     const [openDetail, setDetailOpen] = useState(false);
+
+    const classes = useStyles();
+    const theme = useTheme();
 
     const handleDetailOpen = (rowData) => {
         setDetailData(rowData);
@@ -77,50 +96,57 @@ export default function Inventory(props) {
                 direction="row"
                 alignItems="center"
                 justify="flex-start"
+                padding={2}
+                className={classes.buttonRow}
             >
-                <Grid container items padding={1}>
-                    <Grid items xs={4}>
+                <Grid container items>
+                    <Grid items xs={1}>
                         <AddInventory />
                     </Grid>
-                    <Grid items xs={4}>
+                    <Grid items xs={1}>
                         <ImportExcel />
                     </Grid>
                 </Grid>
             </Grid>
-            <MaterialTable
-                columns={[
-                    { title: 'Brand', field: 'brand' },
-                    { title: 'Drug', field: 'drug' },
-                    { title: 'Quantity', field: 'quantity', type: "numeric" }
-                ]}
-                data={
-                    [
-                        { brand: 'uwu', drug: 'uwu', quantity: 69 },
-                    ]
-                }
-                icons={tableIcons}
+            <div className={classes.root}>
+                <MaterialTable
+                    columns={[
+                        { title: 'Item', field: 'item', type: "string" },
+                        { title: 'Drug', field: 'drug' },
+                        { title: 'Quantity', field: 'quantity', type: "numeric" },
 
-                options={{
-                    exportButton: true
-                }}
+                    ]}
 
-                actions={[
-                    {
-                        icon: tableIcons.Edit,
-                        tooltip: 'View Detail ',
-                        onClick: (event, rowData) => {
-                            handleDetailOpen(rowData);
-                        }
-                    },
-                    {
-                        icon: tableIcons.Delete,
-                        tooltip: 'Delete Item',
-                        onClick: (event, rowData) => {
-                            handleDeleteOpen(rowData);
-                        }
+                    data={
+                        [
+                            { brand: 'uwu', drug: 'uwu', quantity: 69 },
+                        ]
                     }
-                ]}
-            />
+
+                    icons={tableIcons}
+
+                    options={{
+                        exportButton: true,
+                    }}
+
+                    actions={[
+                        {
+                            icon: tableIcons.Edit,
+                            tooltip: 'View Detail ',
+                            onClick: (event, rowData) => {
+                                handleDetailOpen(rowData);
+                            }
+                        },
+                        {
+                            icon: tableIcons.Delete,
+                            tooltip: 'Delete Item',
+                            onClick: (event, rowData) => {
+                                handleDeleteOpen(rowData);
+                            }
+                        }
+                    ]}
+                />
+            </div>
 
             <ViewDetail onClose={handleDetailClose} open={openDetail} data={detailData} />
 
