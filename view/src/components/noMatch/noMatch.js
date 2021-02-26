@@ -1,5 +1,5 @@
 import React from 'react';
-import {Grid} from '@material-ui/core'
+import { Grid } from '@material-ui/core'
 import './noMatch.css'
 import { useLocation, Link, useHistory } from 'react-router-dom'
 import Button from "@material-ui/core/Button";
@@ -17,7 +17,7 @@ export default function NoMatch() {
                 <p>Resource cannot be found!</p>
                 <p>Cannot find resource at: {location}</p>
                 <Grid item>
-                    <Button variant="contained" color="primary"   onClick={() => {
+                    <Button variant="contained" color="primary" onClick={() => {
                         history.goBack();
                     }}>
                         Return to Previous Page
@@ -25,5 +25,5 @@ export default function NoMatch() {
                 </Grid>
             </Grid>
         </Grid>
-        );
+    );
 }
