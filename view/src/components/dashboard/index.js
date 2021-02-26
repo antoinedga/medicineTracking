@@ -28,6 +28,7 @@ import Orders from "./pages/orders";
 import Locations from './pages/locations'
 import Users from "./pages/users";
 import NoLocationAccess from './pages/noAccessPage'
+import IdleTimer from "./pages/idle-timer";
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
@@ -126,6 +127,7 @@ function Dashboard(props) {
 
     return (
         <>
+            <IdleTimer />
             <div className={classes.root}>
                 <CssBaseline />
                 <AppBar
