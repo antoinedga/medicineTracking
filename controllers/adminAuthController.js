@@ -82,7 +82,7 @@ exports.post_invitation = (req, res) => {
 
   let add_invitation = new invitations({
       invitation_token: invitation_id,
-      resetPasswordExpires: Date.now() + 3600000
+      invitationExpires: Date.now() + 3600000
   })
 
   add_invitation.save((err, success) => {

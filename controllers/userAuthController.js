@@ -2,7 +2,7 @@ const User = require('../models/user')
 const Invitations = require('../models/invitations')
 const bcrypt = require("bcrypt")
 const jwt = require('jsonwebtoken')
-const SECRET_KEY = process.env.JWT_SECRETKEY
+const SECRET_KEY = process.env.JWT_SECRETKEY || 'dev'
 const async = require("async");
 const crypto = require("crypto");
 const nodemailer = require('nodemailer')
@@ -53,7 +53,7 @@ exports.post_registration = (req, res) => {
                 if(err){
                   return res.json({response: false, message: 'User already exists', Content: null})
                 }
-                Invitations.updateOne({ invitation_token : undefined, resetPasswordExpires : undefined }, function (err, result) {
+                Invitations.updateOne({ invitation_token : undefined, invitationExpires : undefined }, function (err, result) {
                   if(err){
                     return res.status(400), json({error: err})
                   }       
@@ -75,6 +75,7 @@ exports.get_login = (req, res) => {
 // Login User
 exports.post_login = (req, res) => {
     var email = req.body.email
+    console.log(req.body)
     User.findOne({ email }).exec((err, user) => {
         if(err){
             return res.status(400), json({response: false, message: 'Login Error.', Content: null})
@@ -84,9 +85,10 @@ exports.post_login = (req, res) => {
         }else{
             bcrypt.compare(req.body.password, user.password)
             .then(function(result) {
+              console.log(user.email == req.body.email && result)
                 if(user.email == req.body.email && result){
                     const token = jwt.sign({ user: user }, SECRET_KEY)
-                    res.json({response: true, message: 'Login Successful', Content: token})
+                    res.json({response: true, message: 'Login Successful', Content: jwt.sign({ user: user }, SECRET_KEY)})
                 }else{
                     res.json({response: false, message: 'Password is incorrect', Content: null})
                 }
