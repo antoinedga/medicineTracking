@@ -39,8 +39,8 @@ class AccessControl {
         }
     }
 
-    grant(role, location = '') {
-        this.role = role + ':' + location
+    grant(role, path = '') {
+        this.role = role + ':' + path
         if (this.grants[this.role] === undefined)
             this.grants[this.role] = {}
         
@@ -98,7 +98,7 @@ module.exports = AccessControl
 
 // t = {
 //     name: 'admin',
-//     location: '~/inv1/inv2',
+//     path: '~/inv1/inv2',
 //     resource: 'resource1',
 //     action: 'create:any',
 //     attributes: [ '*', '!_id' ]
