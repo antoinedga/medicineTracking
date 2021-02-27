@@ -2,7 +2,7 @@ var mongoose = require('mongoose')
 
 const Schema = mongoose.Schema
 
-exports.unitSchema = new Schema({
+const unitSchema = new Schema({
   name: {
     type: String,
     ref: 'product',
@@ -13,3 +13,4 @@ exports.unitSchema = new Schema({
 })
 
 exports.Unit = mongoose.model('unit', unitSchema)
+exports.UnitSchema = unitSchema

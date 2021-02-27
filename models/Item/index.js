@@ -1,18 +1,18 @@
 const mongoose = require('mongoose')
-const {productSchema} = require('./EachesDatabase').Product
+const {ProductSchema} = require('../EachesDatabase')
 
-// Product Schema
+// Item Schema
 const itemSchema = new mongoose.Schema({
+    path: {
+        type: String,
+        required: true,
+    },
     product: {
-        type: productSchema,
+        type: ProductSchema,
         required: true,
     },
     quantity: {
         type: Number,
-        required: true
-    },
-    location: {
-        type: String,
         required: true
     },
 })

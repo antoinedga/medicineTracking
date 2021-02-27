@@ -32,4 +32,4 @@ const userSchema = new mongoose.Schema({
     resetPasswordExpires: Date,
 }, {timestamps: true})
 
-module.exports = mongoose.model('User', userSchema)
+module.exports = mongoose.model('user', userSchema)

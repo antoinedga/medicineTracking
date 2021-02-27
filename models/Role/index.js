@@ -7,7 +7,7 @@ const RoleSchema = new Schema({
         type: String,
         required: true,
     },
-    location: {
+    path: {
         type: String,
         default: "",
     },
@@ -28,4 +28,4 @@ const RoleSchema = new Schema({
     }]
 })
 
-module.exports = mongoose.model('role', RoleSchema, 'roles')
+module.exports = mongoose.model('role', RoleSchema)
