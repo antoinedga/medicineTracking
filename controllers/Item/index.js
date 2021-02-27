@@ -41,22 +41,40 @@ exports.create = (req,res) => {
     })
 }
 
-exports.findAllInInventoriesByPath = (req,res) => {
+exports.findRecursivelyByPath = (req,res) => {
   Item
     .find({path: new RegExp('^'+req.body.path)})
     .exec(Callback('find items by path'))
 }
 
-exports.findAllInInventoryByPath = (req,res) => {
+exports.findByPath = (req,res) => {
   Item
     .findOne({path: new RegExp('^'+req.body.path+'$')})
     .exec(Callback('find items by path'))
 }
 
-exports.deleteManyByPath = (req,res) => {
+exports.findByID = (req,res) => {
+    Item
+      .findById(req.body._id)
+      .exec(Callback('find item by _id'))
+}
+
+exports.deleteRecursivelyByPath = (req,res) => {
   Item
     .deleteMany({path: new RegExp('^'+req.body.path)})
-    .exec(Callback('delete inventories by path'))
+    .exec(Callback('delete items by path'))
+}
+
+exports.deleteByPath = (req,res) => {
+    Item
+      .deleteMany({path: new RegExp('^'+req.body.path+'$')})
+      .exec(Callback('delete items by path'))
+}
+
+exports.deleteByID = (req,res) => {
+    Item
+      .deleteByID(req.body._id)
+      .exec(Callback('delete item by _id'))
 }
 
 exports.test = (req,res) => {
