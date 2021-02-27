@@ -102,7 +102,8 @@ exports.post_invitation = (req, res) => {
       subject: 'Invitation for Registration',
       text: 'This is an invitation to register yourself.\n\n' +
       'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
-      'http://' + req.headers.host + '/api/user/signup/' + invitation_id + '\n\n'
+      'http://' + req.headers.host + '/api/user/signup/' + invitation_id + '\n\n' +
+      'If you are registring on you phone, copy the link below and paste it on the registration page.\n' + invitation_id  
   };
 
   const transporter = nodemailer.createTransport({
