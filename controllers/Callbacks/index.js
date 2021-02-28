@@ -1,5 +1,5 @@
-exports.Callback = (action) => {
-    return (err,res) => {
+exports.Callback = (req,res,action) => {
+    return (err,doc) => {
       if (err)
         return res
             .status(400)
@@ -14,7 +14,7 @@ exports.Callback = (action) => {
           .json({
             response: true,
             message: `Successfully completed ${action}`, 
-            Content: res
+            Content: doc
           })
     }
 }

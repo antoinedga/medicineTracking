@@ -14,7 +14,7 @@ const {Callback} = require('../Callbacks')
 
 exports.getAll = (req, res) => {
     if (process.env.NODE_ENV === config.dev) {
-      Item.find({}, Callback('get all Items'))
+      Item.find({}, Callback(req, res, 'get all Items'))
     } else {
       return res.status(401).json({ message: 'Unauthorized user!' })
     }
@@ -37,44 +37,44 @@ exports.create = (req,res) => {
           })
       else
         newItem
-          .save(Callback('create item'))
+          .save(Callback(req, res, 'create item'))
     })
 }
 
 exports.findRecursivelyByPath = (req,res) => {
   Item
     .find({path: new RegExp('^'+req.body.path)})
-    .exec(Callback('find items by path'))
+    .exec(Callback(req, res, 'find items by path'))
 }
 
 exports.findByPath = (req,res) => {
   Item
     .findOne({path: new RegExp('^'+req.body.path+'$')})
-    .exec(Callback('find items by path'))
+    .exec(Callback(req, res, 'find items by path'))
 }
 
 exports.findByID = (req,res) => {
     Item
       .findById(req.body._id)
-      .exec(Callback('find item by _id'))
+      .exec(Callback(req, res, 'find item by _id'))
 }
 
 exports.deleteRecursivelyByPath = (req,res) => {
   Item
     .deleteMany({path: new RegExp('^'+req.body.path)})
-    .exec(Callback('delete items by path'))
+    .exec(Callback(req, res, 'delete items by path'))
 }
 
 exports.deleteByPath = (req,res) => {
     Item
       .deleteMany({path: new RegExp('^'+req.body.path+'$')})
-      .exec(Callback('delete items by path'))
+      .exec(Callback(req, res, 'delete items by path'))
 }
 
 exports.deleteByID = (req,res) => {
     Item
       .deleteByID(req.body._id)
-      .exec(Callback('delete item by _id'))
+      .exec(Callback(req, res, 'delete item by _id'))
 }
 
 exports.test = (req,res) => {

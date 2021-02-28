@@ -13,7 +13,7 @@ const {Callback} = require('../Callbacks')
 
 exports.getAll = (req, res) => {
     if (process.env.NODE_ENV === config.dev) {
-      Inventory.find({}, Callback('get all inventories'))
+      Inventory.find({}, Callback(req, res,'get all inventories'))
     } else {
       return res.status(401).json({ message: 'Unauthorized user!' })
     }
@@ -43,44 +43,44 @@ exports.create = (req,res) => {
           })
       else
         newInventory
-          .save(Callback('create inventory'))
+          .save(Callback(req, res, 'create inventory'))
     })
 }
 
 exports.findRecursivelyByPath = (req,res) => {
   Inventory
     .find({path: new RegExp('^'+req.body.path)})
-    .exec(Callback('find inventories by path'))
+    .exec(Callback(req, res, 'find inventories by path'))
 }
 
 exports.findByPath = (req,res) => {
   Inventory
     .findOne({path: new RegExp('^'+req.body.path+'$')})
-    .exec(Callback('find inventory by path'))
+    .exec(Callback(req, res, 'find inventory by path'))
 }
 
 exports.findByID = (req,res) => {
   Inventory
     .findById(req.body._id)
-    .exec(Callback('find inventory by _id'))
+    .exec(Callback(req, res, 'find inventory by _id'))
 }
 
 exports.deleteRecursivelyByPath = (req,res) => {
   Inventory
     .deleteMany({path: new RegExp('^'+req.body.path)})
-    .exec(Callback('delete inventories by path'))
+    .exec(Callback(req, res, 'delete inventories by path'))
 }
 
 exports.deleteByPath = (req,res) => {
   Inventory
     .deleteMany({path: new RegExp('^'+req.body.path+'$')})
-    .exec(Callback('delete inventory by path'))
+    .exec(Callback(req, res, 'delete inventory by path'))
 }
 
 exports.deleteByID = (req,res) => {
   Inventory
     .deleteByID(req.body._id)
-    .exec(Callback('delete inventory by _id'))
+    .exec(Callback(req, res, 'delete inventory by _id'))
 }
 
 exports.test = (req,res) => {
