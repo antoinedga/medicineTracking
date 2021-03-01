@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "client-install": "npm install --prefix view",
-    "start": "node server.js",
-    "server": "nodemon server.js",
+    "start": "node index.js",
+    "server": "nodemon index.js",
     "client": "npm start --prefix view",
     "dev": "concurrently \"npm run server\" \"npm start --prefix view\""
   },
