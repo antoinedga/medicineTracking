@@ -1,20 +1,26 @@
-const config = require('../../config');
-const {Item, Inventory} = require('../../models');
+const config=require('../../config');
+const {Order, Inventory} = require('../../models');
 const {callback} = require('../Callbacks');
 
 
 /**
- * item:
+ * order:
  * {
  *    path: /<inv1>/<inv2>
- *    product:
- *    quantity:
+ *    orderNumber:
+ *    orderDate:
+ *    user:
+ *    items: [{
+ *          product:
+ *          quantity:
+ *          desired:
+ *      }]
  * }
  */
 
 exports.getAll = (req, res) => {
   if (process.env.NODE_ENV === config.dev) {
-    Item.find({}, callback(req, res, 'get all Items'));
+    Order.find({}, callback(req, res, 'get all Orders'));
   } else {
     return res.status(401).json({message: 'Unauthorized user!'});
   }
@@ -22,10 +28,10 @@ exports.getAll = (req, res) => {
 
 
 exports.create = (req, res) => {
-  const newItem = new Item(req.body);
+  const newOrder = new Order(req.body);
 
   Inventory
-      .findOne({path: newItem.path})
+      .findOne({path: newOrder.path})
       .exec((err, inv) => {
         if (err) {
           return res
@@ -34,50 +40,49 @@ exports.create = (req, res) => {
                 response: false,
                 message: `Error while checking if inventory exists`,
                 Content: err,
-              })
-          ;
+              });
         } else {
-          newItem
-              .save(callback(req, res, 'create item'))
+          newOrder
+              .save(callback(req, res, 'create order'))
           ;
         };
       });
 };
 
 exports.findRecursivelyByPath = (req, res) => {
-  Item
+  Order
       .find({path: new RegExp('^'+req.body.path)})
-      .exec(callback(req, res, 'find items by path'));
+      .exec(callback(req, res, 'find orders by path'));
 };
 
 exports.findByPath = (req, res) => {
-  Item
+  Order
       .findOne({path: new RegExp('^'+req.body.path+'$')})
-      .exec(callback(req, res, 'find items by path'));
+      .exec(callback(req, res, 'find orders by path'));
 };
 
 exports.findByID = (req, res) => {
-  Item
+  Order
       .findById(req.body._id)
-      .exec(callback(req, res, 'find item by _id'));
+      .exec(callback(req, res, 'find order by _id'));
 };
 
 exports.deleteRecursivelyByPath = (req, res) => {
-  Item
+  Order
       .deleteMany({path: new RegExp('^'+req.body.path)})
-      .exec(callback(req, res, 'delete items by path'));
+      .exec(callback(req, res, 'delete orders by path'));
 };
 
 exports.deleteByPath = (req, res) => {
-  Item
+  Order
       .deleteMany({path: new RegExp('^'+req.body.path+'$')})
-      .exec(callback(req, res, 'delete items by path'));
+      .exec(callback(req, res, 'delete orders by path'));
 };
 
 exports.deleteByID = (req, res) => {
-  Item
+  Order
       .deleteByID(req.body._id)
-      .exec(callback(req, res, 'delete item by _id'));
+      .exec(callback(req, res, 'delete order by _id'));
 };
 
 exports.test = (req, res) => {

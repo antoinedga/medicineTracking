@@ -1,13 +1,13 @@
-role            | path      | resource      | action        | possession
---------------- | ------------- | ------------- | ------------- | -------------
-admin           |               | invitation    | read          | all
-                |               |               | create        | all
-                |               |               | update        | all
-                |               |               | delate        | all
-                |               | Products      | read          | all
-                |               |               | create        | all
-                |               |               | update        | all
-                |               |               | delate        | all
+| role            | path      | resource      | action        | possession
+| --------------- | ------------- | ------------- | ------------- | -------------
+| admin           |               | invitation    | read          | all
+|                 |               |               | create        | all
+|                 |               |               | update        | all
+|                 |               |               | delate        | all
+|                 |               | Products      | read          | all
+|                 |               |               | create        | all
+|                 |               |               | update        | all
+|                 |               |               | delate        | all
 
 {
     role: {

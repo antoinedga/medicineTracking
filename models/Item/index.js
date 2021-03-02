@@ -1,20 +1,21 @@
-const mongoose = require('mongoose')
-const {ProductSchema} = require('../EachesDatabase')
+const mongoose = require('mongoose');
+const {ProductSchema} = require('../EachesDatabase');
 
 // Item Schema
 const itemSchema = new mongoose.Schema({
-    path: {
-        type: String,
-        required: true,
-    },
-    product: {
-        type: ProductSchema,
-        required: true,
-    },
-    quantity: {
-        type: Number,
-        required: true
-    },
-})
+  path: {
+    type: String,
+    required: true,
+  },
+  product: {
+    type: ProductSchema,
+    required: true,
+  },
+  quantity: {
+    type: Number,
+    required: true,
+  },
+});
 
-module.exports = mongoose.model('item', itemSchema)
+itemSchema.index( {path: 1} );
+module.exports = mongoose.model('item', itemSchema);
