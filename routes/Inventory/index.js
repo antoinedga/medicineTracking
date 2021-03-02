@@ -1,7 +1,6 @@
 var router = require('express').Router()
 var inventory = require('../../controllers/Inventory')
 
-
 module.exports = () => {
 router.get('/test',inventory.test)
 

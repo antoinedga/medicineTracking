@@ -1,6 +1,6 @@
-const User = require('../models/user');
+const User = require('../../models/user');
 const { v1: uuidv1 } = require('uuid');
-const Order = require('../models/order')
+const Order = require('../../models/order')
 const jwt = require('jsonwebtoken')
 const SECRET_KEY = process.env.JWT_SECRETKEY
 

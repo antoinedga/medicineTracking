@@ -1,6 +1,6 @@
-const Admin = require('../models/admin')
-const invitations = require('../models/invitations')
-const User = require('../models/user')
+const Admin = require('../../models/admin')
+const invitations = require('../../models/invitations')
+const User = require('../../models/user')
 const bcrypt = require("bcrypt")
 const jwt = require('jsonwebtoken')
 const { v1: uuidv1 } = require('uuid');

@@ -1,6 +1,6 @@
 var router = require('express').Router()
-var userRoute = require('./userAuth')
-var adminRoute = require('./adminAuth')
+var userRoute = require('./Authorization')
+var adminRoute = require('./Authorization/admin')
 var inventoryRoute = require('./Inventory')
 
 

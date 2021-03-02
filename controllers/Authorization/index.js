@@ -1,127 +1,219 @@
-const Admin = require('../models/admin')
-const invitations = require('../models/invitations')
-const User = require('../models/user')
+const User = require('../../models/user')
+const Invitations = require('../../models/invitations')
 const bcrypt = require("bcrypt")
 const jwt = require('jsonwebtoken')
-const { v1: uuidv1 } = require('uuid');
+const SECRET_KEY = process.env.JWT_SECRETKEY || 'dev'
+const async = require("async");
+const crypto = require("crypto");
 const nodemailer = require('nodemailer')
-const SECRET_KEY = process.env.JWT_SECRETKEY
+const saltRounds = 10
 
-// Show Admin Registration Page
-exports.get_admin_registration = (req, res) => {
+// Show Register Form
+exports.get_registration = (req, res) => {
     //res.render("register"); 
-    return res.json({response: true, message: 'Admin Registration Page', Content: null})
-};
+    return res.json({response: true, message: 'Register Page', Content: null})
+ };
 
-// Register Admin and encryption of password
-exports.post_admin_registration = (req, res) => {
-    const {email, password} = req.body;
-    Admin.findOne({ email }).exec((err, admin) => {
-        if(admin) {
-            return res.json({response: false, message: 'Admin with email already exists', Content: null})
-        }
-        const saltRounds = 10
+ // create test user 
+ function test() {
+    bcrypt.hash('123qwe', saltRounds, function(err, hash) {
+      let register_user = new User({
+          name: 'test',
+          email: 'test',
+          password: hash
+      });
+      register_user.save()
+  });
+ }
+
+// Register user and encryption of password
+exports.post_registration = (req, res) => {
+  const { email, password} = req.body;
+  Invitations.findOne({ invitation_token: req.params.token, resetPasswordExpires: { $gt: Date.now() } }, function(err, user) {
+    if(!user){
+      console.log('Error: Password reset token is invalid or has expired.')
+      // req.flash('error', 'Password reset token is invalid or has expired.');
+      return res.json({response: false, message: 'Password reset token is invalid or has expired', Content: null})
+      // res.redirect('back');
+    }
+    User.findOne({ email }).exec((err, user) => {
+      if(err){
+        console.log('User already exists', err)
+        return res.json({response: false, message: 'User already exists', Content: null})
+      }
+      else{
         bcrypt.hash(password, saltRounds, function(err, hash) {
-            let register_admin = new Admin({
+            let register_user = new User({
                 name: req.body.name,
                 email: req.body.email,
                 password: hash
             });
-            console.log(register_admin)
-            register_admin.save((err, success) => {
+            //console.log(register_user)
+            register_user.save((err, success) => {
                 if(err){
-                    console.log('Error in signup: ', err)
-                    return res.json({response: false, message: 'An error occured', Content: null})
+                  return res.json({response: false, message: 'User already exists', Content: null})
                 }
+                Invitations.updateOne({ invitation_token : undefined, invitationExpires : undefined }, function (err, result) {
+                  if(err){
+                    return res.status(400), json({error: err})
+                  }       
+                }); 
                 return res.json({response: true, message: 'Registration Successful', Content: null})
             })
-        })
+        });
+      }
     });
+  });
 }
 
-// Show Admin Registration Page
-exports.get_admin_login = (req, res) => {
+// Show Login Form
+exports.get_login = (req, res) => {
     //res.render("register"); 
-    return res.json({response: true, message: 'Admin Login Page', Content: null})
-};
+    res.json({response: true, message: 'Login Page.', Content: null})
+ };
 
-// Admin User
-exports.post_admin_Login = (req, res) => {
+// Login User
+exports.post_login = (req, res) => {
     var email = req.body.email
-    Admin.findOne({ email }).exec((err, user) => {
+    console.log(req.body)
+    User.findOne({ email }).exec((err, user) => {
         if(err){
-            console.log('Login err: ', err)
-            return res.json({response: false, message: 'An error occured', Content: null})
+            return res.status(400), json({response: false, message: 'Login Error.', Content: null})
         }
         if(user == null){
-            res.status(400).json({error: 'Admin user does not exist.'})
+            res.status(400).json({response: false, message: 'User with this email does not exist', Content: null})
         }else{
             bcrypt.compare(req.body.password, user.password)
             .then(function(result) {
+              console.log(user.email == req.body.email && result)
                 if(user.email == req.body.email && result){
-                    const token = jwt.sign({_id: user._id}, SECRET_KEY)
-                    return res.json({response: true, message: 'Admin Login Successful', Content: token})
+                    const token = jwt.sign({ user: user }, SECRET_KEY)
+                    res.json({response: true, message: 'Login Successful', Content: jwt.sign({ user: user }, SECRET_KEY)})
                 }else{
-                    return res.json({response: false, message: 'Invalid password.', Content: null})
+                    res.json({response: false, message: 'Password is incorrect', Content: null})
                 }
             }).catch(err => {
-                return res.json({response: false, message: 'Invalid password.', Content: null})
+                res.json({response: false, message: 'Password is incorrect', Content: null})
             });
         }
     });
 }
 
-// Show Invitation Page
-exports.get_invitation = (req, res) => {
-    //res.render('forgot');
-    return res.json({response: true, message: 'Invitation Page', Content: null})
+// Show Forget Password page
+exports.get_forget = (req, res) => {
+  //res.render('forgot');
+  return res.json({response: true, message: 'Forget Password Page', Content: null})
 };
 
-exports.post_invitation = (req, res) => {
-  const invitation_id = uuidv1();
+// Forget Password page
+exports.post_forget = (req, res, next) => {
+  async.waterfall([
+    function(done) {
+      crypto.randomBytes(20, function(err, buf) {
+        const token = buf.toString('hex');
+        done(err, token);
+      });
+    },
+    function(token, done) {
+      User.findOne({ email: req.body.email }, function(err, user) {
+        if (!user) {
+            console.log('Error: No account with that email address exists.')
+          //req.flash('error', 'No account with that email address exists.');
+          return res.json({response: false, message: 'User does not exists', Content: null})
+          // res.redirect('/forgot');
+        }
 
-  let add_invitation = new invitations({
-      invitation_token: invitation_id,
-      resetPasswordExpires: Date.now() + 3600000
-  })
+        user.resetPasswordToken = token;
+        user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
 
-  add_invitation.save((err, success) => {
-      if(err){
-          console.log(err)
-          return
-      }
-  })
-
-  response = {
-      email: req.body.email,
-  }
-
-  const mailOptions = {
-      from: 'medicine.tracking@outlook.com',
-      to: req.body.email,
-      subject: 'Invitation for Registration',
-      text: 'This is an invitation to register yourself.\n\n' +
-      'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
-      'http://' + req.headers.host + '/api/user/signup/' + invitation_id + '\n\n' +
-      'If you are registring on you phone, copy the link below and paste it on the registration page.\n' + invitation_id  
-  };
-
-  const transporter = nodemailer.createTransport({
-      service: 'hotmail',
-      auth: {
+        user.save(function(err) {
+          done(err, token, user);
+        });
+      });
+    },
+    function(token, user, done) {
+        const transporter = nodemailer.createTransport({
+        service: 'hotmail', 
+        auth: { 
           user: 'medicine.tracking@outlook.com',
           pass: 'Medicine123$%^'
-      }
+        }
+      });
+      const mailOptions = {
+        to: req.body.email,
+        from: 'medicine.tracking@outlook.com',
+        subject: 'Password Reset',
+        text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
+          'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
+          'http://' + req.headers.host + '/reset/' + token + '\n\n' +
+          'If you are registring on you phone, copy the link below and paste it on the registration page.\n' + token  +
+          'If you did not request this, please ignore this email and your password will remain unchanged.\n'
+      };
+      transporter.sendMail(mailOptions, function(err) {
+        console.log('mail sent');
+        return res.json({response: true, message: 'Mail sent', Content: null})
+        // req.flash('success', 'An e-mail has been sent to ' + user.email + ' with further instructions.');
+        // done(err, 'done');
+      });
+    }
+  ], function(err) {
+    if (err) return next(err);
+    // res.redirect('/forgot');
+    return res.json({response: false, message: 'An error occured', Content: null})
   });
-
-  transporter.sendMail(mailOptions, (err, res) => {
-      if (err) {
-        return res.json({response: false, message: 'An error occured', Content: null})
-      } else {
-          console.log('Invitation has been sent to email Successfully!')
-          return res.json({response: true, message: 'An email has been send with an invitation code', Content: null})
-      }
-  })
 };
 
+// Show Reset Page after user clicks in his email
+exports.get_reset = (req, res) =>{
+  User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } }, function(err, user) {
+    if (!user) {
+        console.log('Error: Password reset token is invalid or has expired.')
+      // req.flash('error', 'Password reset token is invalid or has expired.');
+      return res.json({response: false, message: 'Password reset token is invalid or has expired', Content: null})
+      // res.redirect('/forgot');
+    }
+    return res.json({response: true, message: 'Password Reset Page', Content: null})
+    // res.render('api_user/reset/', {token: req.params.token});
+  });
+};
 
+// Reset Page
+exports.post_reset = (req, res) => {
+  async.waterfall([
+    function(done) {
+      User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } }, function(err, user) {
+        if (!user) {
+            res.json('Error: Password reset token is invalid or has expired.')
+            // req.flash('error', 'Password reset token is invalid or has expired.');
+            return res.json({response: false, message: 'Password reset token is invalid or has expired', Content: null})
+          // res.redirect('back');
+        }
+        if(req.body.new_password === req.body.confirm_password) {
+          bcrypt.hash( req.body.new_password, saltRounds, function(err, hash) {
+            if(err){
+              return console.log(err)
+            }
+            // Store hash in your password DB.
+            req.body.new_password = hash
+            user.updateOne({ password : req.body.new_password, resetPasswordExpires : undefined, resetPasswordToken : undefined }, function (err, result) {
+              if(err){
+                      console.log('Err: ', err)
+                      return res.json({response: false, message: 'An error occured', Content: null})
+              }else{
+                console.log('Password Updated!');
+                return res.json({response: true, message: 'Password updated', Content: null})
+              }         
+            }); 
+          });
+        }else {
+          console.log('Error: Passwords do not match')
+          // req.flash("error", "Passwords do not match.");
+          return res.json({response: false, message: 'Passwords do not match', Content: null})
+          // res.redirect('back');
+        }
+      });
+    },
+  ], function(err) {
+    return res.json({response: true, message: 'An error occured', Content: null})
+  });
+};
