@@ -1,17 +1,19 @@
-var router = require('express').Router()
-var userRoute = require('./Authorization')
-var adminRoute = require('./Authorization/admin')
-var inventoryRoute = require('./Inventory')
+// eslint-disable-next-line new-cap
+const router = require('express').Router();
+const userRoute = require('./Authorization');
+const adminRoute = require('./Authorization/admin');
+const inventoryRoute = require('./Inventory');
 
 
 module.exports = () => {
-    router.use('/inventory', inventoryRoute())
-    router.use('/user', userRoute)
-    router.use('/admin', adminRoute)
+  router.use('/inventory', inventoryRoute());
+  router.use('/user', userRoute);
+  router.use('/admin', adminRoute);
 
-    router.get('*', (req, res) => {
-        
-      })
+  router.get('*', (req, res) => {
 
-  return router
-}
+  });
+
+  return router;
+};
+

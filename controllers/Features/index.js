@@ -1,7 +1,7 @@
 const {v1: uuidv1} = require('uuid');
-const Order = require('../models/order');
+const Order = require('../../models/order');
 const jwt = require('jsonwebtoken');
-const SECRET_KEY = process.env.JWT_SECRETKEY;
+const SECRET_KEY = require('../../config').secrets.jwt;
 
 exports.get_placeOrder = (req, res) => {
   jwt.verify(req.token, SECRET_KEY, (err, authData) => {

@@ -1,10 +1,10 @@
-const Admin = require('../models/admin');
-const Invitations = require('../models/invitations');
+const Admin = require('../../models/admin');
+const Invitations = require('../../models/invitations');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const {v1: uuidv1} = require('uuid');
 const nodemailer = require('nodemailer');
-const SECRET_KEY = process.env.JWT_SECRETKEY;
+const SECRET_KEY = require('../../config').secrets.jwt;
 
 // Show Admin Registration Page
 exports.get_admin_registration = (req, res) => {
