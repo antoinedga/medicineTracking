@@ -1,6 +1,6 @@
 
 const config = require('../../../config');
-const {User} = require('../../../models');
+const {User, Inventory} = require('../../../models');
 const {action} = require('../enum/actions');
 const {resource} = require('../enum/resources');
 const jwt = require('jsonwebtoken');
@@ -92,12 +92,68 @@ function can(_query, action, resource, path) {
  * @param {*} _query
  * @param {*} action
  * @param {*} resource
+ * @param {Boolean} regex default `false`
  * @return {Array} paths
  */
-function getPaths(_query, action, resource) {
+function getPaths(_query, action, resource, regex=false) {
   if (!_query[resource] || !_query[resource][action]) return [];
 
-  return Object.keys(_query[resource][action]);
+  const paths = Object.keys(_query[resource][action]);
+  if (regex) {
+    return paths.map((path) => {
+      return new RegExp('^'+path);
+    });
+  }
+  return paths;
+}
+
+/**
+ * creates a path object containing all paths where the access query can preform
+ * the given action on the given resource
+ * @param {*} _query
+ * @param {*} action
+ * @param {*} resource
+ */
+async function getPathsObject(_query, action, resource) {
+  const paths = getPaths(_query, action, resource, true);
+  console.log(paths, 'paths');
+  const pathObject = Inventory
+      .aggregate(
+          {
+            $match: {
+              path: {
+                $in: paths,
+              },
+            },
+          },
+      )
+      .exec((err, invs) => {
+        if (err) {
+          console.log(err);
+          return null;
+        }
+
+        console.log(invs, 'invs');
+        const paths = invs.map((inv) => {
+          return inv.path;
+        });
+        const result = {};
+
+        paths.forEach((path) => {
+          let tmp = result;
+          path = path.split('/');
+
+          path.forEach((name) => {
+            if (tmp[name] === undefined) {
+              tmp = tmp[name] = {};
+            } else {
+              tmp = tmp[name];
+            };
+          });
+        });
+        return result;
+      });
+  return pathObject;
 }
 
 /**
@@ -124,6 +180,7 @@ function combine(roles) {
       }
     });
   });
+  console.log(_query);
   return _query;
 }
 
@@ -174,20 +231,20 @@ function requireAccess(action, resource) {
  */
 function createAdminRole() {
   const _role = {
-    role: 'admin:',
-    path: '',
+    role: 'admin:^',
+    path: '^',
     permissions: [],
   };
 
   Object.values(resource).forEach((r) => {
     Object.values(action).forEach((a) => {
       _role.permissions.push({
-        resource: r + ':',
+        resource: r + ':^',
         action: a + ':any',
       });
     });
   });
-
+  console.log(_role);
   return _role;
 }
 /**
@@ -223,6 +280,7 @@ module.exports = {
   combine,
   can,
   getPaths,
+  getPathsObject,
   toArray,
   flattenDBRoles,
   grantsToRolls,

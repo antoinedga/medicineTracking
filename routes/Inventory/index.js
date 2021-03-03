@@ -16,8 +16,14 @@ module.exports = () => {
           inventory.create,
       );
 
+  router.route('/paths')
+      .post(
+          requireLogin,
+          inventory.getPaths,
+      );
+
   router.route('/by_id')
-      .get(
+      .post(
           requireLogin,
           requireAccess(action.READ, resource.INVENTORY),
           inventory.findByID,
@@ -29,7 +35,7 @@ module.exports = () => {
       );
 
   router.route('/by_path')
-      .get(
+      .post(
           requireLogin,
           requireAccess(action.READ, resource.INVENTORY),
           inventory.findByPath,
@@ -41,7 +47,7 @@ module.exports = () => {
       );
 
   router.route('/by_path/recursive')
-      .get(
+      .post(
           requireLogin,
           requireAccess(action.READ, resource.INVENTORY),
           inventory.findRecursivelyByPath,

@@ -6,7 +6,7 @@ const config = {
   port: process.env.PORT || 8080,
   saltRounds: 10,
   exp: {
-    jwt: process.env.JWT_EXP || '5m',
+    jwt: process.env.JWT_EXP || '30m',
   },
   secrets: {
     jwt: process.env.JWT || 'greenbanana',
