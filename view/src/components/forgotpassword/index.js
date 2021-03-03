@@ -6,6 +6,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
+import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
@@ -15,7 +16,8 @@ import { FormHelperText } from '@material-ui/core';
 import { useForm } from "react-hook-form";
 import { Input } from "@material-ui/core";
 import Brand from '../../resources/logo_1.png'
-import { Redirect, Link } from 'react-router-dom'
+
+import { Redirect } from 'react-router-dom'
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -59,8 +61,7 @@ export default function SignIn() {
                 <div className={classes.paper}>
                     <img className={classes.image} src={Brand} />
                     <Typography component="h1" variant="h5">
-                        Sign in
-                </Typography>
+                        Password Rest                </Typography>
                     <form className={classes.form} onSubmit={handleSubmit(onSubmit)} noValidate>
 
                         <TextField
@@ -82,33 +83,10 @@ export default function SignIn() {
                             })}
                         />
 
-                        <FormHelperText error={errors.email != undefined}>
-                            {errors?.email?.message}
-                        </FormHelperText>
-                        <TextField
-                            variant="outlined"
-                            margin="normal"
-                            required
-                            fullWidth
-                            name="password"
-                            label="Password"
-                            type="password"
-                            id="password"
-                            autoComplete="current-password"
-                            inputRef={register({
-                                required: "Password Field cannot be empty"
-                            })}
-                        />
                         <FormHelperText error={errors.password != undefined}>
                             {errors?.password?.message}
                         </FormHelperText>
 
-
-
-                        <FormControlLabel
-                            control={<Checkbox value="remember" color="primary" />}
-                            label="Remember me"
-                        />
                         <Button
                             type="submit"
                             fullWidth
@@ -121,12 +99,12 @@ export default function SignIn() {
                     </Button>
                         <Grid container>
                             <Grid item xs>
-                                <Link to="/password_reset">
+                                <Link href="#" variant="body2">
                                     Forgot password?
                             </Link>
                             </Grid>
                             <Grid item>
-                                <Link to="/register">
+                                <Link href="/register" variant="body2">
                                     {"Don't have an account? Sign Up"}
                                 </Link>
                             </Grid>

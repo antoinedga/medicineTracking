@@ -29,6 +29,7 @@ import Locations from './pages/locations'
 import Users from "./pages/users";
 import NoLocationAccess from './pages/noAccessPage'
 import IdleTimer from "./pages/idle-timer";
+import UserMenu from "./components/userMenu"
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
@@ -153,7 +154,7 @@ function Dashboard(props) {
                             Medicine Tracking
                         </Typography>
                         <div className={classes.appName}>
-                            USER
+                            <UserMenu />
                         </div>
                     </Toolbar>
                 </AppBar>
@@ -240,7 +241,7 @@ function Dashboard(props) {
                                 fullWidth={true}
                                 displayEmpty={true}
                             >
-                                <MenuItem>
+                                <MenuItem selected>
                                     something
                                 </MenuItem>
 

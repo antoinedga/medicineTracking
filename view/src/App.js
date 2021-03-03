@@ -5,6 +5,7 @@ import Login from "./components/login"
 import NoMatch from "./components/noMatch/noMatch";
 import Register from "./components/register"
 import Dashboard from "./components/dashboard"
+import Password from './components/forgotpassword'
 import "bootstrap/dist/css/bootstrap.min.css";
 import "shards-ui/dist/css/shards.min.css"
 
@@ -22,6 +23,10 @@ function App() {
 
                 <Route exact path="/register">
                     <Register />
+                </Route>
+
+                <Route exact path="/password_reset">
+                    <Password />
                 </Route>
 
                 <Route path="/dashboard">
