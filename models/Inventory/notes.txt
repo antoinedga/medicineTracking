@@ -5,15 +5,15 @@ item lookup
 
     attached info
         status
-        location
+        path
         description
         eaches
-    find item in location
+    find item in path
 package lookup
     find by id
         items
         status
-        location
+        path
 
 name
 permissions
@@ -22,4 +22,4 @@ list of products
 
 Product:
     name: string
-    location: <mlc>/<base>/<inv1>/<in2v>...
+    path: <mlc>,<base>,<inv1>,<in2v>...

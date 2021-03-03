@@ -1,13 +1,13 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 
-// User Schema
+// Invitation Schema
 const invitationSchema = new mongoose.Schema({
-    invitation_token: {
-        type: String,
-        trim: true,
-        required: true,
-    },
-    resetPasswordExpires: Date,
-})
+  invitation_token: {
+    type: String,
+    trim: true,
+    required: true,
+  },
+  invitationExpires: Date,
+});
 
-module.exports = mongoose.model('InvitationCode', invitationSchema)
+module.exports = mongoose.model('invitation_code', invitationSchema);

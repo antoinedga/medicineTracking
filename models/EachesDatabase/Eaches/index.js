@@ -2,22 +2,23 @@ var mongoose = require('mongoose')
 
 const Schema = mongoose.Schema
 
-exports.eachesSchema = new Schema({
-  product_id: {
+const eachesSchema = new Schema({
+  product_definition_id: {
     type: Schema.Types.ObjectId,
-    ref: 'product',
+    ref: 'product_definition',
   },
   eaches: {
     type: [{
         quantity: {
             type: Number,
-            required: true
+            required: true,
         },
         unit: {
             type: String,
-            required: true
+            required: true,
         }
     }],
+    required: true,
   },
   score: {
     type: Number,
@@ -26,3 +27,4 @@ exports.eachesSchema = new Schema({
 })
 
 exports.Eaches = mongoose.model('eaches', eachesSchema)
+exports.EachesSchema = eachesSchema

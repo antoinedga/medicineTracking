@@ -1,46 +1,44 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
+const {ProductSchema} = require('./EachesDatabase');
+
+const Schema = mongoose.Schema;
 
 // Order Schema
 const orderSchema = new mongoose.Schema({
-    orderNumber: {
-        type: String,
-        required: true
-    },
-    orderDate: {
-        type: Date,
-        default: Date.now()
-    },
-    products: [
-        {
-            product_name: {
-                type: String,
-                required: true,
-                trim: true
-            },
-            manufacturer_name: {
-                type: String,
-                required: true,
-                trim: true
-            },
-            quantity: {
-                type: Number,
-                required: true
-            },
-            total_quantity: {
-                type: Number,
-                required: true
-            },
-        }
-    ],
-    user_name: { 
-        type: mongoose.Schema.Types.String, 
-        ref: 'User',
-    },
-    user_id: { 
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: 'User',
-        required: true
-    },
-}, {timestamps: true})
+  path: {
+    type: String,
+    required: true,
+  },
+  orderNumber: {
+    type: String,
+    required: true,
+  },
+  orderDate: {
+    type: Date,
+    default: Date.now(),
+  },
+  items: {
+    type: [{
+      product: {
+        type: ProductSchema,
+        required: true,
+      },
+      quantity: {
+        type: Number,
+        required: true,
+      },
+      desired: {
+        type: ProductSchema,
+      },
+    }],
+    required: true,
+  },
+  user: {
+    type: Schema.Types.ObjectId,
+    ref: 'user',
+  },
+}, {timestamps: true});
 
-module.exports = mongoose.model('order', orderSchema )
+orderSchema.index( {path: 1} );
+
+module.exports = mongoose.model('order', orderSchema );

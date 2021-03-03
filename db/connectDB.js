@@ -1,10 +1,10 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 
-//connect to database
+// connect to database
 mongoose.connect(process.env.DATABASE, {
-    useNewUrlParser: true,
-    useFindAndModify: true,
-    useUnifiedTopology: true,
-    useCreateIndex: true
+  useNewUrlParser: true,
+  useFindAndModify: true,
+  useUnifiedTopology: true,
+  useCreateIndex: true,
 }).then(() => console.log('Database Connected'))
-.catch(err => console.log('Database Connection Error: ', err))
+    .catch((err) => console.log('Database Connection Error: ', err));

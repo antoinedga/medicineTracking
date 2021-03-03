@@ -1,29 +1,34 @@
 var mongoose = require('mongoose')
 
-var { eachesSchema } = require('../Eaches')
-
 const Schema = mongoose.Schema
 
-exports.productSchema = new Schema({
-    product_id: {
-        type: Schema.Types.ObjectId,
-        ref: 'product',
-    },
+const productSchema = new Schema({
     identifiers: {
         type: [{
             key: {
                 type: String,
-                required: true
+                required: true,
             },
             value: {
                 type: String,
-                required: true
+                required: true,
             }
         }],
+        required: true,
+    },
+    product: {
+        type: Schema.Types.ObjectId,
+        ref: 'product',
     },
     eaches: {
-        type: eachesSchema,
-        }
+        type: Schema.Types.ObjectId,
+        ref: 'eaches',
+    },
+    additional_info: {
+        type: Schema.Types.ObjectId,
+        ref: 'additional_info',
+    },
 })
 
 exports.Product = mongoose.model('product', productSchema)
+exports.ProductSchema = productSchema

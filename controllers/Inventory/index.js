@@ -1,64 +1,93 @@
-var config = require('../../config')
-var Inventory = require('../../models/Inventory')
+const config = require('../../config');
+const {Inventory} = require('../../models');
+const {callback} = require('../Callbacks');
 
+
+/**
+ * inventory:
+ * {
+ *    name: <inv2>,
+ *    path: ,<inv1>,<inv2>,
+ * }
+ */
 
 exports.getAll = (req, res) => {
-    if (process.env.NODE_ENV === config.dev) {
-      Inventory.find({}, (err, inventories) => {
-        if (err) {
-          res.send(err)
-        } else {
-          res.json(inventories)
-        }
-      })
-    } else {
-      return res.status(401).json({ message: 'Unauthorized user!' })
-    }
+  if (process.env.NODE_ENV === config.dev) {
+    Inventory.find({}, callback(req, res, 'get all inventories'));
+  } else {
+    return res.status(401).json({message: 'Unauthorized user!'});
   }
+};
 
-exports.createInventory = (req,res) => {
-    newInventory = new Inventory(req.body)
+exports.create = (req, res) => {
+  if (!req.body.name) req.body.name = req.body.path.split('/').pop();
+  const newInventory = new Inventory(req.body);
 
-    if (newInventory.parent_inventory_id == null) {
-        newInventory.save((err, inventory) => {
-            if (err) {
-              return res.status(400).json({ message: 'Inventory could not be created' })
-            } else {
-              return res.status(200).json({ message: 'Inventory successfully created' })
-            }
-        })
-    } else{
-        Inventory
-            .findById(newInventory.parent_inventory_id)
-            .exec((err,parent) => {
-                if (err) throw err
-                if (!parent) {
-                    return res.status(401).json({ message: 'Parent does not exist!' })
-                } else {
-                    newInventory.location = parent.location + "/" + parent._id
-                    newInventory.save((err, inventory) => {
-                        if (err) {
-                          return res.status(400).json({ message: 'Inventory could not be created' })
-                        } else {
-                            Inventory
-                                .updateOne(
-                                    { _id: parent._id },
-                                    { $push: { child_inventories: inventory._id } }
-                                )
-                                .exec((err,_) => {
-                                    if (err) throw err
-                                    else {
-                                        return res.status(200).json({ message: 'Inventory successfully created' })
-                                    }
-                                })
-                        }
-                    })
-                }
-            })
-    }
+  Inventory
+      .findOne({path: newInventory.path})
+      .exec((err, inv) => {
+        if (err) {
+          return res
+              .status(400)
+              .json({
+                response: false,
+                message: `Error while checking uniqueness of inventory path`,
+                Content: err,
+              });
+        } else if (inv) {
+          return res
+              .status(400)
+              .json({
+                response: false,
+                message: `Inventory: ${newInventory.path}, already exists`,
+                Content: null,
+              });
+        } else {
+          newInventory
+              .save(callback(req, res, 'create inventory'))
+          ;
+        };
+      });
+};
+
+exports.findRecursivelyByPath = (req, res) => {
+  Inventory
+      .find({path: new RegExp('^'+req.body.path)})
+      .exec(callback(req, res, 'find inventories by path'));
+};
+
+exports.findByPath = (req, res) => {
+  Inventory
+      .findOne({path: new RegExp('^'+req.body.path+'$')})
+      .exec(callback(req, res, 'find inventory by path'));
+};
+
+exports.findByID = (req, res) => {
+  Inventory
+      .findById(req.body._id)
+      .exec(callback(req, res, 'find inventory by _id'));
+};
+
+exports.deleteRecursivelyByPath = (req, res) => {
+  Inventory
+      .deleteMany({path: new RegExp('^'+req.body.path)})
+      .exec(callback(req, res, 'delete inventories by path'));
+};
+
+exports.deleteByPath = (req, res) => {
+  Inventory
+      .deleteMany({path: new RegExp('^'+req.body.path+'$')})
+      .exec(callback(req, res, 'delete inventory by path'));
+};
+
+exports.deleteByID = (req, res) => {
+  Inventory
+      .deleteByID(req.body._id)
+      .exec(callback(req, res, 'delete inventory by _id'));
+};
+
+exports.test = (req, res) => {
+  console.log(req);
+  return res.status(200).json({message: 'Success!'});
 }
-
-exports.test = (req,res) => {
-    console.log(req)
-    return res.status(200).json({ message: 'Success!' })
-}
+;

@@ -1,17 +1,18 @@
-var _ = require('lodash')
-require('dotenv').config()
+require('dotenv').config();
 
-var config = {
+const config = {
   dev: 'development',
   prod: 'production',
-  port: process.env.PORT || 80,
+  port: process.env.PORT || 8080,
+  saltRounds: 10,
   secrets: {
-    jwt: process.env.JWT || 'greenbanana'
-  }
-}
+    jwt: process.env.JWT || 'greenbanana',
+  },
+};
 
-process.env.NODE_ENV = process.env.NODE_ENV || config.dev
-config.env = process.env.NODE_ENV
+process.env.NODE_ENV = process.env.NODE_ENV || config.dev;
+config.env = process.env.NODE_ENV;
 
 
-module.exports = config
+module.exports = config;
+
