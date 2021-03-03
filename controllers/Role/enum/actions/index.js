@@ -5,5 +5,6 @@ exports.action = createEnum([
   'READ',
   'UPDATE',
   'DELETE',
+  'GRANT',
 ]);
 

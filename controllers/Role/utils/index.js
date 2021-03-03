@@ -1,96 +1,9 @@
 
 const config = require('../../../config');
-const { User } = require('../../../models');
-const { action } = require('../enum/actions');
-const { resource } = require('../enum/resources');
+const {User} = require('../../../models');
+const {action} = require('../enum/actions');
+const {resource} = require('../enum/resources');
 const jwt = require('jsonwebtoken');
-
-// const roles = [
-//   {
-//     role: 'user:/inv1/inv2',
-//     path: '/inv1/inv2',
-//     resource: 'product:/inv1/inv2',
-//     action: 'read:own',
-//     attributes: ['*', '!price', '!_id'],
-//   },
-//   {
-//     role: 'admin:',
-//     path: '',
-//     resource: 'product:',
-//     action: 'read:any',
-//     attributes: ['*', '!price', '!_id'],
-//   },
-//   {
-//     role: 'user:/mlc',
-//     path: '/mlc',
-//     resource: 'product:/mlc/Outgoing',
-//     action: 'read:own',
-//     attributes: ['*', '!price', '!_id'],
-//   },
-// ];
-
-// const dbRoles = [
-//   {
-//     role: 'user:/h/inv1/inv2',
-//     path: '/h/inv1/inv2',
-//     permissions: [
-//       {
-//         resource: 'product:/h/inv1/inv2',
-//         action: 'read:own',
-//         attributes: ['*', '!price', '!_id'],
-//       },
-//     ],
-//   },
-//   {
-//     role: 'user:/h/inv1',
-//     path: '/h/inv1',
-//     permissions: [
-//       {
-//         resource: 'product:/h/inv1',
-//         action: 'read:any',
-//         attributes: ['*', '!price', '!_id'],
-//       },
-//     ],
-//   },
-//   {
-//     role: 'admin:/h',
-//     path: '/h',
-//     permissions: [
-//       {
-//         resource: 'product:/h',
-//         action: 'read:own',
-//         attributes: ['*', '!price', '!_id'],
-//       },
-//       {
-//         resource: 'product:/h',
-//         action: 'create:any',
-//         attributes: ['*', '!price', '!_id'],
-//       },
-//       {
-//         resource: 'product:/h',
-//         action: 'update:any',
-//         attributes: ['*', '!price', '!_id'],
-//       },
-//       {
-//         resource: 'product:/h',
-//         action: 'delete:any',
-//         attributes: ['*', '!price', '!_id'],
-//       },
-//     ],
-//   },
-//   {
-//     role: 'user:/h/mlc',
-//     path: '/h/mlc',
-//     permissions: [
-//       {
-//         resource: 'product:/h/mlc/Outgoing',
-//         action: 'read:own',
-//         attributes: ['*', '!price', '!_id'],
-//       },
-//     ],
-//   },
-// ];
-
 
 /**
  * Wraps any object in an array
@@ -113,8 +26,8 @@ function flattenDBRoles(dbRoles) {
   dbRoles.forEach((role) => {
     role.permissions.forEach((permission) => {
       _grants.push(Object.assign(
-        { role: role.role, path: role.path },
-        permission,
+          {role: role.role, path: role.path},
+          permission,
       ));
     });
   });
@@ -130,7 +43,7 @@ function grantsToRolls(grants) {
   const _roles = [];
   Object.keys(grants).forEach((role) => {
     let path = role.split(':')[1];
-    const _role = { role: role, path: path, permissions: [] };
+    const _role = {role: role, path: path, permissions: []};
 
     Object.keys(grants[role]).forEach((resource) => {
       Object.keys(grants[role][resource]).forEach((action) => {
@@ -160,7 +73,7 @@ function grantsToRolls(grants) {
 function can(_query, action, resource, path) {
   if (!_query?.[resource]?.[action]) return false;
 
-  let paths = _query[resource][action];
+  const paths = _query[resource][action];
 
   if (paths[path + '$']) return true;
   while (path.length > 0) {
@@ -193,12 +106,12 @@ function getPaths(_query, action, resource) {
  * @return {*} query
  */
 function combine(roles) {
-  let _query = {};
+  const _query = {};
   roles.forEach((role) => {
     role.permissions.forEach((permission) => {
-      let _resource = permission.resource.split(':');
-      let _action = permission.action.split(':');
-      let _path = _resource[1] + ((_action[1] == 'own') ? '$' : '');
+      const _resource = permission.resource.split(':');
+      const _action = permission.action.split(':');
+      const _path = _resource[1] + ((_action[1] == 'own') ? '$' : '');
 
       if (!_query[_resource[0]]) {
         _query[_resource[0]] = {};
@@ -220,7 +133,8 @@ function combine(roles) {
  */
 
 /**
- *
+ * creates middleware that checks if the user has access to an action
+ * on a resource.
  * @param {*} action
  * @param {*} resource
  * @return {*} middleware
@@ -231,17 +145,17 @@ function requireAccess(action, resource) {
     body.forEach((doc) => {
       if (doc.path && !can(req.auth.access, action, resource, doc.path)) {
         return res
-          .status(401)
-          .json({
-            response: false,
-            message:
+            .status(401)
+            .json({
+              response: false,
+              message:
               `Unauthorized: cannot ${action} ${resource} at ${doc.path}`,
-            Content: null,
-          });
+              Content: null,
+            });
       }
     });
 
-    let paths = getPaths(req.auth.access, action, resource);
+    const paths = getPaths(req.auth.access, action, resource);
 
     if (!req.auth.permissions) {
       req.auth.permissions = {};
@@ -255,11 +169,11 @@ function requireAccess(action, resource) {
   };
 }
 /**
- *
+ * creates an admin role with all permissions
  * @return {Object}
  */
 function createAdminRole() {
-  let _role = {
+  const _role = {
     role: 'admin:',
     path: '',
     permissions: [],
@@ -277,28 +191,31 @@ function createAdminRole() {
   return _role;
 }
 /**
- *
+ * create and a JWT for the given user
  * @param {*} userId
  */
 async function createToken(userId) {
   const res = User
-    .findById(userId).populate('roles')
-    .then((user) => {
-      let access = combine(user.roles);
+      .findById(userId).populate('roles')
+      .then((user) => {
+        const access = combine(user.roles);
 
-      const token = jwt.sign({
-        user: {
-          _id: user._id,
-          name: user.name,
-        },
-        access,
-      }, config.secrets.jwt);
+        const token = jwt.sign(
+            {
+              user: {
+                _id: user._id,
+                name: user.name,
+              },
+              access,
+            },
+            config.secrets.jwt,
+            {expiresIn: config.exp.jwt});
 
-      return token;
-    })
-    .catch(() => {
-      return null;
-    });
+        return token;
+      })
+      .catch(() => {
+        return null;
+      });
   return res;
 }
 
