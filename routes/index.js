@@ -13,7 +13,7 @@ module.exports = () => {
   router.use('/role', roleRoute());
 
   router.get('*', (req, res) => {
-    res.status(404).json({message: 'not a route'});
+    res.status(404).json({ message: 'not a route' });
   });
 
   return router;

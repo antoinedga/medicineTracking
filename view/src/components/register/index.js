@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { Redirect } from 'react-router-dom'
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
@@ -11,8 +12,9 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { useForm } from "react-hook-form";
-import {FormHelperText} from "@material-ui/core";
+import { FormHelperText } from "@material-ui/core";
 import Copyright from '../copyRight'
+import BrandNav from '../brandNav'
 import Brand from '../../resources/logo_1.png'
 
 
@@ -34,24 +36,30 @@ const useStyles = makeStyles((theme) => ({
     submit: {
         margin: theme.spacing(3, 0, 2),
     },
+    invalid: {
+        height: "85vh",
+    }
 }));
 
 export default function SignUp() {
     const classes = useStyles();
-    const { register, errors, handleSubmit, setError, clearErrors, watch } = useForm({mode: 'onTouched'});
+    const { register, errors, handleSubmit, setError, clearErrors, watch } = useForm({ mode: 'onTouched' });
 
-    const onSubmit = (data, e) =>{
+    const [isValidInvite, setInvite] = useState(true)
+
+    const onSubmit = (data, e) => {
 
     }
+
 
     return (
         <Container component="main" maxWidth="xs">
             <CssBaseline />
             <div className={classes.paper}>
-                <img className={classes.image} src={Brand}/>
+                <img className={classes.image} src={Brand} />
                 <Typography component="h1" variant="h5">
                     Sign up
-                </Typography>
+                    </Typography>
                 <form className={classes.form} onSubmit={handleSubmit(onSubmit)} noValidate>
                     <Grid container spacing={2}>
 
@@ -172,7 +180,7 @@ export default function SignUp() {
                                             }
 
                                         }
-                                        )
+                                    )
                                 }
 
                             />
@@ -192,8 +200,8 @@ export default function SignUp() {
                                 autoComplete="confirm-password"
 
                                 inputRef={register({
-                                        validate: (value) => value === watch('password') || "Confirm Password Must Match Password"
-                                    }
+                                    validate: (value) => value === watch('password') || "Confirm Password Must Match Password"
+                                }
                                 )}
                             />
                             <FormHelperText error={errors.password2 != undefined}>
@@ -209,12 +217,12 @@ export default function SignUp() {
                         className={classes.submit}
                     >
                         Sign Up
-                    </Button>
+                        </Button>
                     <Grid container justify="flex-end">
                         <Grid item>
                             <Link to="/login" variant="body2">
                                 Already have an account? Sign in
-                            </Link>
+                                </Link>
                         </Grid>
                     </Grid>
                 </form>

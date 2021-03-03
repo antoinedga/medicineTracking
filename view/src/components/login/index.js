@@ -17,6 +17,9 @@ import { Input } from "@material-ui/core";
 import Brand from '../../resources/logo_1.png'
 import { Redirect, Link } from 'react-router-dom'
 
+import { connect, useSelector, useDispatch } from 'react-redux'
+import { loginPayload } from '../../store/actions/login.action'
+
 const useStyles = makeStyles((theme) => ({
     paper: {
         marginTop: theme.spacing(8),
@@ -40,16 +43,17 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-export default function SignIn() {
+function SignIn() {
     const classes = useStyles();
-    const { register, errors, handleSubmit, setError, clearErrors } = useForm({ mode: 'onTouched' });
-    const [successful, setLogin] = useState(false)
-
+    const { register, errors, handleSubmit, setError, clearErrors, getValues } = useForm({ mode: 'onTouched' });
+    const isLogin = useSelector(state => state.login)
+    const dispatch = useDispatch()
     const onSubmit = () => {
-        setLogin(true)
+        let data = getValues();
+        loginPayload(data.email, data.password, dispatch)
     };
 
-    if (successful) {
+    if (isLogin) {
         return (<Redirect to="/dashboard" />);
     }
     else {
@@ -140,3 +144,5 @@ export default function SignIn() {
         );
     }
 }
+
+export default connect(null, { loginPayload })(SignIn)
