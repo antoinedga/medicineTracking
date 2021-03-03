@@ -1,113 +1,58 @@
-// eslint-disable-next-line no-unused-vars
-const {AccessControl, Query, Permission} = require('accesscontrol');
-const {Roles} = require('../../models/Roles');
+const {Role} = require('../../models');
 const User = require('../../models/user');
-const camelCase = require('camelcase');
+const {callback} = require('../Callbacks');
+const utils = require('./utils');
+const config = require('../../config');
 
-let ac = new AccessControl();
+/**
+ *
+ */
+function createAdmin() {
+  Role.findOneAndUpdate(
+      {role: 'admin:'},
+      utils.createAdminRole(),
+      {
+        upsert: true,
+        setDefaultsOnInsert: true,
+        useFindAndModify: false,
+        new: true,
+      },
+  ).exec((err, doc) => {
+    if (err) return console.log(err);
+    User.findOneAndUpdate(
+        {_id: '111111111111111111111111'},
+        {
+          name: 'admin',
+          email: 'admin',
+          password: 'admin',
+          roles: [doc._id],
+        },
+        {upsert: true,
+          setDefaultsOnInsert: true,
+          useFindAndModify: false},
+    ).exec((err, doc) => {
+      if (err) return console.log(err);
+      console.log('successfully created an admin');
+    });
+  });
+}
+createAdmin();
 
-let roles = [
-  {
-    role: 'user:/inv1/inv2',
-    path: '/inv1/inv2',
-    resource: 'product:/inv1/inv2',
-    action: 'read:own',
-    attributes: ['*', '!price', '!_id'],
-  },
-  {
-    role: 'admin:',
-    path: '',
-    resource: 'product:',
-    action: 'read:any',
-    attributes: ['*', '!price', '!_id'],
-  },
-  {
-    role: 'user:/mlc',
-    path: '/mlc',
-    resource: 'product:/mlc/Outgoing',
-    action: 'read:own',
-    attributes: ['*', '!price', '!_id'],
-  },
-];
-
-const dbRoles = [
-  {
-    role: 'user:/inv1/inv2',
-    path: '/inv1/inv2',
-    permissions: [
-      {
-        resource: 'product:/inv1/inv2',
-        action: 'read:own',
-        attributes: ['*', '!price', '!_id'],
-      },
-    ],
-  },
-  {
-    role: 'user:/inv1/inv2',
-    path: '/inv1/inv2',
-    permissions: [
-      {
-        resource: 'product:/inv1',
-        action: 'read:any',
-        attributes: ['*', '!price', '!_id'],
-      },
-    ],
-  },
-  {
-    role: 'admin:',
-    path: '',
-    permissions: [
-      {
-        resource: 'product:',
-        action: 'read:any',
-        attributes: ['*', '!price', '!_id'],
-      },
-      {
-        resource: 'product:',
-        action: 'create:any',
-        attributes: ['*', '!price', '!_id'],
-      },
-      {
-        resource: 'product:',
-        action: 'update:any',
-        attributes: ['*', '!price', '!_id'],
-      },
-      {
-        resource: 'product:',
-        action: 'delete:any',
-        attributes: ['*', '!price', '!_id'],
-      },
-    ],
-  },
-  {
-    role: 'user:/mlc',
-    path: '/mlc',
-    permissions: [
-      {
-        resource: 'product:/mlc/Outgoing',
-        action: 'read:own',
-        attributes: ['*', '!price', '!_id'],
-      },
-    ],
-  },
-];
-
-
-ac = new AccessControl(roles);
-
+exports.getAll = (req, res) => {
+  if (process.env.NODE_ENV === config.dev) {
+    Role.find({}, callback(req, res, 'get all roles'));
+  } else {
+    return res.status(401).json({message: 'Unauthorized user!'});
+  }
+};
 /*
     /mlc1/Outgoing|Orders|Inv|Outposts
 */
 exports.createRole = (req, res) => {
-  roles = grantsToRolls(req.body);
+  roles = req.body;
 
-  Roles.insertMany(roles)
-      .then(() => {
-        return res.status(200).json({message: 'Role(s) successfully created'});
-      })
-      .catch(function(err) {
-        res.status(400).send(err);
-      });
+  Role.insertMany(roles)
+      .then(callback(req, res, 'create role(s)'));
 };
 
 /*
@@ -121,95 +66,12 @@ exports.grantUserRole = (req, res) => {
 
   User
       .updateMany(
-          {_id: {$in: toArray(grant.users)}},
-          {$addToSet: {roles: toArray(grant.roles)}},
+          {_id: {$in: utils.toArray(grant.users)}},
+          {$addToSet: {roles: utils.toArray(grant.roles)}},
       )
-      .then( () => {
-        return res.status(200).json({
-          message: 'Users(s) successfully granted role(s)',
-        });
-      })
-      .catch( (err) => {
-        res.status(400).send(err);
-      });
+      .then(callback(req, res, 'grant role(s)'));
 };
 
-/**
- * Wraps any object in an array
- * @param {Any} value
- * @return {Array} [value]
- */
-function toArray(value) {
-  if (!value) return [];
-  if (Array.isArray(value)) return value;
-  return [value];
-}
-
-/**
- * Turns Roles as received from DB into an array of Grants
- * @param {Array} dbRoles
- * @return {Array} grants
- */
-function flattenDBRoles(dbRoles) {
-  const _grants = [];
-  dbRoles.forEach( (role) => {
-    role.permissions.forEach( (permission) => {
-      _grants.push(Object.assign(
-          {role: role.role, path: role.path},
-          permission,
-      ));
-    });
-  });
-  return _grants;
-}
-
-/**
- * converts and array of grant objects into Roles
- * @param {Array} grants
- * @return {Array<Role>} Roles - shape needed to store in DB
- */
-function grantsToRolls(grants) {
-  const _roles = [];
-  Object.keys(grants).forEach( (role) => {
-    path = role.split(':')[1];
-    const _role = {role: role, path: path, permissions: []};
-
-    Object.keys(grants[role]).forEach( (resource) => {
-      Object.keys(grants[role][resource]).forEach( (action) => {
-        path = resource.split(':')[1];
-        _role.permissions.push({
-          resource: resource,
-          action: action,
-          attributes: grants[role][resource][action],
-        });
-      });
-    });
-
-    _roles.push(_role);
-  });
-  return _roles;
-}
-
-/**
- * Checks if the query has permission to ACTION the RESOURCE.
- * Accounts for recursive permissions
- * @param {Query} _query
- * @param {String} action
- * @param {String} resource
- * @return {Permission} permission
- */
-function can(_query, action, resource) {
-  a = [action, 'own'];
-  _resource = resource;
-
-  let permission = _query[camelCase(a)](_resource);
-
-  while (!permission.granted && _resource[_resource.length - 1] != ':') {
-    _resource = _resource.replace(/\/\w*$/, '');
-    permission = _query[action](_resource);
-  }
-  return permission;
-}
 
 /*
     action = 'read' | 'create' | 'update' | 'delete' | [ <action>]
@@ -217,28 +79,6 @@ function can(_query, action, resource) {
  */
 
 
-exports.accessControl = (req, res, next) => {
-  if (!req.user || !req.user.roles) {
-    return res.status(401).json({
-      response: false,
-      message: `Unauthorized`,
-      Content: null});
-  };
-
-  ac = new AccessControl(flattenDBRoles(req.user.roles));
-  _roles = Object.keys(ac.getGrants());
-  _query = ac.can(_roles);
-  /**
-     * Check if user can preform and action on a resource
-     * @param {String} action - 'read' | 'create' | 'update' | 'delete'
-     * @param {String} resource - '<resource>:<path>' - 'item:/mlc/shipping'
-     * @return {Object} permission
-     */
-  req.user.can = (action, resource) => {
-    return can(_query, action, resource);
-  };
-  next();
-};
 exports.getUserWithRolls = (userId) => {
   User
       .findById(userId).populate('roles')
@@ -250,19 +90,4 @@ exports.getUserWithRolls = (userId) => {
       });
 };
 
-exports.getAll = (req, res) => {
-  if (process.env.NODE_ENV === config.dev) {
-    Roles.find({}, (err, roles) => {
-      if (err) {
-        res.send(err);
-      } else {
-        res.json(roles);
-      }
-    });
-  } else {
-    return res.status(401).json({message: 'Unauthorized user!'});
-  }
-};
 
-console.log(grantsToRolls(ac.getGrants()), dbRoles)
-;

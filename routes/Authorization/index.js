@@ -14,5 +14,7 @@ module.exports = () => {
 
   router.route('/reset/:token')
       .post(controller.authorization.post_reset);
+
+  return router;
 };
 

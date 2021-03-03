@@ -1,8 +1,7 @@
 const User = require('../../models/user');
 const Invitations = require('../../models/invitations');
+const {createToken} = require('../Role/utils');
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const SECRET_KEY = require('../../config').secrets.jwt;
 const async = require('async');
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
@@ -35,7 +34,7 @@ exports.post_registration = (req, res) => {
       });
       // res.redirect('back');
     }
-    User.findOne({email}).exec((err, user) => {
+    User.findOne({email}).exec((err) => {
       if (err) {
         console.log('User already exists', err);
         return res.json({
@@ -51,7 +50,7 @@ exports.post_registration = (req, res) => {
             password: hash,
           });
             // console.log(register_user)
-          registerUser.save((err, success) => {
+          registerUser.save((err) => {
             if (err) {
               return res.json({
                 response: false,
@@ -62,7 +61,7 @@ exports.post_registration = (req, res) => {
             Invitations.updateOne({
               invitation_token: undefined,
               invitationExpires: undefined,
-            }, function(err, result) {
+            }, function(err) {
               if (err) {
                 return res.status(400), json({error: err});
               }
@@ -89,10 +88,10 @@ exports.get_login = (req, res) => {
   });
 };
 
+
 // Login User
 exports.post_login = (req, res) => {
   const email = req.body.email;
-  console.log(req.body);
   User.findOne({email}).exec((err, user) => {
     if (err) {
       return res.status(400), json({
@@ -100,39 +99,81 @@ exports.post_login = (req, res) => {
         message: 'Login Error.',
         Content: null,
       });
-    }
-    if (user == null) {
+    } else if (user == null) {
       res.status(400).json({
         response: false,
         message: 'User with this email does not exist',
         Content: null,
       });
     } else {
-      bcrypt.compare(req.body.password, user.password)
-          .then(function(result) {
-            console.log(user.email == req.body.email && result);
-            if (user.email == req.body.email && result) {
-              res.json({
-                response: true,
-                message: 'Login Successful',
-                Content: jwt.sign({user: user}, SECRET_KEY),
-              });
-            } else {
+      user.authPassword(req.body.password, user.password)
+          .then( (passed) => {
+            if (!passed) {
               res.json({
                 response: false,
                 message: 'Password is incorrect',
                 Content: null,
               });
+            } else {
+              createToken(user._id).then( (token) => {
+                res.json({
+                  response: true,
+                  message: 'Login Successful',
+                  Content: token,
+                });
+              },
+              ).catch((err) => console.log(err));
             }
-          }).catch((err) => {
-            res.json({
-              response: false, message: 'Password is incorrect',
-              Content: null,
-            });
-          });
-    }
+          },
+          ).catch((err) => console.log(err));
+    };
   });
 };
+
+// exports.post_login = (req, res) => {
+//   const email = req.body.email;
+//   console.log(req.body);
+//   User.findOne({email}).exec((err, user) => {
+//     if (err) {
+//       return res.status(400), json({
+//         response: false,
+//         message: 'Login Error.',
+//         Content: null,
+//       });
+//     }
+//     if (user == null) {
+//       res.status(400).json({
+//         response: false,
+//         message: 'User with this email does not exist',
+//         Content: null,
+//       });
+//     } else {
+//       bcrypt.compare(req.body.password, user.password)
+//           .then(function(result) {
+//             console.log(user.email == req.body.email && result);
+//             if (user.email == req.body.email && result) {
+//               console.log(SECRET_KEY);
+//               res.json({
+//                 response: true,
+//                 message: 'Login Successful',
+//                 Content: jwt.sign({user: user}, SECRET_KEY),
+//               });
+//             } else {
+//               res.json({
+//                 response: false,
+//                 message: 'Password is incorrect',
+//                 Content: null,
+//               });
+//             }
+//           }).catch((err) => {
+//             res.json({
+//               response: false, message: 'Password is incorrect',
+//               Content: null,
+//             });
+//           });
+//     }
+//   });
+// };
 
 // Show Forget Password page
 exports.get_forget = (req, res) => {
@@ -172,7 +213,7 @@ exports.post_forget = (req, res, next) => {
         });
       });
     },
-    function(token, user, done) {
+    function(token) {
       const transporter = nodemailer.createTransport({
         service: 'hotmail',
         auth: {
@@ -194,7 +235,7 @@ exports.post_forget = (req, res, next) => {
           'If you did not request this, please ignore this email and your ' +
           'password will remain unchanged.\n',
       };
-      transporter.sendMail(mailOptions, function(err) {
+      transporter.sendMail(mailOptions, function() {
         console.log('mail sent');
         return res.json({
           response: true, message: 'Mail sent',
@@ -242,7 +283,7 @@ exports.get_reset = (req, res) =>{
 // Reset Page
 exports.post_reset = (req, res) => {
   async.waterfall([
-    function(done) {
+    function() {
       User.findOne({
         resetPasswordToken: req.params.token,
         resetPasswordExpires: {$gt: Date.now()},
@@ -265,7 +306,7 @@ exports.post_reset = (req, res) => {
             user.updateOne({
               password: req.body.new_password,
               resetPasswordExpires: undefined,
-              resetPasswordToken: undefined}, function(err, result) {
+              resetPasswordToken: undefined}, function(err) {
               if (err) {
                 console.log('Err: ', err);
                 return res.json({
@@ -295,7 +336,7 @@ exports.post_reset = (req, res) => {
         }
       });
     },
-  ], function(err) {
+  ], function() {
     return res.json({
       response: true,
       message: 'An error occurred',
