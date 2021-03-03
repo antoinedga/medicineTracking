@@ -53,7 +53,7 @@ exports.getAll = (req, res) => {
 /*
     /mlc1/Outgoing|Orders|Inv|Outposts
 */
-exports.createRole = (req, res) => {
+exports.create = (req, res) => {
   roles = req.body;
 
   Role.insertMany(roles)

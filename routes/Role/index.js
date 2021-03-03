@@ -23,7 +23,7 @@ module.exports = () => {
             role.grantUserRole);
 
     router.route('/by_id')
-        .get(
+        .post(
             requireLogin,
             requireAccess(action.READ, resource.ROLE),
             role.findByID,
@@ -35,7 +35,7 @@ module.exports = () => {
         );
 
     router.route('/by_path')
-        .get(
+        .post(
             requireLogin,
             requireAccess(action.READ, resource.ROLE),
             role.findByPath,
@@ -47,7 +47,7 @@ module.exports = () => {
         );
 
     router.route('/by_path/recursive')
-        .get(
+        .post(
             requireLogin,
             requireAccess(action.READ, resource.ROLE),
             role.findRecursivelyByPath,

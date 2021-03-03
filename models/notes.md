@@ -151,3 +151,25 @@ find({ identifiers: { $in: product.identifiers } })
     ] }
 }
 ```
+
+```js
+paths = [
+    '/inv1',
+    '/inv1/inv11',
+    '/inv1/inv12',
+    '/inv1/inv12/inv123',
+    '/inv2',
+]
+```
+
+```js
+paths = {
+    inv1: {
+        inv11:{},
+        inv12:{
+            inv123:{}
+        },
+    },
+    inv2: {}
+}
+```

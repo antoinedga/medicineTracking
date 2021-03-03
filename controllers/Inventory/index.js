@@ -1,6 +1,7 @@
 const config = require('../../config');
 const {Inventory} = require('../../models');
 const {callback} = require('../Callbacks');
+const {getPathsObject} = require('../Role/utils');
 
 
 /**
@@ -47,6 +48,28 @@ exports.create = (req, res) => {
               .save(callback(req, res, 'create inventory'))
           ;
         };
+      });
+};
+
+exports.getPaths = (req, res) => {
+  console.log(req.auth.access);
+  getPathsObject(req.auth.access, req.body.action, req.body.resource)
+      .then((paths) => {
+        return res
+            .status(200)
+            .json({
+              response: true,
+              message: `Successfully completed get path object`,
+              Content: paths,
+            });
+      }).catch((err) => {
+        return res
+            .status(400)
+            .json({
+              response: false,
+              message: `Error during get path object`,
+              Content: err,
+            });
       });
 };
 
