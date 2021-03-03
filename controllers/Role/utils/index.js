@@ -116,27 +116,17 @@ function getPaths(_query, action, resource, regex=false) {
  */
 async function getPathsObject(_query, action, resource) {
   const paths = getPaths(_query, action, resource, true);
-  console.log(paths, 'paths');
-  const pathObject = Inventory
-      .aggregate(
-          {
-            $match: {
-              path: {
-                $in: paths,
-              },
-            },
-          },
-      )
-      .exec((err, invs) => {
-        if (err) {
-          console.log(err);
-          return null;
-        }
-
-        console.log(invs, 'invs');
+  return await Inventory
+      .find({
+        'path': {
+          '$in': paths,
+        },
+      })
+      .then((invs) => {
         const paths = invs.map((inv) => {
           return inv.path;
         });
+
         const result = {};
 
         paths.forEach((path) => {
@@ -144,16 +134,21 @@ async function getPathsObject(_query, action, resource) {
           path = path.split('/');
 
           path.forEach((name) => {
-            if (tmp[name] === undefined) {
-              tmp = tmp[name] = {};
-            } else {
-              tmp = tmp[name];
+            if (name) {
+              if (tmp[name] === undefined) {
+                tmp = tmp[name] = {};
+              } else {
+                tmp = tmp[name];
+              }
             };
           });
         });
         return result;
+      })
+      .catch((err) => {
+        console.log(err);
+        return null;
       });
-  return pathObject;
 }
 
 /**
@@ -180,7 +175,6 @@ function combine(roles) {
       }
     });
   });
-  console.log(_query);
   return _query;
 }
 
@@ -199,8 +193,10 @@ function combine(roles) {
 function requireAccess(action, resource) {
   return (req, res, next) => {
     const body = toArray(req.body);
+    let err = false;
     body.forEach((doc) => {
       if (doc.path && !can(req.auth.access, action, resource, doc.path)) {
+        err = true;
         return res
             .status(401)
             .json({
@@ -211,7 +207,7 @@ function requireAccess(action, resource) {
             });
       }
     });
-
+    if (err) return;
     const paths = getPaths(req.auth.access, action, resource);
 
     if (!req.auth.permissions) {
@@ -231,20 +227,19 @@ function requireAccess(action, resource) {
  */
 function createAdminRole() {
   const _role = {
-    role: 'admin:^',
-    path: '^',
+    role: 'admin:',
+    path: '',
     permissions: [],
   };
 
   Object.values(resource).forEach((r) => {
     Object.values(action).forEach((a) => {
       _role.permissions.push({
-        resource: r + ':^',
+        resource: r + ':',
         action: a + ':any',
       });
     });
   });
-  console.log(_role);
   return _role;
 }
 /**

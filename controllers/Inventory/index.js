@@ -52,7 +52,6 @@ exports.create = (req, res) => {
 };
 
 exports.getPaths = (req, res) => {
-  console.log(req.auth.access);
   getPathsObject(req.auth.access, req.body.action, req.body.resource)
       .then((paths) => {
         return res
