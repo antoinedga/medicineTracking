@@ -1,8 +1,8 @@
 
 const config = require('../../../config');
-const {User} = require('../../../models');
-const {action} = require('../enum/actions');
-const {resource} = require('../enum/resources');
+const { User } = require('../../../models');
+const { action } = require('../enum/actions');
+const { resource } = require('../enum/resources');
 const jwt = require('jsonwebtoken');
 
 // const roles = [
@@ -110,11 +110,11 @@ function toArray(value) {
  */
 function flattenDBRoles(dbRoles) {
   const _grants = [];
-  dbRoles.forEach( (role) => {
-    role.permissions.forEach( (permission) => {
+  dbRoles.forEach((role) => {
+    role.permissions.forEach((permission) => {
       _grants.push(Object.assign(
-          {role: role.role, path: role.path},
-          permission,
+        { role: role.role, path: role.path },
+        permission,
       ));
     });
   });
@@ -128,12 +128,12 @@ function flattenDBRoles(dbRoles) {
  */
 function grantsToRolls(grants) {
   const _roles = [];
-  Object.keys(grants).forEach( (role) => {
-    path = role.split(':')[1];
-    const _role = {role: role, path: path, permissions: []};
+  Object.keys(grants).forEach((role) => {
+    let path = role.split(':')[1];
+    const _role = { role: role, path: path, permissions: [] };
 
-    Object.keys(grants[role]).forEach( (resource) => {
-      Object.keys(grants[role][resource]).forEach( (action) => {
+    Object.keys(grants[role]).forEach((resource) => {
+      Object.keys(grants[role][resource]).forEach((action) => {
         path = resource.split(':')[1];
         _role.permissions.push({
           resource: resource,
@@ -160,16 +160,16 @@ function grantsToRolls(grants) {
 function can(_query, action, resource, path) {
   if (!_query?.[resource]?.[action]) return false;
 
-  paths =_query[resource][action];
+  let paths = _query[resource][action];
 
-  if (paths[path+'$']) return true;
+  if (paths[path + '$']) return true;
   while (path.length > 0) {
     // console.log(path, paths[path], paths[path+'$']);
     if (paths[path]) return true;
     path = path.replace(/\/\w*$/, '');
   }
 
-  return (paths[path])? true : false;
+  return (paths[path]) ? true : false;
 }
 
 /**
@@ -193,12 +193,12 @@ function getPaths(_query, action, resource) {
  * @return {*} query
  */
 function combine(roles) {
-  _query = {};
-  roles.forEach( (role) => {
-    role.permissions.forEach( (permission) => {
-      _resource = permission.resource.split(':');
-      _action = permission.action.split(':');
-      _path = _resource[1] + ((_action[1] == 'own')? '$':'');
+  let _query = {};
+  roles.forEach((role) => {
+    role.permissions.forEach((permission) => {
+      let _resource = permission.resource.split(':');
+      let _action = permission.action.split(':');
+      let _path = _resource[1] + ((_action[1] == 'own') ? '$' : '');
 
       if (!_query[_resource[0]]) {
         _query[_resource[0]] = {};
@@ -231,17 +231,17 @@ function requireAccess(action, resource) {
     body.forEach((doc) => {
       if (doc.path && !can(req.auth.access, action, resource, doc.path)) {
         return res
-            .status(401)
-            .json({
-              response: false,
-              message:
-                `Unauthorized: cannot ${action} ${resource} at ${doc.path}`,
-              Content: null,
-            });
+          .status(401)
+          .json({
+            response: false,
+            message:
+              `Unauthorized: cannot ${action} ${resource} at ${doc.path}`,
+            Content: null,
+          });
       }
     });
 
-    paths = getPaths(req.auth.access, action, resource);
+    let paths = getPaths(req.auth.access, action, resource);
 
     if (!req.auth.permissions) {
       req.auth.permissions = {};
@@ -259,7 +259,7 @@ function requireAccess(action, resource) {
  * @return {Object}
  */
 function createAdminRole() {
-  _role = {
+  let _role = {
     role: 'admin:',
     path: '',
     permissions: [],
@@ -268,8 +268,8 @@ function createAdminRole() {
   Object.values(resource).forEach((r) => {
     Object.values(action).forEach((a) => {
       _role.permissions.push({
-        resource: r+':',
-        action: a+':any',
+        resource: r + ':',
+        action: a + ':any',
       });
     });
   });
@@ -282,23 +282,23 @@ function createAdminRole() {
  */
 async function createToken(userId) {
   const res = User
-      .findById(userId).populate('roles')
-      .then((user) => {
-        access = combine(user.roles);
+    .findById(userId).populate('roles')
+    .then((user) => {
+      let access = combine(user.roles);
 
-        const token = jwt.sign({
-          user: {
-            _id: user._id,
-            name: user.name,
-          },
-          access,
-        }, config.secrets.jwt);
+      const token = jwt.sign({
+        user: {
+          _id: user._id,
+          name: user.name,
+        },
+        access,
+      }, config.secrets.jwt);
 
-        return token;
-      })
-      .catch( () => {
-        return null;
-      });
+      return token;
+    })
+    .catch(() => {
+      return null;
+    });
   return res;
 }
 
