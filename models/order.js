@@ -33,6 +33,15 @@ const orderSchema = new mongoose.Schema({
     }],
     required: true,
   },
+  status: {
+    type: String,
+  },
+  expectedDelivery: {
+    type: Date,
+  },
+  trackingNumber: {
+    type: String,
+  },
   user: {
     type: Schema.Types.ObjectId,
     ref: 'user',

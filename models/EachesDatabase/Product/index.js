@@ -1,34 +1,35 @@
-var mongoose = require('mongoose')
+const mongoose = require('mongoose');
 
-const Schema = mongoose.Schema
+const Schema = mongoose.Schema;
 
 const productSchema = new Schema({
-    identifiers: {
-        type: [{
-            key: {
-                type: String,
-                required: true,
-            },
-            value: {
-                type: String,
-                required: true,
-            }
-        }],
+  identifiers: {
+    type: [{
+      key: {
+        type: String,
         required: true,
-    },
-    product: {
-        type: Schema.Types.ObjectId,
-        ref: 'product',
-    },
-    eaches: {
-        type: Schema.Types.ObjectId,
-        ref: 'eaches',
-    },
-    additional_info: {
-        type: Schema.Types.ObjectId,
-        ref: 'additional_info',
-    },
-})
+      },
+      value: {
+        type: String,
+        required: true,
+      },
+    }],
+    required: true,
+  },
+  product: {
+    type: Schema.Types.ObjectId,
+    ref: 'product',
+  },
+  eaches: {
+    type: Schema.Types.ObjectId,
+    ref: 'eaches',
+  },
+  additional_info: {
+    type: Schema.Types.ObjectId,
+    ref: 'additional_info',
+  },
+});
 
-exports.Product = mongoose.model('product', productSchema)
+exports.Product = mongoose.model('product', productSchema);
 exports.ProductSchema = productSchema
+;

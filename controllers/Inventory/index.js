@@ -1,7 +1,7 @@
 const config = require('../../config');
 const {Inventory} = require('../../models');
 const {callback} = require('../Callbacks');
-const {getPathsObject} = require('../Role/utils');
+const {getPathsObject, getCompletePaths} = require('../Role/utils');
 
 
 /**
@@ -67,6 +67,27 @@ exports.getPaths = (req, res) => {
             .json({
               response: false,
               message: `Error during get path object`,
+              Content: err,
+            });
+      });
+};
+
+exports.getCompletePaths = (req, res) => {
+  getCompletePaths(req.auth.access, req.body.action, req.body.resource)
+      .then((paths) => {
+        return res
+            .status(200)
+            .json({
+              response: true,
+              message: `Successfully completed get complete object`,
+              Content: paths,
+            });
+      }).catch((err) => {
+        return res
+            .status(400)
+            .json({
+              response: false,
+              message: `Error during get complete path`,
               Content: err,
             });
       });

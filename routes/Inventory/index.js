@@ -21,6 +21,11 @@ module.exports = () => {
           requireLogin,
           inventory.getPaths,
       );
+  router.route('/complete_paths')
+      .post(
+          requireLogin,
+          inventory.getCompletePaths,
+      );
 
   router.route('/by_id')
       .post(

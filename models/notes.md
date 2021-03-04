@@ -61,7 +61,35 @@
     path: '/<inv1>/<inv2>',
     user: '<user_id>',
     order_date: '2021-02-14T19:07:38.511',
-    items: [...],
+    items: [
+        {
+            product: {
+                identifiers: [
+                    {key: 'name', value: 'aspirin'}
+                ]
+            },
+            quantity: 5
+            desired: {
+                identifiers: [
+                    {key: 'name', value: 'salve'}
+                ]
+            }
+        },
+        {
+            product: {
+                identifiers: [
+                    {key: 'name', value: 'bandage'},
+                    {key: 'ndc', value: '123-1245-23'}
+                ]
+            },
+            quantity: 3
+            desired: {
+                identifiers: [
+                    {key: 'name', value: 'salve'}
+                ]
+            }
+        }
+    ],
     log: [
         {
             date: '2021-02-14T20:09:22.235'

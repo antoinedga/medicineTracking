@@ -152,6 +152,32 @@ async function getPathsObject(_query, action, resource) {
 }
 
 /**
+ *
+ * @param {*} _query
+ * @param {*} action
+ * @param {*} resource
+ */
+async function getCompletePaths(_query, action, resource) {
+  const paths = getPaths(_query, action, resource, true);
+  return await Inventory
+      .find({
+        'path': {
+          '$in': paths,
+        },
+      })
+      .then((invs) => {
+        const paths = invs.map((inv) => {
+          return inv.path;
+        });
+        return paths;
+      })
+      .catch((err) => {
+        console.log(err);
+        return null;
+      });
+}
+
+/**
  * Combines roles in to a query object
  * @param {*} roles
  * @return {*} query
@@ -276,6 +302,7 @@ module.exports = {
   can,
   getPaths,
   getPathsObject,
+  getCompletePaths,
   toArray,
   flattenDBRoles,
   grantsToRolls,
