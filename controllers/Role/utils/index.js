@@ -132,14 +132,15 @@ async function getPathsObject(_query, action, resource) {
         paths.forEach((path) => {
           let tmp = result;
           path = path.split('/');
-
-          path.forEach((name) => {
+          const len = path.length;
+          path.forEach((name, idx) => {
             if (name) {
               if (tmp[name] === undefined) {
-                tmp = tmp[name] = {};
-              } else {
-                tmp = tmp[name];
+                tmp[name] = {can: false, next: {}};
+              } if (idx == len-1) {
+                tmp[name].can = true;
               }
+              tmp = tmp[name].next;
             };
           });
         });
