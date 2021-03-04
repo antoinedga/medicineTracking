@@ -3,6 +3,7 @@ const express = require('express');
 const helmet = require('helmet');
 const cors = require('cors');
 const hpp = require('hpp');
+const logger = require('./Logger');
 
 module.exports = [
   express.json(),
@@ -11,4 +12,5 @@ module.exports = [
   cors(),
   hpp(),
   tokenAuth(),
+  logger,
 ];
