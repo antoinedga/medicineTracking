@@ -13,14 +13,24 @@ import "shards-ui/dist/css/shards.min.css"
 import { Provider } from 'react-redux'
 import thunk from 'redux-thunk'
 import rootReducer from "./store/reducers"
-import initial from "./store/initialState"
 
+const initial = require("./store/initialState")
 const middleware = [thunk];
-const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-const store = createStore(
-    rootReducer, initial
-    + window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
-);
+let store = null;
+
+if (window?.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) {
+    const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+    store = createStore(
+        rootReducer, initial, composeEnhancer(applyMiddleware(thunk))
+
+    );
+} else {
+    store = createStore(
+        rootReducer, initial, applyMiddleware(thunk)
+
+    );
+}
+
 function App() {
     return (
         <Provider store={store}>

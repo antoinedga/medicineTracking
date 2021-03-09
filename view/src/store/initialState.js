@@ -7,7 +7,8 @@ var initialState = {
   login: false,
   loading: false,
   role: "",
-  error: ""
+  error: "",
+  token: ""
 };
 
 export default initialState

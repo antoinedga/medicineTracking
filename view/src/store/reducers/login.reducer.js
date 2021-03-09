@@ -12,8 +12,6 @@ const initialState = {
 }
 
 export default function loginReducer(state = initialState, action) {
-
-    console.log("reducer")
     switch (action.type) {
         case constant.LOGIN_SENT: {
             return {
@@ -26,6 +24,7 @@ export default function loginReducer(state = initialState, action) {
                 ...state,
                 loading: false,
                 login: true,
+                token: action.payload.token
             }
         }
         case constant.LOGIN_ERROR: {

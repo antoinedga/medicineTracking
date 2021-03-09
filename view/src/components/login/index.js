@@ -12,12 +12,14 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { FormHelperText } from '@material-ui/core';
+import Backdrop from '@material-ui/core/Backdrop';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import { useForm } from "react-hook-form";
 import { Input } from "@material-ui/core";
 import Brand from '../../resources/logo_1.png'
 import { Redirect, Link } from 'react-router-dom'
 
-import { connect, useSelector, useDispatch } from 'react-redux'
+import { shallowEqual, useSelector, useDispatch } from 'react-redux'
 import { loginPayload } from '../../store/actions/login.action'
 
 const useStyles = makeStyles((theme) => ({
@@ -40,19 +42,30 @@ const useStyles = makeStyles((theme) => ({
     },
     image: {
         padding: 16
+    },
+    backdrop: {
+        zIndex: theme.zIndex.drawer + 1,
+        color: '#fff',
     }
 }));
 
-function SignIn() {
+export default function SignIn(props) {
     const classes = useStyles();
     const { register, errors, handleSubmit, setError, clearErrors, getValues } = useForm({ mode: 'onTouched' });
-    const isLogin = useSelector(state => state.login)
+
+    let isLogin = useSelector(state => state.loginReducer.login)
+    let isLoading = useSelector(state => state.loginReducer.loading)
+
     const dispatch = useDispatch()
+
     const onSubmit = () => {
         let data = getValues();
         loginPayload(data.email, data.password, dispatch)
+
+        console.log(isLoading)
     };
 
+    console.log(useSelector(state => state))
     if (isLogin) {
         return (<Redirect to="/dashboard" />);
     }
@@ -140,9 +153,11 @@ function SignIn() {
                 <Box mt={8}>
 
                 </Box>
+                <Backdrop className={classes.backdrop} open={isLoading}>
+                    <CircularProgress color="inherit" />
+                </Backdrop>
             </Container>
         );
     }
 }
 
-export default connect(null, { loginPayload })(SignIn)
