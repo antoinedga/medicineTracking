@@ -143,7 +143,7 @@ export default function SignIn(props) {
                             </Link>
                             </Grid>
                             <Grid item>
-                                <Link to="/register">
+                                <Link to="/signup">
                                     {"Don't have an account? Sign Up"}
                                 </Link>
                             </Grid>

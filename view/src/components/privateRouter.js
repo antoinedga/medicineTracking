@@ -1,33 +1,28 @@
 
 import React from "react";
-import Cookies from 'universal-cookie';
 import {
     Route,
     Redirect,
 } from "react-router-dom";
 
-const cookies = new Cookies();
 
-const verifyCookie = (cookies) => {
-
-}
-
-
-const PrivateRoute = ({child, ...rest }) => {
+const PrivateRoute = ({ child, ...rest }) => {
+    let login = useSelector(state => state.loginReducer.login)
+    let token = useSelector(state => state.loginReducer.token)
     return (
         <Route
             {...rest}
             render={({ location }) =>
                 cookies.get('access_token') !== null ||
-                cookies.get('access_token') !== undefined
+                    cookies.get('access_token') !== undefined
                     ? (
-                    child) : (
-                    <Redirect
-                        to={{
-                            pathname: "/login",
-                        }}
-                    />
-                )
+                        child) : (
+                        <Redirect
+                            to={{
+                                pathname: "/login",
+                            }}
+                        />
+                    )
             }
         />
     );

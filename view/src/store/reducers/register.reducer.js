@@ -1,4 +1,4 @@
-import constant from '../actions/actionType/login'
+import constant from '../actions/actionType/register'
 
 const initialState = {
     name: "",
