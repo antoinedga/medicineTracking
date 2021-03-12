@@ -1,6 +1,6 @@
 const User = require('../../models/user');
 const Invitations = require('../../models/invitations');
-const {createToken} = require('../Role/utils');
+const { createToken } = require('../Role/utils');
 const bcrypt = require('bcrypt');
 const async = require('async');
 const crypto = require('crypto');
@@ -19,11 +19,11 @@ exports.get_registration = (req, res) => {
 
 // Register user and encryption of password
 exports.post_registration = (req, res) => {
-  const {email, password} = req.body;
+  const { email, password } = req.body;
   Invitations.findOne({
     invitation_token: req.params.token,
-    resetPasswordExpires: {$gt: Date.now()},
-  }, function(err, user) {
+    resetPasswordExpires: { $gt: Date.now() },
+  }, function (err, user) {
     if (!user) {
       console.log('Error: Password reset token is invalid or has expired.');
       // req.flash('error', 'Password reset token is invalid or has expired.');
@@ -34,7 +34,7 @@ exports.post_registration = (req, res) => {
       });
       // res.redirect('back');
     }
-    User.findOne({email}).exec((err) => {
+    User.findOne({ email }).exec((err) => {
       if (err) {
         console.log('User already exists', err);
         return res.json({
@@ -43,13 +43,13 @@ exports.post_registration = (req, res) => {
           Content: null,
         });
       } else {
-        bcrypt.hash(password, saltRounds, function(err, hash) {
+        bcrypt.hash(password, saltRounds, function (err, hash) {
           const registerUser = new User({
             name: req.body.name,
             email: req.body.email,
             password: hash,
           });
-            // console.log(register_user)
+          // console.log(register_user)
           registerUser.save((err) => {
             if (err) {
               return res.json({
@@ -61,9 +61,9 @@ exports.post_registration = (req, res) => {
             Invitations.updateOne({
               invitation_token: undefined,
               invitationExpires: undefined,
-            }, function(err) {
+            }, function (err) {
               if (err) {
-                return res.status(400), json({error: err});
+                return res.status(400), json({ error: err });
               }
             });
             return res.json({
@@ -92,7 +92,7 @@ exports.get_login = (req, res) => {
 // Login User
 exports.post_login = (req, res) => {
   const email = req.body.email;
-  User.findOne({email}).exec((err, user) => {
+  User.findOne({ email }).exec((err, user) => {
     if (err) {
       return res.status(400), json({
         response: false,
@@ -107,25 +107,25 @@ exports.post_login = (req, res) => {
       });
     } else {
       user.authPassword(req.body.password, user.password)
-          .then( (passed) => {
-            if (!passed) {
+        .then((passed) => {
+          if (!passed) {
+            res.json({
+              response: false,
+              message: 'Password is incorrect',
+              Content: null,
+            });
+          } else {
+            createToken(user._id).then((token) => {
               res.json({
-                response: false,
-                message: 'Password is incorrect',
-                Content: null,
+                response: true,
+                message: 'Login Successful',
+                Content: token,
               });
-            } else {
-              createToken(user._id).then( (token) => {
-                res.json({
-                  response: true,
-                  message: 'Login Successful',
-                  Content: token,
-                });
-              },
-              ).catch((err) => console.log(err));
-            }
-          },
-          ).catch((err) => console.log(err));
+            },
+            ).catch((err) => console.log(err));
+          }
+        },
+        ).catch((err) => console.log(err));
     };
   });
 };
@@ -181,20 +181,21 @@ exports.get_forget = (req, res) => {
   return res.json({
     response: true,
     message: 'Forget Password Page',
-    Content: null});
+    Content: null
+  });
 };
 
 // Forget Password page
 exports.post_forget = (req, res, next) => {
   async.waterfall([
-    function(done) {
-      crypto.randomBytes(20, function(err, buf) {
+    function (done) {
+      crypto.randomBytes(20, function (err, buf) {
         const token = buf.toString('hex');
         done(err, token);
       });
     },
-    function(token, done) {
-      User.findOne({email: req.body.email}, function(err, user) {
+    function (token, done) {
+      User.findOne({ email: req.body.email }, function (err, user) {
         if (!user) {
           console.log('Error: No account with that email address exists.');
           // req.flash('error', 'No account with that email address exists.');
@@ -208,12 +209,12 @@ exports.post_forget = (req, res, next) => {
         user.resetPasswordToken = token;
         user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
 
-        user.save(function(err) {
+        user.save(function (err) {
           done(err, token, user);
         });
       });
     },
-    function(token) {
+    function (token) {
       const transporter = nodemailer.createTransport({
         service: 'hotmail',
         auth: {
@@ -226,16 +227,16 @@ exports.post_forget = (req, res, next) => {
         from: 'medicine.tracking@outlook.com',
         subject: 'Password Reset',
         text: 'You are receiving this because you (or someone else) ' +
-        'have requested the reset of the password for your account.\n\n' +
+          'have requested the reset of the password for your account.\n\n' +
           'Please click on the following link, or paste this into your ' +
           'browser to complete the process:\n\n' +
           'http://' + req.headers.host + '/reset/' + token + '\n\n' +
-          'If you are registring on you phone, copy the link below and paste '+
+          'If you are registring on you phone, copy the link below and paste ' +
           'it on the registration page.\n' + token +
           'If you did not request this, please ignore this email and your ' +
           'password will remain unchanged.\n',
       };
-      transporter.sendMail(mailOptions, function() {
+      transporter.sendMail(mailOptions, function () {
         console.log('mail sent');
         return res.json({
           response: true, message: 'Mail sent',
@@ -244,7 +245,7 @@ exports.post_forget = (req, res, next) => {
         // done(err, 'done');
       });
     },
-  ], function(err) {
+  ], function (err) {
     if (err) return next(err);
     // res.redirect('/forgot');
     return res.json({
@@ -256,11 +257,11 @@ exports.post_forget = (req, res, next) => {
 };
 
 // Show Reset Page after user clicks in his email
-exports.get_reset = (req, res) =>{
+exports.get_reset = (req, res) => {
   User.findOne({
     resetPasswordToken: req.params.token,
-    resetPasswordExpires: {$gt: Date.now()},
-  }, function(err, user) {
+    resetPasswordExpires: { $gt: Date.now() },
+  }, function (err, user) {
     if (!user) {
       console.log('Error: Password reset token is invalid or has expired.');
       // req.flash('error', 'Password reset token is invalid or has expired.');
@@ -283,21 +284,22 @@ exports.get_reset = (req, res) =>{
 // Reset Page
 exports.post_reset = (req, res) => {
   async.waterfall([
-    function() {
+    function () {
       User.findOne({
         resetPasswordToken: req.params.token,
-        resetPasswordExpires: {$gt: Date.now()},
-      }, function(err, user) {
+        resetPasswordExpires: { $gt: Date.now() },
+      }, function (err, user) {
         if (!user) {
           res.json('Error: Password reset token is invalid or has expired.');
           return res.json({
             response: false,
             message: 'Password reset token is invalid or has expired',
-            Content: null});
+            Content: null
+          });
           // res.redirect('back');
         }
         if (req.body.new_password === req.body.confirm_password) {
-          bcrypt.hash( req.body.new_password, saltRounds, function(err, hash) {
+          bcrypt.hash(req.body.new_password, saltRounds, function (err, hash) {
             if (err) {
               return console.log(err);
             }
@@ -306,7 +308,8 @@ exports.post_reset = (req, res) => {
             user.updateOne({
               password: req.body.new_password,
               resetPasswordExpires: undefined,
-              resetPasswordToken: undefined}, function(err) {
+              resetPasswordToken: undefined
+            }, function (err) {
               if (err) {
                 console.log('Err: ', err);
                 return res.json({
@@ -336,7 +339,7 @@ exports.post_reset = (req, res) => {
         }
       });
     },
-  ], function() {
+  ], function () {
     return res.json({
       response: true,
       message: 'An error occurred',

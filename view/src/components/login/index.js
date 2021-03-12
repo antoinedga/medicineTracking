@@ -53,9 +53,9 @@ export default function SignIn(props) {
     const classes = useStyles();
     const { register, errors, handleSubmit, setError, clearErrors, getValues } = useForm({ mode: 'onTouched' });
 
-    let isLogin = useSelector(state => state.loginReducer.login)
-    let isLoading = useSelector(state => state.loginReducer.loading)
-    let errorMsg = useSelector(state => state.loginReducer.error)
+    let isLogin = useSelector(state => state.login.login)
+    let isLoading = useSelector(state => state.login.loading)
+    let errorMsg = useSelector(state => state.login.error)
 
     const dispatch = useDispatch()
 

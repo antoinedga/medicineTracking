@@ -9,15 +9,21 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
+import Backdrop from '@material-ui/core/Backdrop';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { FormHelperText } from '@material-ui/core';
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
 import { useForm } from "react-hook-form";
 import { Input } from "@material-ui/core";
 import Brand from '../../resources/logo_1.png'
 
 import { Redirect } from 'react-router-dom'
+import { forgotAction } from '../../store/actions/forgot.action'
+import { useDispatch, useSelector } from 'react-redux';
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -39,85 +45,119 @@ const useStyles = makeStyles((theme) => ({
     },
     image: {
         padding: 16
+    },
+    backdrop: {
+        zIndex: theme.zIndex.drawer + 1,
+        color: '#fff',
     }
 }));
 
-export default function SignIn() {
+function Alert(props) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
+
+export default function Forgot() {
     const classes = useStyles();
-    const { register, errors, handleSubmit, setError, clearErrors } = useForm({ mode: 'onTouched' });
-    const [successful, setLogin] = useState(false)
+    const { register, errors, handleSubmit, setError, getValues, clearErrors } = useForm({ mode: 'onTouched' });
+    const isLoading = useSelector(state => state.forgot.loading)
+    const errorMsg = useSelector(state => state.forgot.error)
+    const success = useSelector(state => state.forgot.success)
+    const [open, setOpen] = React.useState(false);
+    const dispatch = useDispatch()
 
     const onSubmit = () => {
+        clearErrors()
+        let data = getValues();
+        forgotAction(data.email, dispatch)
 
-
-
-        setLogin(true)
+        if (errorMsg == "" && success) {
+            setOpen(true);
+            setError('email', {
+                message: ""
+            });
+        } else {
+            setError('email', {
+                message: "NO USER UNDER THIS EMAIL EXIST!"
+            });
+        }
     };
 
-    if (successful) {
-        return (<Redirect to="/dashboard" />);
-    }
-    else {
-        return (
-            <Container component="main" maxWidth="xs">
-                <CssBaseline />
-                <div className={classes.paper}>
-                    <img className={classes.image} src={Brand} />
-                    <Typography component="h1" variant="h5">
-                        Password Rest                </Typography>
-                    <form className={classes.form} onSubmit={handleSubmit(onSubmit)} noValidate>
+    // for the alert 
 
-                        <TextField
-                            variant="outlined"
-                            margin="normal"
-                            required
-                            fullWidth
-                            label="Email Address"
-                            name="email"
-                            autoComplete="email"
-                            varient="outlined"
-                            inputRef={register({
-                                pattern: {
-                                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                                    message:
-                                        "Must be a Valid Email"
-                                },
-                                required: "Email Field cannot be empty"
-                            })}
-                        />
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
 
-                        <FormHelperText error={errors.password != undefined}>
-                            {errors?.password?.message}
-                        </FormHelperText>
+        setOpen(false);
+    };
 
-                        <Button
-                            type="submit"
-                            fullWidth
-                            variant="contained"
-                            color="primary"
-                            className={classes.submit}
-                            onClick={onSubmit}
-                        >
-                            Sign In
+
+
+    return (
+        <Container component="main" maxWidth="xs">
+            <CssBaseline />
+            <div className={classes.paper}>
+                <img className={classes.image} src={Brand} />
+                <Typography component="h1" variant="h5">
+                    Password Rest                </Typography>
+                <form className={classes.form} onSubmit={handleSubmit(onSubmit)} noValidate>
+
+                    <TextField
+                        variant="outlined"
+                        margin="normal"
+                        required
+                        fullWidth
+                        label="Email Address"
+                        name="email"
+                        autoComplete="email"
+                        varient="outlined"
+                        inputRef={register({
+                            pattern: {
+                                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                                message:
+                                    "Must be a Valid Email"
+                            },
+                            required: "Email Field cannot be empty"
+                        })}
+                    />
+
+                    <FormHelperText error={errors.email != undefined}>
+                        {errors?.email?.message}
+                    </FormHelperText>
+
+                    <Button
+                        type="submit"
+                        fullWidth
+                        variant="contained"
+                        color="primary"
+                        className={classes.submit}
+                        onClick={handleSubmit(onSubmit)}
+                    >
+                        Submit
                     </Button>
-                        <Grid container>
-                            <Grid item xs>
-                                <Link href="#" variant="body2">
-                                    Forgot password?
-                            </Link>
-                            </Grid>
-                            <Grid item>
-                                <Link href="/register" variant="body2">
-                                    {"Don't have an account? Sign Up"}
-                                </Link>
-                            </Grid>
-                        </Grid>
-                    </form>
-                </div>
-                <Box mt={8}>
+                    <Grid container>
 
-                </Box>
-            </Container>
-        );
-    }
+                        <Grid item>
+                            <Link href="/signup" variant="body2">
+                                {"Don't have an account? Sign Up"}
+                            </Link>
+                        </Grid>
+                    </Grid>
+                </form>
+            </div>
+            <Box mt={8}>
+
+            </Box>
+            <Backdrop className={classes.backdrop} open={isLoading}>
+                <CircularProgress color="inherit" />
+            </Backdrop>
+
+            <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+                <Alert onClose={handleClose} severity="success">
+                    This is a success message!
+                </Alert>
+            </Snackbar>
+        </Container>
+    );
 }
