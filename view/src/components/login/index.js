@@ -55,6 +55,7 @@ export default function SignIn(props) {
 
     let isLogin = useSelector(state => state.loginReducer.login)
     let isLoading = useSelector(state => state.loginReducer.loading)
+    let errorMsg = useSelector(state => state.loginReducer.error)
 
     const dispatch = useDispatch()
 
@@ -62,7 +63,14 @@ export default function SignIn(props) {
         let data = getValues();
         loginPayload(data.email, data.password, dispatch)
 
-        console.log(isLoading)
+        if (errorMsg == "INCORRECT CREDENTIAL") {
+            setError("password", {
+                message: "INCORRECT CREDENTIAL"
+            })
+        } else {
+            setError("email", { message: errorMsg })
+        }
+
     };
 
     console.log(useSelector(state => state))
@@ -132,7 +140,7 @@ export default function SignIn(props) {
                             variant="contained"
                             color="primary"
                             className={classes.submit}
-                            onClick={onSubmit}
+                            onClick={handleSubmit(onSubmit)}
                         >
                             Sign In
                     </Button>

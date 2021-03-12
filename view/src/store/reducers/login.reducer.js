@@ -34,6 +34,7 @@ export default function loginReducer(state = initialState, action) {
                 ...state,
                 loading: false,
                 login: false,
+                error: action.payload.error
             }
         }
         default:
