@@ -7,6 +7,7 @@ import NoMatch from "./components/noMatch/noMatch";
 import Register from "./components/register"
 import Dashboard from "./components/dashboard"
 import Password from './components/forgotpassword'
+import PrivateRoute from './components/privateRouter.js'
 import "bootstrap/dist/css/bootstrap.min.css";
 import "shards-ui/dist/css/shards.min.css"
 
@@ -37,28 +38,23 @@ function App() {
             <Router>
                 <Switch>
 
-                    <Route exact path="/">
-                        <Login />
+                    <Route exact path="/" component={Login}>
                     </Route>
 
-                    <Route path="/signup/:token?">
-                        <Register />
+                    <Route path="/signup/:token?" component={Register}>
                     </Route>
 
-                    <Route exact path="/login">
-                        <Login />
+                    <Route exact path="/login" component={Login}>
                     </Route>
 
-                    <Route exact path="/password_reset">
-                        <Password />
+                    <Route exact path="/password_reset" component={Password}>
                     </Route>
 
-                    <Route path="/dashboard">
+                    <PrivateRoute path="/dashboard">
                         <Dashboard />
-                    </Route>
+                    </PrivateRoute>
 
-                    <Route path="*">
-                        <NoMatch />
+                    <Route path="*" component={NoMatch}>
                     </Route>
 
                 </Switch>

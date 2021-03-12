@@ -154,8 +154,8 @@ export default function Forgot() {
             </Backdrop>
 
             <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-                <Alert onClose={handleClose} severity="success">
-                    This is a success message!
+                <Alert onClose={handleClose} severity="error">
+                    this.props?.redirect
                 </Alert>
             </Snackbar>
         </Container>

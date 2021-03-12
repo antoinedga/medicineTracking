@@ -14,6 +14,8 @@ import Container from '@material-ui/core/Container';
 import { FormHelperText } from '@material-ui/core';
 import Backdrop from '@material-ui/core/Backdrop';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
 import { useForm } from "react-hook-form";
 import { Input } from "@material-ui/core";
 import Brand from '../../resources/logo_1.png'
@@ -49,6 +51,10 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
+function Alert(props) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
+
 export default function SignIn(props) {
     const classes = useStyles();
     const { register, errors, handleSubmit, setError, clearErrors, getValues } = useForm({ mode: 'onTouched' });
@@ -56,7 +62,7 @@ export default function SignIn(props) {
     let isLogin = useSelector(state => state.login.login)
     let isLoading = useSelector(state => state.login.loading)
     let errorMsg = useSelector(state => state.login.error)
-
+    const [open, setOpen] = React.useState(false);
     const dispatch = useDispatch()
 
     const onSubmit = () => {
@@ -73,7 +79,24 @@ export default function SignIn(props) {
 
     };
 
-    console.log(useSelector(state => state))
+    // for the alert 
+
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setOpen(false);
+    };
+
+
+    useEffect(() => {
+        console.log(props)
+        if (props.location.state?.msg) {
+            setOpen(true)
+        }
+    }, []);
+
     if (isLogin) {
         return (<Redirect to="/dashboard" />);
     }
@@ -164,6 +187,12 @@ export default function SignIn(props) {
                 <Backdrop className={classes.backdrop} open={isLoading}>
                     <CircularProgress color="inherit" />
                 </Backdrop>
+                <Snackbar open={open} anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+                    autoHideDuration={6000} onClose={handleClose}>
+                    <Alert onClose={handleClose} severity="error">
+                        You must be signed in to access dashboard
+                    </Alert>
+                </Snackbar>
             </Container>
         );
     }
