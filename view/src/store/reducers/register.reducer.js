@@ -1,4 +1,4 @@
-import constant from '../actions/actionType/login'
+import constant from '../actions/actionType/register'
 
 const initialState = {
     name: "",
@@ -34,7 +34,6 @@ export default function loginReducer(state = initialState, action) {
                 ...state,
                 loading: false,
                 login: false,
-                error: action.payload.error
             }
         }
         default:

@@ -2,14 +2,23 @@ import constant from './actionType/login'
 import axios from 'axios'
 
 export const loginPayload = (email, password, dispatch) => {
-    console.log("is this working?")
     dispatch({ type: constant.LOGIN_SENT });
-    console.log("is this working?")
-    axios.post("/login").then(res => res.json()).then(data => {
-        console.log(data)
-        dispatch({ type: constant.LOGIN_SUCCESS, payload: {} })
-    }).catch(error => {
-        console.log(error);
-        dispatch({ type: constant.LOGIN_ERROR, payload: {} })
-    })
+
+    axios.post("http://localhost:8080/api/user/login", { email, password })
+        .then((res) => res.data).
+        then(data => {
+            console.log(data)
+            if (data.response) {
+                dispatch({ type: constant.LOGIN_SUCCESS, payload: { token: data.content } })
+            } // user exist but incorrect credentials 
+            else {
+                dispatch({ type: constant.LOGIN_ERROR, payload: { error: "INCORRECT CREDENTIAL" } })
+            }
+
+        }).catch((error) => {
+            // 400+ errors normally if user doesnt exist
+            let msg = error.response.data.message;
+            console.log(error.response)
+            dispatch({ type: constant.LOGIN_ERROR, payload: { error: msg } })
+        })
 }

@@ -4,7 +4,7 @@ import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
@@ -43,13 +43,22 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignUp() {
     const classes = useStyles();
-    const { register, errors, handleSubmit, setError, clearErrors, watch } = useForm({ mode: 'onTouched' });
+    const { register, errors, handleSubmit, setError, clearErrors, watch, setValue } = useForm({ mode: 'onTouched' });
 
     const [isValidInvite, setInvite] = useState(true)
 
     const onSubmit = (data, e) => {
 
     }
+    let { token } = useParams();
+    useEffect(() => {
+
+        if (token != undefined) {
+            setValue("invite", token)
+        }
+
+    }, []);
+
 
 
     return (
@@ -151,6 +160,15 @@ export default function SignUp() {
                                 id="invite-code"
                                 label="Invitation Code"
                                 name="invite"
+                                inputRef={
+                                    register(
+                                        {
+                                            required: 'A Valid Token must be added to allow registration!'
+
+                                        }
+                                    )
+                                }
+
                             />
                             <FormHelperText error={errors.invite != undefined}>
                                 {errors?.invite?.message}
