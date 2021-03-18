@@ -37,6 +37,13 @@ export default function loginReducer(state = initialState, action) {
                 error: action.payload.error
             }
         }
+        case constant.LOGIN_LOGOUT: {
+            return {
+                ...state,
+                login: false,
+                token: "logged out"
+            }
+        }
         default:
             return state;
     }

@@ -13,10 +13,17 @@ const PrivateRoute = ({ children, ...rest }) => {
         <Route
             {...rest}
             render={() => {
-                if (!login && token == "") {
+                if (!login && (token == "" || token == null)) {
                     return <Redirect to={{
                         pathname: "/login",
                         state: { msg: "not logged in" },
+                        from: "/dashboard"
+                    }} />;
+                }
+                else if (!login && (token == "logged out")) {
+                    return <Redirect to={{
+                        pathname: "/login",
+                        state: null,
                         from: "/dashboard"
                     }} />;
                 }
