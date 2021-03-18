@@ -7,7 +7,9 @@ import Popper from '@material-ui/core/Popper';
 import MenuItem from '@material-ui/core/MenuItem';
 import MenuList from '@material-ui/core/MenuList';
 import { makeStyles } from '@material-ui/core/styles';
-
+import constants from '../../../../store/actions/actionType/login'
+import { shallowEqual, useSelector, useDispatch } from 'react-redux'
+import { Redirect, Link } from 'react-router-dom'
 const useStyles = makeStyles((theme) => ({
     userBtn: {
         color: 'white',
@@ -21,6 +23,7 @@ export default function SimpleMenu(props) {
     const [open, setOpen] = React.useState(false);
     const anchorRef = React.useRef(null);
     const classes = useStyles();
+    const dispatch = useDispatch();
 
     const handleToggle = () => {
         setOpen((prevOpen) => !prevOpen);
@@ -42,7 +45,7 @@ export default function SimpleMenu(props) {
     }
 
     const handleLogOut = () => {
-
+        dispatch({ type: constants.LOGIN_LOGOUT })
     }
 
     return (
@@ -65,7 +68,7 @@ export default function SimpleMenu(props) {
                         <Paper>
                             <ClickAwayListener onClickAway={handleClose}>
                                 <MenuList autoFocusItem={open} id="menu-list-grow" onKeyDown={handleListKeyDown}>
-                                    <MenuItem onClick={handleClose}>Logout</MenuItem>
+                                    <MenuItem onClick={handleLogOut}>Logout</MenuItem>
                                 </MenuList>
                             </ClickAwayListener>
                         </Paper>
