@@ -112,6 +112,7 @@ exports.post_invitation = (req, res) => {
 
   const addInvitation = new Invitations({
     invitation_token: invitationId,
+    email: req.body.email,
     invitationExpires: Date.now() + 3600000,
   });
 
@@ -121,10 +122,6 @@ exports.post_invitation = (req, res) => {
       return;
     }
   });
-
-  response = {
-    email: req.body.email,
-  };
 
   const mailOptions = {
     from: 'medicine.tracking@outlook.com',
@@ -140,22 +137,22 @@ exports.post_invitation = (req, res) => {
   };
 
   const transporter = nodemailer.createTransport({
-    service: 'hotmail',
+    service: process.env.EMAIL_PROVIDER,
     auth: {
-      user: 'medicine.tracking@outlook.com',
-      pass: 'Medicine123$%^',
+      user: process.env.EMAIL_ADDRESS,
+      pass: process.env.EMAIL_PASSWORD,
     },
   });
 
-  transporter.sendMail(mailOptions, (err, res) => {
+
+  transporter.sendMail(mailOptions, (err, info) => {
     if (err) {
       return res.json({
         response: false,
         message: 'An error occurred',
-        Content: null,
+        Content: err,
       });
     } else {
-      console.log('Invitation has been sent to email Successfully!');
       return res.json({
         response: true,
         message: 'An email has been send with an invitation code',
