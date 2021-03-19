@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import clsx from 'clsx';
 import {
     Route,
@@ -9,7 +9,7 @@ import {
     AppBar, IconButton, Divider,
     List, ListItem, ListItemIcon, ListItemText,
     Toolbar, Drawer, Typography,
-    Tooltip, Grid, Select, MenuItem, FormHelperText
+    Tooltip, Grid, Select, MenuItem, FormHelperText, CardActions
 } from '@material-ui/core'
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { makeStyles, useTheme } from '@material-ui/core/styles';
@@ -30,6 +30,8 @@ import Users from "./pages/users";
 import NoLocationAccess from './pages/noAccessPage'
 import IdleTimer from "./pages/idle-timer";
 import UserMenu from "./components/userMenu"
+import { useSelector, useDispatch } from 'react-redux'
+const inventAction = require('../../store/actions/inventory.action')
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
@@ -110,9 +112,10 @@ function Dashboard(props) {
 
     const classes = useStyles();
     const theme = useTheme();
+    const dispatch = useDispatch();
     const [open, setOpen] = React.useState(false);
-    const [location, setLocation] = React.useState("None");
     let { path, url } = useRouteMatch();
+    const location = useSelector(state => state.inventory.location)
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -123,8 +126,12 @@ function Dashboard(props) {
     };
 
     const handleLocationChange = (event) => {
-        setLocation(event.target.value)
+
     }
+
+    useEffect(() => {
+        inventAction.getAllPath(dispatch)
+    }, [location])
 
     return (
         <>
