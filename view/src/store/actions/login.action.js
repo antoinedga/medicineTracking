@@ -9,7 +9,8 @@ export const loginPayload = (email, password, dispatch) => {
         then(data => {
             console.log(data)
             if (data.response) {
-                dispatch({ type: constant.LOGIN_SUCCESS, payload: { token: data.content } })
+
+                dispatch({ type: constant.LOGIN_SUCCESS, payload: { token: data.Content } })
             } // user exist but incorrect credentials 
             else {
                 dispatch({ type: constant.LOGIN_ERROR, payload: { error: "INCORRECT CREDENTIAL" } })

@@ -1,6 +1,5 @@
 
 import React from "react";
-import { applyMiddleware, createStore, compose } from 'redux'
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Login from "./components/login"
 import NoMatch from "./components/noMatch/noMatch";
@@ -13,23 +12,16 @@ import "shards-ui/dist/css/shards.min.css"
 
 import { Provider } from 'react-redux'
 import thunk from 'redux-thunk'
-import rootReducer from "./store/reducers"
 
-const initial = require("./store/initialState")
+
+const Store = require('./store/store')
 const middleware = [thunk];
 let store = null;
 
 if (window?.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) {
-    const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-    store = createStore(
-        rootReducer, initial, composeEnhancer(applyMiddleware(thunk))
-
-    );
+    store = Store.withDevTool();
 } else {
-    store = createStore(
-        rootReducer, initial, applyMiddleware(thunk)
-
-    );
+    store = Store.withoutDevTool();
 }
 
 function App() {
