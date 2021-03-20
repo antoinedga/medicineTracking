@@ -1,5 +1,6 @@
 import constant from './actionType/login'
 import axios from 'axios'
+import Cookies from 'universal-cookie';
 
 export const loginPayload = (email, password, dispatch) => {
     dispatch({ type: constant.LOGIN_SENT });
@@ -10,6 +11,7 @@ export const loginPayload = (email, password, dispatch) => {
             console.log(data)
             if (data.response) {
 
+                localStorage.setItem('token', data.Content);
                 dispatch({ type: constant.LOGIN_SUCCESS, payload: { token: data.Content } })
             } // user exist but incorrect credentials 
             else {
@@ -18,8 +20,13 @@ export const loginPayload = (email, password, dispatch) => {
 
         }).catch((error) => {
             // 400+ errors normally if user doesnt exist
-            let msg = error.response.data.message;
+            let msg = error.response?.data?.message;
             console.log(error.response)
             dispatch({ type: constant.LOGIN_ERROR, payload: { error: msg } })
         })
+}
+
+export const logoutPayload = (dispatch) => {
+    localStorage.clear();
+    dispatch({ type: constant.LOGIN_LOGOUT })
 }

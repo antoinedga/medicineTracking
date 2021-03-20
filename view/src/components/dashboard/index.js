@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import clsx from 'clsx';
 import {
     Route,
@@ -31,6 +31,9 @@ import NoLocationAccess from './pages/noAccessPage'
 import IdleTimer from "./pages/idle-timer";
 import UserMenu from "./components/userMenu"
 import { useSelector, useDispatch } from 'react-redux'
+import constants from "../../store/actions/actionType/inventory";
+import store from '../../store/store'
+
 const inventAction = require('../../store/actions/inventory.action')
 const drawerWidth = 240;
 
@@ -116,6 +119,7 @@ function Dashboard(props) {
     const [open, setOpen] = React.useState(false);
     let { path, url } = useRouteMatch();
     const location = useSelector(state => state.inventory.location)
+    const selectedLocation = useSelector(state => state.inventory.selected)
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -126,12 +130,12 @@ function Dashboard(props) {
     };
 
     const handleLocationChange = (event) => {
-
+        dispatch({ type: constants.CHANGE_LOCATION, payload: { selected: event.target.value } })
     }
 
     useEffect(() => {
-        inventAction.getAllPath(dispatch)
-    }, [location])
+        inventAction.getAllPath(dispatch);
+    }, [])
 
     return (
         <>
@@ -242,15 +246,19 @@ function Dashboard(props) {
                         </Grid>
                         <Grid item xs={2} >
                             <Select
-                                value={location}
+                                value={selectedLocation}
                                 onChange={handleLocationChange}
                                 inputProps={{ 'aria-label': 'Without label' }}
                                 fullWidth={true}
-                                displayEmpty={true}
+                                displayEmpty={false}
                             >
-                                <MenuItem selected>
-                                    something
-                                </MenuItem>
+                                {
+                                    location.map(loc =>
+                                        <MenuItem key={loc} value={loc}>
+                                            {loc}
+                                        </MenuItem>
+                                    )
+                                }
 
                             </Select>
                         </Grid>
