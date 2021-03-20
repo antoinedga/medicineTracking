@@ -136,14 +136,15 @@ exports.refreshToken = (req, res) => {
                 message: 'Invalid refresh token',
                 Content: null,
               });
-        };
-        res
-            .status(400)
-            .json({
-              response: true,
-              message: 'Successfully refreshed token',
-              Content: token,
-            });
+        } else {
+          res
+              .status(400)
+              .json({
+                response: true,
+                message: 'Successfully refreshed token',
+                Content: token,
+              });
+        }
       });
 };
 
