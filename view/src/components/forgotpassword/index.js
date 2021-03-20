@@ -62,24 +62,27 @@ export default function Forgot() {
     const isLoading = useSelector(state => state.forgot.loading)
     const errorMsg = useSelector(state => state.forgot.error)
     const success = useSelector(state => state.forgot.success)
-    const [open, setOpen] = React.useState(false);
+    const [openAlerDialog, setOpen] = React.useState(false);
     const dispatch = useDispatch()
 
     const onSubmit = () => {
         clearErrors()
         let data = getValues();
-        forgotAction(data.email, dispatch)
+        forgotAction(data.email, dispatch).then((result) => {
 
-        if (errorMsg == "" && success) {
-            setOpen(true);
-            setError('email', {
-                message: ""
-            });
-        } else {
-            setError('email', {
-                message: "NO USER UNDER THIS EMAIL EXIST!"
-            });
-        }
+            if (result) {
+                setOpen(true);
+            } else {
+                setError('email', {
+                    message: "NO USER UNDER THIS EMAIL EXIST!"
+                });
+            }
+
+        }).catch(error => {
+            setError("email", {
+                message: "ERROR ON OUR END"
+            })
+        })
     };
 
     // for the alert 
@@ -153,9 +156,9 @@ export default function Forgot() {
                 <CircularProgress color="inherit" />
             </Backdrop>
 
-            <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-                <Alert onClose={handleClose} severity="error">
-                    this.props?.redirect
+            <Snackbar open={openAlerDialog} autoHideDuration={6000} onClose={handleClose}>
+                <Alert onClose={handleClose} severity="success">
+                    EMAIL HAS BEEN SENT
                 </Alert>
             </Snackbar>
         </Container>
