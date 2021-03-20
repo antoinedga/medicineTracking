@@ -4,7 +4,9 @@ const controller = require('../../controllers/Authorization/admin');
 
 module.exports = () => {
   router.route('/admin_invite')
-      .post(controller.post_invitation);
+      .post(
+          controller.post_invitation,
+      );
   return router;
 };
 

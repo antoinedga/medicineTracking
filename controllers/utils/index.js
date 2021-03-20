@@ -1,9 +1,9 @@
 
-const config = require('../../../config');
-const {User, Inventory} = require('../../../models');
-const {action} = require('../enum/actions');
-const {resource} = require('../enum/resources');
-const jwt = require('jsonwebtoken');
+const config = require('../../config');
+const {User, Inventory, Token} = require('../../models');
+const {action} = require('../Role/enum/actions');
+const {resource} = require('../Role/enum/resources');
+const JWT = require('jsonwebtoken');
 
 /**
  * Wraps any object in an array
@@ -279,7 +279,7 @@ async function createToken(userId) {
       .then((user) => {
         const access = combine(user.roles);
 
-        const token = jwt.sign(
+        const token = JWT.sign(
             {
               user: {
                 _id: user._id,
@@ -287,8 +287,8 @@ async function createToken(userId) {
               },
               access,
             },
-            config.secrets.jwt,
-            {expiresIn: config.exp.jwt});
+            config.secrets.jwtToken,
+            {expiresIn: config.exp.jwtToken});
 
         return token;
       })
@@ -296,6 +296,80 @@ async function createToken(userId) {
         return null;
       });
   return res;
+}
+
+/**
+ * Creates a JWT token and refresh token for the given user
+ * @param {*} userId
+ * @return {Promise<{token: String, refreshToken: String}>}
+ */
+async function createRefreshToken(userId) {
+  const res = createToken(userId)
+      .then((token) => {
+        if (token == undefined) return null;
+
+        const refreshToken = JWT.sign(
+            {
+              user: {
+                _id: userId,
+              },
+            },
+            config.secrets.jwtRefreshToken,
+            {expiresIn: config.exp.jwtRefreshToken});
+
+        return Token
+            .findOneAndUpdate(
+                {user: userId},
+                {
+                  user: userId,
+                  refreshToken: refreshToken,
+                },
+                {
+                  upsert: true,
+                  setDefaultsOnInsert: true,
+                  useFindAndModify: false,
+                },
+            )
+            .then((doc) => {
+              return {token, refreshToken};
+            })
+            .catch(() => {
+              return null;
+            });
+      })
+      .catch(() => {
+        return null;
+      });
+  return res;
+}
+
+/**
+ * verifies the refresh token and generates a new token
+ * @param {*} refreshToken
+ * @return {Promise<String>} new token
+ */
+async function verifyRefreshToken(refreshToken) {
+  return JWT.verify(
+      refreshToken,
+      config.secrets.jwtRefreshToken,
+      (err, decode) => {
+        return Token
+            .findOne({user: decode?.user?._id})
+            .then((doc) => {
+              if (doc?.refreshToken != refreshToken) return null;
+
+              return createToken(decode.user._id)
+                  .then((token) => {
+                    return token;
+                  })
+                  .catch((err)=>{
+                    return null;
+                  });
+            })
+            .catch((err)=>{
+              return null;
+            });
+      });
 }
 
 module.exports = {
@@ -310,6 +384,8 @@ module.exports = {
   requireAccess,
   createAdminRole,
   createToken,
+  createRefreshToken,
+  verifyRefreshToken,
 };
 
 
