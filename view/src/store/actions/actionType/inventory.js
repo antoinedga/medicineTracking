@@ -1,0 +1,9 @@
+const constants = {
+    INVENT_GET_ALL: "INVENT_GET_ALL",
+    INVENT_GET_PATH: "INVENT_GET_PATH",
+    LOADING: "LOADING",
+    CHANGE_LOCATION: "CHANGE_LOCATION",
+    INVENT_ERROR: "INVENT_ERROR",
+    DONE: "DONE"
+}
+export default constants;

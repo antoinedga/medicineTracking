@@ -1,7 +1,7 @@
 const {Role} = require('../../models');
 const User = require('../../models/user');
 const {callback} = require('../Callbacks');
-const utils = require('./utils');
+const utils = require('../utils');
 const config = require('../../config');
 
 /**
@@ -23,7 +23,7 @@ function createAdmin(name, email, password) {
   ).exec((err, doc) => {
     if (err) return console.log(err);
     User.findOneAndUpdate(
-        {_id: '111111111111111111111111'},
+        {_id: '111111111111111111111112'},
         {
           name,
           email,
@@ -41,7 +41,8 @@ function createAdmin(name, email, password) {
     });
   });
 }
-createAdmin('admin', 'admin@admin.com', 'admin');
+
+createAdmin('admin', 'an.gordonalvarez@gmail.com', 'admin');
 
 exports.getAll = (req, res) => {
   if (process.env.NODE_ENV === config.dev) {
@@ -80,13 +81,13 @@ exports.grantUserRole = (req, res) => {
 
 exports.findRecursivelyByPath = (req, res) => {
   Role
-      .find({path: new RegExp('^'+req.body.path)})
+      .find({path: new RegExp('^' + req.body.path)})
       .exec(callback(req, res, 'find roles by path'));
 };
 
 exports.findByPath = (req, res) => {
   Role
-      .findOne({path: new RegExp('^'+req.body.path+'$')})
+      .findOne({path: new RegExp('^' + req.body.path + '$')})
       .exec(callback(req, res, 'find roles by path'));
 };
 
@@ -98,13 +99,13 @@ exports.findByID = (req, res) => {
 
 exports.deleteRecursivelyByPath = (req, res) => {
   Role
-      .deleteMany({path: new RegExp('^'+req.body.path)})
+      .deleteMany({path: new RegExp('^' + req.body.path)})
       .exec(callback(req, res, 'delete roles by path'));
 };
 
 exports.deleteByPath = (req, res) => {
   Role
-      .deleteMany({path: new RegExp('^'+req.body.path+'$')})
+      .deleteMany({path: new RegExp('^' + req.body.path + '$')})
       .exec(callback(req, res, 'delete roles by path'));
 };
 

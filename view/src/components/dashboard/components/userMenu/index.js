@@ -10,6 +10,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import constants from '../../../../store/actions/actionType/login'
 import { shallowEqual, useSelector, useDispatch } from 'react-redux'
 import { Redirect, Link } from 'react-router-dom'
+
+const loginAction = require('../../../../store/actions/login.action')
+
 const useStyles = makeStyles((theme) => ({
     userBtn: {
         color: 'white',
@@ -45,7 +48,7 @@ export default function SimpleMenu(props) {
     }
 
     const handleLogOut = () => {
-        dispatch({ type: constants.LOGIN_LOGOUT })
+        loginAction.logoutPayload(dispatch)
     }
 
     return (

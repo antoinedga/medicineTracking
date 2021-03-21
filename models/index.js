@@ -5,4 +5,5 @@ exports.Role = require('./Role');
 exports.User = require('./user');
 exports.Invitation = require('./invitations');
 exports.Order = require('./order');
-
+exports.Config = require('./config');
+exports.Token = require('./token');

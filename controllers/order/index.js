@@ -28,6 +28,7 @@ exports.getAll = (req, res) => {
 
 
 exports.create = (req, res) => {
+  if (!req.body?.user) req.body.user = req.auth.user._id;
   const newOrder = new Order(req.body);
 
   Inventory

@@ -2,7 +2,7 @@
 const router = require('express').Router();
 const inventory = require('../../controllers/Inventory');
 const {requireLogin} =require('../../middleware/requireLogin');
-const {requireAccess} = require('../../controllers/Role/utils');
+const {requireAccess} = require('../../controllers/utils');
 const {action, resource} = require('../../controllers/Role/enum');
 
 module.exports = () => {

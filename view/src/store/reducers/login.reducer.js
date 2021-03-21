@@ -2,10 +2,6 @@ import constant from '../actions/actionType/login'
 
 const initialState = {
     name: "",
-    location: [],
-    selectedInventory: "",
-    inventory: [],
-    orders: [],
     login: false,
     loading: false,
     role: "",

@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react'
 import { useIdleTimer } from 'react-idle-timer'
 import { Dialog, DialogContent, Button, DialogTitle, DialogActions, DialogContentText } from '@material-ui/core'
 import { Redirect } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+
+const loginAction = require('../../../../store/actions/login.action')
 
 export default function IdleTimerComp(props) {
     // needs to be in mili seconds
@@ -13,6 +16,7 @@ export default function IdleTimerComp(props) {
     const [isTimedOut, setTimedOut] = useState(false)
     const [isIdle, setIsIdle] = useState(false)
 
+    const dispatch = useDispatch()
 
     const handleActive = () => {
         console.log(isTimedOut)
@@ -24,6 +28,7 @@ export default function IdleTimerComp(props) {
         setOpen(true)
 
         if (isTimedOut) {
+            loginAction.logoutPayload(dispatch)
             setRedirect(true)
         } else {
             setOpen(true)

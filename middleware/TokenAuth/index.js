@@ -5,7 +5,7 @@ const decodeToken = (req, res, next) => {
   if (req?.headers?.authorization?.split(' ')[0] === 'Bearer') {
     JWT.verify(
         req.headers.authorization.split(' ')[1],
-        config.secrets.jwt,
+        config.secrets.jwtToken,
         (err, decode) => {
           req.auth = decode;
           if (err) req.auth = undefined;

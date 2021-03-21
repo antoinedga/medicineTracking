@@ -22,6 +22,7 @@ import Brand from '../../resources/logo_1.png'
 import { Redirect, Link } from 'react-router-dom'
 
 import { shallowEqual, useSelector, useDispatch } from 'react-redux'
+import constant from '../../store/actions/actionType/login'
 import { loginPayload } from '../../store/actions/login.action'
 
 const useStyles = makeStyles((theme) => ({
@@ -91,7 +92,10 @@ export default function SignIn(props) {
 
 
     useEffect(() => {
-        console.log(props)
+        if (localStorage.getItem("token") !== null) {
+            dispatch({ type: constant.LOGIN_SUCCESS, payload: { token: localStorage.getItem('token') } })
+        }
+
         if (props.location.state?.msg) {
             setOpen(true)
         }

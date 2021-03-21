@@ -15,8 +15,7 @@ exports.callback = (req, res, action) => {
             response: true,
             message: `Successfully completed ${action}`,
             Content: doc,
-          })
-      ;
+          });
     };
   };
 }

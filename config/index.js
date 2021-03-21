@@ -6,10 +6,12 @@ const config = {
   port: process.env.PORT || 8080,
   saltRounds: 10,
   exp: {
-    jwt: process.env.JWT_EXP || '30m',
+    jwtToken: process.env.JWT_TOKEN_EXP || '30m',
+    jwtRefreshToken: process.env.JWT_REFRESH_TOKEN_EXP || '1d',
   },
   secrets: {
-    jwt: process.env.JWT || 'greenbanana',
+    jwtToken: process.env.JWT_TOKEN || 'greenbanana',
+    jwtRefreshToken: process.env.JWT_REFRESH_TOKEN || 'purpleapple',
   },
 };
 
