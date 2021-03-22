@@ -6,6 +6,7 @@ const RoleSchema = new Schema({
   role: {
     type: String,
     required: true,
+    unique: true,
   },
   path: {
     type: String,
@@ -29,5 +30,6 @@ const RoleSchema = new Schema({
 });
 
 RoleSchema.index( {path: 1} );
+RoleSchema.index( {name: 1} );
 
 module.exports = mongoose.model('role', RoleSchema);

@@ -8,7 +8,8 @@
     "start": "node index.js",
     "server": "nodemon index.js",
     "client": "npm start --prefix view",
-    "dev": "concurrently \"npm run server\" \"npm start --prefix view\""
+    "dev": "concurrently \"npm run server\" \"npm start --prefix view\"",
+    "build": "cd view && npm run build"
   },
   "keywords": [],
   "author": "",
@@ -41,6 +42,7 @@
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
     "rotating-file-stream": "^2.1.3",
+    "sendmail": "^1.6.1",
     "uuid": "^8.3.2"
   },
   "devDependencies": {

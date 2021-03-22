@@ -1,7 +1,7 @@
 const config = require('../../config');
 const {Inventory} = require('../../models');
 const {callback} = require('../Callbacks');
-const {getPathsObject, getCompletePaths} = require('../Role/utils');
+const {getPathsObject, getCompletePaths} = require('../utils');
 
 
 /**

@@ -1,6 +1,6 @@
 const User = require('../../models/user');
 const Invitations = require('../../models/invitations');
-const {createToken} = require('../Role/utils');
+const {createRefreshToken, verifyRefreshToken} = require('../utils');
 const bcrypt = require('bcrypt');
 const async = require('async');
 const crypto = require('crypto');
@@ -110,7 +110,7 @@ exports.post_login = (req, res) => {
                 Content: null,
               });
             } else {
-              createToken(user._id).then((token) => {
+              createRefreshToken(user._id).then((token) => {
                 res.json({
                   response: true,
                   message: 'Login Successful',
@@ -123,6 +123,29 @@ exports.post_login = (req, res) => {
           ).catch((err) => console.log(err));
     };
   });
+};
+
+exports.refreshToken = (req, res) => {
+  verifyRefreshToken(req.body?.refreshToken)
+      .then((token) => {
+        if (token == undefined) {
+          res
+              .status(400)
+              .json({
+                response: false,
+                message: 'Invalid refresh token',
+                Content: null,
+              });
+        } else {
+          res
+              .status(400)
+              .json({
+                response: true,
+                message: 'Successfully refreshed token',
+                Content: token,
+              });
+        }
+      });
 };
 
 // exports.post_login = (req, res) => {
@@ -211,23 +234,23 @@ exports.post_forget = (req, res, next) => {
     },
     function(token) {
       const transporter = nodemailer.createTransport({
-        service: 'hotmail',
+        service: process.env.EMAIL_PROVIDER,
         auth: {
-          user: 'medicine.tracking@outlook.com',
-          pass: 'Medicine123$%^',
+          user: process.env.EMAIL_ADDRESS,
+          pass: process.env.EMAIL_PASSWORD,
         },
       });
       const mailOptions = {
         to: req.body.email,
-        from: 'medicine.tracking@outlook.com',
+        from: process.env.EMAIL_ADDRESS,
         subject: 'Password Reset',
         text: 'You are receiving this because you (or someone else) ' +
           'have requested the reset of the password for your account.\n\n' +
           'Please click on the following link, or paste this into your ' +
           'browser to complete the process:\n\n' +
           'http://' + req.headers.host + '/reset/' + token + '\n\n' +
-          'If you are registring on you phone, copy the link below and paste ' +
-          'it on the registration page.\n' + token +
+          'If you are registering on you phone, copy the link below and ' +
+          'paste it on the registration page.\n' + token + ' ' +
           'If you did not request this, please ignore this email and your ' +
           'password will remain unchanged.\n',
       };
@@ -245,7 +268,7 @@ exports.post_forget = (req, res, next) => {
     // res.redirect('/forgot');
     return res.json({
       response: false,
-      message: 'An error occured',
+      message: 'An error occurred',
       Content: null,
     });
   });

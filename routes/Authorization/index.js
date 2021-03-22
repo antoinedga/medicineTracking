@@ -2,6 +2,7 @@
 const router = require('express').Router();
 const controller = require('../../controllers');
 
+
 module.exports = () => {
   router.route('/signup/:token')
       .post(controller.authorization.post_registration);
@@ -14,6 +15,9 @@ module.exports = () => {
 
   router.route('/reset/:token')
       .post(controller.authorization.post_reset);
+
+  router.route('/token')
+      .post(controller.authorization.refreshToken);
 
   return router;
 };
