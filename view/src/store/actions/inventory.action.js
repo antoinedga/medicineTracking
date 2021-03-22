@@ -20,8 +20,8 @@ export const getAllPath = (dispatch) => {
 
         }).catch((error) => {
             // 400+ errors normally if user doesnt exist
-            let msg = error.response.data.message;
-            console.log(error.response)
+            console.log(error)
+            let msg = error.response?.data.message;
             dispatch({ type: constant.INVENT_ERROR, payload: { errorMsg: msg } })
         })
 }
