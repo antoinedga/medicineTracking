@@ -6,6 +6,7 @@ import NoMatch from "./components/noMatch/noMatch";
 import Register from "./components/register"
 import Dashboard from "./components/dashboard"
 import Password from './components/forgotpassword'
+import ResetPassword from './components/resetPassword'
 import PrivateRoute from './components/privateRouter.js'
 import "bootstrap/dist/css/bootstrap.min.css";
 import "shards-ui/dist/css/shards.min.css"
@@ -41,6 +42,8 @@ function App() {
 
                     <Route exact path="/password_reset" component={Password}>
                     </Route>
+                    <Route exact path="/reset/:token?" component={ResetPassword}
+                    ></Route>
 
                     <PrivateRoute path="/dashboard">
                         <Dashboard />
