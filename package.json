@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "client-install": "npm install --prefix view",
+    "install-all": "npm install && npm install --prefix view",
     "start": "node index.js",
     "server": "nodemon index.js",
     "client": "npm start --prefix view",
