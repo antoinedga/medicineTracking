@@ -22,7 +22,7 @@ import ViewDetail from './viewDetail'
 import DeleteDialog from './deleteDialog'
 import ImportExcel from './importExcel'
 import AddInventory from './addInventory'
-
+import { useSelector } from 'react-redux'
 const tableIcons = {
     Add: AddBox,
     Check: Check,
@@ -67,7 +67,7 @@ export default function Inventory(props) {
     const [deleteData, setDeleteData] = useState({});
     const [detailData, setDetailData] = useState({});
     const [openDetail, setDetailOpen] = useState(false);
-
+    const title = useSelector(state => state.inventory.selected)
     const classes = useStyles();
     const theme = useTheme();
 
@@ -110,6 +110,7 @@ export default function Inventory(props) {
             </Grid>
             <div className={classes.root}>
                 <MaterialTable
+                    title={title}
                     columns={[
                         { title: 'Item', field: 'item', type: "string" },
                         { title: 'Drug', field: 'drug' },

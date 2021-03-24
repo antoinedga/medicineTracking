@@ -251,6 +251,13 @@ function Dashboard(props) {
                                 inputProps={{ 'aria-label': 'Without label' }}
                                 fullWidth={true}
                                 displayEmpty={false}
+                                MenuProps={{
+                                    PaperProps: {
+                                        style: {
+                                            maxHeight: 300
+                                        }
+                                    }
+                                }}
                             >
                                 {
                                     location.map(loc =>
