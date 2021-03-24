@@ -44,9 +44,21 @@ const useStyles = makeStyles((theme) => ({
     formControl: {
         margin: theme.spacing(2),
         minWidth: 120,
-    }, backdrop: {
+    },
+    backdrop: {
         zIndex: theme.zIndex.drawer + 1,
         color: '#fff',
+    },
+
+    buttonFont: {
+        fontSize: '.725rem',
+        '@media (min-width:700px)': {
+            fontSize: '.5rem',
+        },
+        textAlign: "center",
+        margin: theme.spacing(1),
+
+        height: '2.2rem'
     }
 
 
@@ -105,7 +117,7 @@ export default function SwipeableTemporaryDrawer() {
 
     return (
         <React.Fragment>
-            <Button variant="outlined" color="primary" onClick={openInventory}>Create New Inventory</Button>
+            <Button variant="outlined" color="primary" className={classes.buttonFont} onClick={openInventory}>Create New Inventory</Button>
             <Drawer
                 className={classes.drawer}
                 variant="persistent"

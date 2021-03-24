@@ -100,10 +100,10 @@ export default function Inventory(props) {
                 className={classes.buttonRow}
             >
                 <Grid container items>
-                    <Grid items xs={1}>
+                    <Grid items xs={2}>
                         <AddInventory />
                     </Grid>
-                    <Grid items xs={1}>
+                    <Grid items xs={2}>
                         <ImportExcel />
                     </Grid>
                 </Grid>

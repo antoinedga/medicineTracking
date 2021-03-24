@@ -30,6 +30,16 @@ const useStyles = makeStyles((theme) => ({
         zIndex: theme.zIndex.drawer + 1,
         color: '#fff',
     },
+    buttonFont: {
+        fontSize: '.725rem',
+        textAlign: "center",
+        '@media (min-width:600px)': {
+            fontSize: '.650rem',
+        },
+
+        margin: theme.spacing(1),
+        height: '2.2rem'
+    }
 }));
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -137,7 +147,7 @@ export default function FullScreenDialog() {
 
     return (
         <>
-            <Button variant="outlined" color="primary" onClick={handleClickOpen}>
+            <Button variant="outlined" color="primary" className={classes.buttonFont} onClick={handleClickOpen}>
                 Import CSV/XLVS
             </Button>
             <Dialog fullScreen open={open} onClose={handleDialogClose} TransitionComponent={Transition} disableBackdropClick>
