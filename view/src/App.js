@@ -31,7 +31,8 @@ function App() {
             <Router>
                 <Switch>
 
-                    <Route exact path="/" component={Login}>
+                    <Route exact path="/">
+
                     </Route>
 
                     <Route path="/signup/:token?" component={Register}>
@@ -59,3 +60,13 @@ function App() {
 }
 
 export default App;
+
+
+function ProtoType() {
+
+    return (
+        <div>
+
+        </div>
+    )
+}

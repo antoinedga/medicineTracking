@@ -8,8 +8,6 @@ const initialState = {
 
 
 export default function resetReducer(state = initialState, action) {
-    console.log("das")
-    console.log(constant)
     switch (action.type) {
         case constant.RESET_SENT: {
             console.log("hello")
