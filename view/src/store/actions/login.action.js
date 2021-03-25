@@ -3,6 +3,7 @@ import axios from 'axios'
 import Cookies from 'universal-cookie';
 
 export const loginPayload = (email, password, dispatch) => {
+    const cookies = new Cookies();
     dispatch({ type: constant.LOGIN_SENT });
 
     axios.post("http://localhost:8080/api/user/login", { email, password })
@@ -10,8 +11,8 @@ export const loginPayload = (email, password, dispatch) => {
         then(data => {
             console.log(data)
             if (data.response) {
-
-                localStorage.setItem('token', data.Content.token);
+                cookies.set('token', data.Content.token, { path: "/", expires: new Date(Date.now() + (60 * 1000 * 30)) })
+                //sessionStorage.setItem('token', data.Content.token);
                 dispatch({
                     type: constant.LOGIN_SUCCESS, payload: {
                         token: data.Content.token,
@@ -32,6 +33,6 @@ export const loginPayload = (email, password, dispatch) => {
 }
 
 export const logoutPayload = (dispatch) => {
-    localStorage.clear();
+    cookies.remove("token");
     dispatch({ type: constant.LOGIN_LOGOUT })
 }

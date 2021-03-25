@@ -24,6 +24,9 @@ import { Redirect, Link } from 'react-router-dom'
 import { shallowEqual, useSelector, useDispatch } from 'react-redux'
 import constant from '../../store/actions/actionType/login'
 import { loginPayload } from '../../store/actions/login.action'
+import Cookies from 'universal-cookie';
+const cookies = new Cookies();
+
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -92,8 +95,8 @@ export default function SignIn(props) {
 
 
     useEffect(() => {
-        if (localStorage.getItem("token") !== null) {
-            dispatch({ type: constant.LOGIN_SUCCESS, payload: { token: localStorage.getItem('token'), refresh: "" } })
+        if (cookies.get("token") !== null) {
+            dispatch({ type: constant.LOGIN_SUCCESS, payload: { token: cookies.get('token'), refresh: "" } })
         }
 
         if (props.location.state?.msg) {

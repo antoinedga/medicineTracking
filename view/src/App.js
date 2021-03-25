@@ -12,6 +12,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "shards-ui/dist/css/shards.min.css"
 
 import { Provider } from 'react-redux'
+
 import thunk from 'redux-thunk'
 
 
@@ -31,7 +32,7 @@ function App() {
             <Router>
                 <Switch>
 
-                    <Route exact path="/">
+                    <Route exact path="/" component={Login}>
 
                     </Route>
 
