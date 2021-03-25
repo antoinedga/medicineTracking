@@ -15,7 +15,7 @@ exports.get = (req, res) => {
       req,
       res,
       `get config ${req.params.name}`,
-  )(config.custom[req.params.name]);
+  )(null, config.custom[req.params.name]);
 };
 
 exports.test = (req, res) => {
