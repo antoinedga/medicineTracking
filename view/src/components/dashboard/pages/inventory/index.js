@@ -22,6 +22,8 @@ import ViewDetail from './viewDetail'
 import DeleteDialog from './deleteDialog'
 import ImportExcel from './importExcel'
 import AddInventory from './addInventory'
+import AddItem from './addItem'
+
 import { useSelector } from 'react-redux'
 const tableIcons = {
     Add: AddBox,
@@ -106,6 +108,9 @@ export default function Inventory(props) {
                     <Grid items xs={2}>
                         <ImportExcel />
                     </Grid>
+                    <Grid items xs={2}>
+                        <AddItem />
+                    </Grid>
                 </Grid>
             </Grid>
             <div className={classes.root}>
@@ -113,14 +118,15 @@ export default function Inventory(props) {
                     title={title}
                     columns={[
                         { title: 'Item', field: 'item', type: "string" },
-                        { title: 'Drug', field: 'drug' },
+                        { title: 'Drug', field: 'drug', type: "string" },
                         { title: 'Quantity', field: 'quantity', type: "numeric" },
+                        { title: 'AAA', field: 'ds', type: "string" },
 
                     ]}
 
                     data={
                         [
-                            { brand: 'uwu', drug: 'uwu', quantity: 69 },
+                            { item: 'uwu', drug: 'uwu', quantity: 69 },
                         ]
                     }
 

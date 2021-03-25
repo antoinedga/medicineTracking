@@ -6,7 +6,8 @@ const initialState = {
     loading: false,
     role: "",
     error: "",
-    token: ""
+    token: "",
+    refresh: ""
 }
 
 export default function loginReducer(state = initialState, action) {
@@ -22,7 +23,8 @@ export default function loginReducer(state = initialState, action) {
                 ...state,
                 loading: false,
                 login: true,
-                token: action.payload.token
+                token: action.payload.token,
+                refresh: action.payload.refresh
             }
         }
         case constant.LOGIN_ERROR: {

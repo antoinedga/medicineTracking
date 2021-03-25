@@ -93,7 +93,7 @@ export default function SignIn(props) {
 
     useEffect(() => {
         if (localStorage.getItem("token") !== null) {
-            dispatch({ type: constant.LOGIN_SUCCESS, payload: { token: localStorage.getItem('token') } })
+            dispatch({ type: constant.LOGIN_SUCCESS, payload: { token: localStorage.getItem('token'), refresh: "" } })
         }
 
         if (props.location.state?.msg) {

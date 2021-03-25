@@ -31,8 +31,9 @@ import NoLocationAccess from './pages/noAccessPage'
 import IdleTimer from "./pages/idle-timer";
 import UserMenu from "./components/userMenu"
 import { useSelector, useDispatch } from 'react-redux'
+import { useHistory } from 'react-router-dom'
 import constants from "../../store/actions/actionType/inventory";
-import store from '../../store/store'
+import { state } from '../../store/store'
 
 const inventAction = require('../../store/actions/inventory.action')
 const drawerWidth = 240;
@@ -120,6 +121,7 @@ function Dashboard(props) {
     let { path, url } = useRouteMatch();
     const location = useSelector(state => state.inventory.location)
     const selectedLocation = useSelector(state => state.inventory.selected)
+    let history = useHistory();
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -132,9 +134,13 @@ function Dashboard(props) {
     const handleLocationChange = (event) => {
         dispatch({ type: constants.CHANGE_LOCATION, payload: { selected: event.target.value } })
     }
+    useEffect(() => {
+        console.log(state.getState())
+    })
 
     useEffect(() => {
         inventAction.getAllPath(dispatch);
+        console.log(location)
     }, [])
 
     return (
