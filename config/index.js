@@ -13,6 +13,9 @@ const config = {
     jwtToken: process.env.JWT_TOKEN || 'greenbanana',
     jwtRefreshToken: process.env.JWT_REFRESH_TOKEN || 'purpleapple',
   },
+  custom: {
+    productIdentifiers: ['name', 'ndc', 'supplier'],
+  },
 };
 
 process.env.NODE_ENV = process.env.NODE_ENV || config.dev;

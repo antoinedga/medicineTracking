@@ -2,7 +2,7 @@ const express = require('express');
 const routes = require('./routes');
 const middleware = require('./middleware');
 const path = require('path');
-const { loadAllConfigs } = require('./controllers/config/utils');
+const {loadAllConfigs} = require('./controllers/config/utils');
 
 require('./config');
 require('./db/connectDB');

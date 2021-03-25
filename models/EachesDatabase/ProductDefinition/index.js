@@ -1,22 +1,46 @@
-var mongoose = require('mongoose')
+const mongoose = require('mongoose');
 
-const Schema = mongoose.Schema
+const Schema = mongoose.Schema;
 
 const productDefinitionSchema = new Schema({
-    identifiers: {
-        type: [{
-            key: {
-                type: String,
-                required: true,
-            },
-            value: {
-                type: String,
-                required: true,
-            }
-        }],
+  identifiers: {
+    type: [{
+      key: {
+        type: String,
         required: true,
-    }
-})
+      },
+      value: {
+        type: String,
+        required: true,
+      },
+    }],
+    required: true,
+    _id: false,
+  },
+  _nGrams: {
+    type: String,
+    required: true,
+  },
+  _prefixNGrams: {
+    type: String,
+    required: true,
+  },
+});
 
-exports.ProductDefinition = mongoose.model('product_definition', productDefinitionSchema)
-exports.ProductDefinitionSchema = productDefinitionSchema
+productDefinitionSchema.index( {
+  _nGrams: 'text',
+  _prefixNGrams: 'text',
+},
+{
+  weights: {
+    _nGrams: 10,
+    _prefixNGrams: 20,
+  },
+  name: 'nGramIndex',
+} );
+
+exports.ProductDefinition = mongoose.model(
+    'product_definition',
+    productDefinitionSchema,
+);
+exports.ProductDefinitionSchema = productDefinitionSchema;

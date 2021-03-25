@@ -1,16 +1,15 @@
-var mongoose = require('mongoose')
+const mongoose = require('mongoose');
 
-const Schema = mongoose.Schema
+const Schema = mongoose.Schema;
 
 const unitSchema = new Schema({
   name: {
     type: String,
-    ref: 'product',
   },
   Description: {
     type: String,
   },
-})
+});
 
-exports.Unit = mongoose.model('unit', unitSchema)
-exports.UnitSchema = unitSchema
+exports.Unit = mongoose.model('unit', unitSchema);
+exports.UnitSchema = unitSchema;

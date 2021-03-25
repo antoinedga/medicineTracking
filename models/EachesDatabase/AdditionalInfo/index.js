@@ -20,6 +20,7 @@ const additionalInfoSchema = new Schema({
       },
     }],
     required: true,
+    _id: false,
   },
   score: {
     type: Number,

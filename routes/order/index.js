@@ -16,11 +16,23 @@ module.exports = () => {
           order.create,
       );
 
+  router.route('/upload')
+      .post(
+          requireLogin,
+          requireAccess(action.UPDATE, resource.ORDER),
+          order.uploadOrderData,
+      );
+
   router.route('/by_id')
       .post(
           requireLogin,
           requireAccess(action.READ, resource.ORDER),
           order.findByID,
+      )
+      .put(
+          requireLogin,
+          requireAccess(action.UPDATE, resource.ORDER),
+          order.updateByID,
       )
       .delete(
           requireLogin,

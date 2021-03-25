@@ -12,21 +12,24 @@ const RoleSchema = new Schema({
     type: String,
     default: '',
   },
-  permissions: [{
-    resource: {
-      type: String,
-      required: true,
-    },
-    action: {
-      type: String,
-      required: true,
-    },
-    attributes: {
-      type: [{
+  permissions: {
+    type: [{
+      resource: {
         type: String,
-      }],
-    },
-  }],
+        required: true,
+      },
+      action: {
+        type: String,
+        required: true,
+      },
+      attributes: {
+        type: [{
+          type: String,
+        }],
+      },
+    }],
+    _id: false,
+  },
 });
 
 RoleSchema.index( {path: 1} );
