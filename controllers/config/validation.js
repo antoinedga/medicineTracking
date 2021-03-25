@@ -7,6 +7,19 @@
  */
 
 /**
+ *
+ * @param  {...ValidationFunction} checks
+ * @return {ValidationObject}
+ */
+function validate(...checks) {
+  return (value) => {
+    checks.forEach( (check) => {
+      const validation = check(value);
+      if (!validation.valid) return validation;
+    });
+  };
+}
+/**
  * checks if the value is an array of strings
  * @param {any} value
  * @return {ValidationObject}
@@ -36,6 +49,45 @@ function checkArrayOfStrings(value) {
   return {valid: true};
 }
 
+/**
+ * checks if the value is a string
+ * @param {any} value
+ * @return {ValidationObject}
+ */
+function checkString(value) {
+  if (typeof value != 'string') {
+    return {
+      valid: false,
+      error: `Requires: string.`+
+      `Given: ${typeof value}.`,
+    };
+  }
+  return {valid: true};
+}
+
+/**
+ * checks if the value is a ndc
+ * @param {any} value
+ * @return {ValidationObject}
+ */
+function checkNDC(value) {
+  const validNDC = /^\d{5}-\d{3}-(\d{2})?$/;
+  if (typeof value != 'string' ||
+  !ndc.replace(validNDC, '')
+  ) {
+    return {
+      valid: false,
+      error: `Requires: string with format: ${validNDC}`+
+      `Given: value`,
+    };
+  }
+  return {valid: true};
+}
+
+
 module.exports = {
+  validate,
   checkArrayOfStrings,
+  checkString,
+  checkNDC,
 };

@@ -5,11 +5,12 @@ const {configTypes} = require('./configTypes');
 
 /**
  *
- * @param {string} name
+ * @param {string?} name
  * @return {function(any,any): any} Request response function
  */
-function setConfig(name) {
+function setConfig(name=undefined) {
   return (req, res) => {
+    if (!name) name = req.body.name;
     if (!configTypes.has(name)) {
       return res
           .status(400)
@@ -42,7 +43,7 @@ function setConfig(name) {
                 });
           }
           if (!('custom' in config)) config.custom = {};
-          config.custom[name] = content;
+          config.custom[name] = content.value;
 
           return res
               .status(200)
@@ -154,7 +155,7 @@ async function loadConfig(name, validate=false) {
           };
         };
         if (!('custom' in config)) config.custom = {};
-        config.custom[name] = doc;
+        config.custom[name] = doc.value;
 
         return {
           successful: true,

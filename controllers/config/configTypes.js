@@ -1,4 +1,4 @@
-const {checkArrayOfStrings} = require('./validation');
+const validation = require('./validation');
 
 /**
  * @typedef {import('./validation').ValidationFunction} ValidationFunction
@@ -8,7 +8,10 @@ const {checkArrayOfStrings} = require('./validation');
  * @type {Map<string,ValidationFunction>}
  */
 const configTypes = new Map([
-  ['productIdentifiers', checkArrayOfStrings],
+  ['productIdentifiers', validation.checkArrayOfStrings],
+  ['quantityField', validation.checkString],
+  ['NDCField', validation.checkNDC],
+  ['fieldsForWebsite', validation.checkArrayOfStrings],
 ]);
 
 module.exports = {

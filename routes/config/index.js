@@ -8,17 +8,20 @@ const {action, resource} = require('../../controllers/Role/enum');
 module.exports = () => {
   router.get('/test', config.test);
 
-  router.route('/product_identifiers')
+  router.route('/')
       .get(
-          requireLogin,
-          requireAccess(action.READ, resource.CONFIG),
-          config.getProductIdentifiers,
+          config.getAllNames,
       )
       .post(
           requireLogin,
           requireAccess(action.CREATE, resource.CONFIG),
-          config.setProductIdentifiers,
+          config.set,
       );
-
+  router.route('/:name')
+      .get(
+          requireLogin,
+          requireAccess(action.CREATE, resource.CONFIG),
+          config.get,
+      );
   return router;
 };
