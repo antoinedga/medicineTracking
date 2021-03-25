@@ -8,4 +8,5 @@ exports.resource = createEnum([
   'ORDER',
   'PRODUCT',
   'ROLE',
+  'EACHES',
 ]);

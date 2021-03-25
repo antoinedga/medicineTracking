@@ -15,10 +15,11 @@ const productSchema = new Schema({
       },
     }],
     required: true,
+    _id: false,
   },
-  product: {
+  product_definition: {
     type: Schema.Types.ObjectId,
-    ref: 'product',
+    ref: 'product_definition',
   },
   eaches: {
     type: Schema.Types.ObjectId,

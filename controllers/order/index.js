@@ -1,6 +1,8 @@
 const config = require('../../config');
 const { Order, Inventory } = require('../../models');
 const { callback } = require('../Callbacks');
+const csv = require('csv-parser');
+const fs = require('fs');
 
 
 /**
@@ -50,6 +52,80 @@ exports.create = (req, res) => {
     });
 };
 
+exports.uploadOrderData = (req, res) => {
+  try {
+    if (
+      !req.files ||
+      req.files.orderData.mimetype != 'text/csv' ||
+      !req.body.orderNumber
+    ) {
+      console.log(req.files, req.body);
+      return res
+        .status(400)
+        .json({
+          response: false,
+          message: `Error: requires a csv file and and orderNumber`,
+          Content: null,
+        });
+    }
+    const file = req.files.orderData;
+    const results = [];
+    fs.createReadStream(file.tempFilePath)
+      .pipe(csv())
+      .on('data', (data) => results.push(data))
+      .on('end', () => {
+        // [
+        //   { NAME: 'Daffy Duck', AGE: '24' },
+        //   { NAME: 'Bugs Bunny', AGE: '22' }
+        // ]
+        return res
+          .status(200)
+          .json({
+            response: true,
+            message: `Successfully uploaded order data`,
+            Content: results,
+          });
+      });
+    fs.unlink(file.tempFilePath, () => { });
+  } catch (err) {
+    return res
+      .status(500)
+      .json({
+        response: false,
+        message: `Error ocurred while uploading order data`,
+        Content: err,
+      });
+  }
+};
+/**
+ *
+ * @param {String} orderNumber
+ * @param {[*]} data
+ */
+async function updateOrderData(orderNumber, data) {
+  const products = data.map((product) => {
+    return Object.entries(product).map(([key, value]) => {
+      return { key, value };
+    });
+  });
+  const session = await Order.db.startSession();
+  session.startTransaction();
+
+  Order
+    .findOne({ orderNumber })
+    .then((doc) => {
+
+    });
+
+  session.endSession();
+}
+
+exports.updateByID = (req, res) => {
+  Order
+    .findByIdAndUpdate({ _id: req.body?._id }, req.body)
+    .exec(callback(req, res, 'find orders by path'));
+};
+
 exports.findRecursivelyByPath = (req, res) => {
   Order
     .find({ path: new RegExp('^' + req.body.path) })
@@ -58,7 +134,7 @@ exports.findRecursivelyByPath = (req, res) => {
 
 exports.findByPath = (req, res) => {
   Order
-    .findOne({ path: new RegExp('^' + req.body.path + '$') })
+    .find({ path: new RegExp('^' + req.body.path + '$') })
     .exec(callback(req, res, 'find orders by path'));
 };
 

@@ -87,7 +87,7 @@ exports.findRecursivelyByPath = (req, res) => {
 
 exports.findByPath = (req, res) => {
   Role
-      .findOne({path: new RegExp('^' + req.body.path + '$')})
+      .find({path: new RegExp('^' + req.body.path + '$')})
       .exec(callback(req, res, 'find roles by path'));
 };
 

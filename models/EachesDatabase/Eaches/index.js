@@ -1,6 +1,19 @@
-var mongoose = require('mongoose')
+const mongoose = require('mongoose');
 
-const Schema = mongoose.Schema
+const Schema = mongoose.Schema;
+
+const eachesStructureSchema = new Schema({
+  quantity: {
+    type: Number,
+    required: true,
+  },
+  unit: {
+    type: String,
+    required: true,
+  },
+  _id: false,
+});
+eachesStructureSchema.add({contains: [eachesStructureSchema]});
 
 const eachesSchema = new Schema({
   product_definition_id: {
@@ -8,23 +21,14 @@ const eachesSchema = new Schema({
     ref: 'product_definition',
   },
   eaches: {
-    type: [{
-        quantity: {
-            type: Number,
-            required: true,
-        },
-        unit: {
-            type: String,
-            required: true,
-        }
-    }],
+    type: [eachesStructureSchema],
     required: true,
   },
   score: {
     type: Number,
-    required: true
+    required: true,
   },
-})
+});
 
-exports.Eaches = mongoose.model('eaches', eachesSchema)
-exports.EachesSchema = eachesSchema
+exports.Eaches = mongoose.model('eaches', eachesSchema);
+exports.EachesSchema = eachesSchema;
