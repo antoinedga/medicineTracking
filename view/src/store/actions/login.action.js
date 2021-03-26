@@ -1,9 +1,9 @@
 import constant from './actionType/login'
 import axios from 'axios'
 import Cookies from 'universal-cookie';
+const cookies = new Cookies();
 
 export const loginPayload = (email, password, dispatch) => {
-    const cookies = new Cookies();
     dispatch({ type: constant.LOGIN_SENT });
 
     axios.post("http://localhost:8080/api/user/login", { email, password })
@@ -33,6 +33,6 @@ export const loginPayload = (email, password, dispatch) => {
 }
 
 export const logoutPayload = (dispatch) => {
-    cookies.remove("token");
     dispatch({ type: constant.LOGIN_LOGOUT })
+    cookies.remove("token");
 }

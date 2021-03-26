@@ -11,7 +11,7 @@ export const getAllPath = (dispatch) => {
     let config = {
         headers: { Authorization: `Bearer ${state.login.token}` }
     };
-    console.log("CONFIGL " + config.headers.Authorization)
+    // console.log("CONFIGL " + config.headers.Authorization)
 
     axios.post("http://localhost:8080/api/inventory/complete_paths", bodyParam, config)
         .then((res) => res.data).
@@ -19,7 +19,7 @@ export const getAllPath = (dispatch) => {
             dispatch({ type: constant.INVENT_GET_ALL, payload: { location: data.Content } })
         }).catch((error) => {
             // 400+ errors normally if user doesnt exist
-            console.log(error.response)
+            //console.log(error.response)
             let msg = error.response?.data.message;
             dispatch({ type: constant.INVENT_ERROR, payload: { errorMsg: msg } })
         })

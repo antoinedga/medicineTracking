@@ -70,8 +70,8 @@ export default function Orders(props) {
                 <MaterialTable
                     title="One Detail Panel Preview"
                     columns={[
-                        { title: 'Order Number', field: 'OrderID' },
-                        { title: 'From', field: 'from' },
+                        { title: 'Order Number', field: 'orderNumber' },
+                        { title: 'Order Date', field: 'orderDate' },
                         { title: 'To', field: 'To' },
                         {
                             title: 'Status',

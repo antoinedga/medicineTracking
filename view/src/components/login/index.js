@@ -95,7 +95,8 @@ export default function SignIn(props) {
 
 
     useEffect(() => {
-        if (cookies.get("token") !== null) {
+        if (cookies.get("token") != "" && cookies.get("token") != null && cookies.get("token") != undefined) {
+            console.log(cookies.get("token"))
             dispatch({ type: constant.LOGIN_SUCCESS, payload: { token: cookies.get('token'), refresh: "" } })
         }
 
