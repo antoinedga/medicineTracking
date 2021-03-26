@@ -12,6 +12,7 @@ const orderSchema = new mongoose.Schema({
   orderNumber: {
     type: String,
     required: true,
+    unique: true,
   },
   orderDate: {
     type: Date,
@@ -46,6 +47,19 @@ const orderSchema = new mongoose.Schema({
   user: {
     type: Schema.Types.ObjectId,
     ref: 'user',
+  },
+  log: {
+    type: [{
+      date: {
+        type: Date,
+        default: Date.now(),
+        required: true,
+      },
+      message: {
+        type: String,
+        required: true,
+      },
+    }],
   },
 }, {timestamps: true});
 
