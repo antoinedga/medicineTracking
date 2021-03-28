@@ -13,7 +13,7 @@ exports.post_invitation = (req, res) => {
   const invitationId = uuidv1();
 
   const addInvitation = new Invitations({
-    invitation_token: invitationId,
+    invitationToken: invitationId,
     email: req.body.email,
     invitationExpires: Date.now() + 3600000,
   });
