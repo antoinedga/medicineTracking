@@ -22,7 +22,6 @@ const orderSchema = new mongoose.Schema({
     type: [{
       product: {
         type: ProductSchema,
-        required: true,
       },
       quantity: {
         type: Number,
@@ -67,5 +66,6 @@ const orderSchema = new mongoose.Schema({
 }, {timestamps: true});
 
 orderSchema.index( {path: 1} );
+orderSchema.index( {orderNumber: 1} );
 
 module.exports = mongoose.model('order', orderSchema );

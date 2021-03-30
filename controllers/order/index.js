@@ -3,7 +3,7 @@ const {Order, Inventory} = require('../../models');
 const {callback} = require('../Callbacks');
 const csv = require('csv-parser');
 const fs = require('fs');
-const {action} = require('../Role/enum');
+const {action, resource} = require('../Role/enum');
 
 
 /**
@@ -120,9 +120,43 @@ exports.updateByID = (req, res) => {
   Order
       .findOneAndUpdate({
         _id: req.body?._id,
-        path: {$in: req.auth.permissions[action.UPDATE][resource.ORDER]},
       }, req.body)
-      .exec(callback(req, res, 'find orders by path'));
+      .exec(callback(req, res, 'update order by id'));
+};
+
+exports.updateLogByID = (req, res) => {
+  Order
+      .findOneAndUpdate(
+          {
+            _id: req.body?._id,
+          },
+          {
+            $push: {log: {message: req.body?.message}},
+          },
+          {
+            setDefaultsOnInsert: true,
+            useFindAndModify: false,
+          },
+      )
+      .exec(callback(req, res, 'update order log by id'));
+};
+
+exports.updateLogByOrderNumber = (req, res) => {
+  console.log(req.auth.permissions[action.UPDATE][resource.ORDER]);
+  Order
+      .findOneAndUpdate(
+          {
+            orderNumber: req.body?.orderNumber,
+          },
+          {
+            $push: {log: {message: req.body?.message}},
+          },
+          {
+            setDefaultsOnInsert: true,
+            useFindAndModify: false,
+          },
+      )
+      .exec(callback(req, res, 'update order log by orderNumber'));
 };
 
 exports.findRecursivelyByPath = (req, res) => {

@@ -29,8 +29,7 @@ const additionalInfoSchema = new Schema({
 });
 
 exports.AdditionalInfo = mongoose.model(
-    'additional_info',
+    'additionalInfo',
     additionalInfoSchema,
 );
-exports.AdditionalInfoSchema = additionalInfoSchema
-;
+exports.AdditionalInfoSchema = additionalInfoSchema;

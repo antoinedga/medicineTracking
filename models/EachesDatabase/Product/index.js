@@ -1,4 +1,7 @@
 const mongoose = require('mongoose');
+const {ProductDefinitionSchema} = require('../ProductDefinition');
+const {EachesSchema} = require('../Eaches');
+const {AdditionalInfoSchema} = require('../AdditionalInfo');
 
 const Schema = mongoose.Schema;
 
@@ -17,20 +20,14 @@ const productSchema = new Schema({
     required: true,
     _id: false,
   },
-  product_definition: {
-    type: Schema.Types.ObjectId,
-    ref: 'product_definition',
-  },
+  productDefinition: ProductDefinitionSchema,
   eaches: {
-    type: Schema.Types.ObjectId,
-    ref: 'eaches',
+    type: EachesSchema,
   },
-  additional_info: {
-    type: Schema.Types.ObjectId,
-    ref: 'additional_info',
+  additionalInfo: {
+    type: AdditionalInfoSchema,
   },
 });
 
 exports.Product = mongoose.model('product', productSchema);
-exports.ProductSchema = productSchema
-;
+exports.ProductSchema = productSchema;

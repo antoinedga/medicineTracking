@@ -40,7 +40,7 @@ productDefinitionSchema.index( {
 } );
 
 exports.ProductDefinition = mongoose.model(
-    'product_definition',
+    'productDefinition',
     productDefinitionSchema,
 );
 exports.ProductDefinitionSchema = productDefinitionSchema;

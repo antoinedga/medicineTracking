@@ -16,12 +16,12 @@ const eachesStructureSchema = new Schema({
 eachesStructureSchema.add({contains: [eachesStructureSchema]});
 
 const eachesSchema = new Schema({
-  product_definition_id: {
+  productDefinition: {
     type: Schema.Types.ObjectId,
-    ref: 'product_definition',
+    ref: 'productDefinition',
   },
   eaches: {
-    type: [eachesStructureSchema],
+    type: eachesStructureSchema,
     required: true,
   },
   score: {
