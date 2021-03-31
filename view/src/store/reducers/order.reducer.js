@@ -3,7 +3,8 @@ import constant from '../actions/actionType/order'
 const initialState = {
     orders: [],
     loading: false,
-    errorMsg: ""
+    errorMsg: "",
+    error: false
 }
 
 export default function orderReducer(state = initialState, action) {

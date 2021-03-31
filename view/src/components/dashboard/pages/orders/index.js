@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Grid, Divider, List, Typography, Backdrop, CircularProgress } from '@material-ui/core'
 import PlaceOrder from './placeOrder'
 import MaterialTable from 'material-table'
@@ -8,8 +8,10 @@ import { makeStyles } from '@material-ui/core/styles';
 import { getOrders } from '../../../../store/actions/order.action'
 import { useDispatch, useSelector } from "react-redux"
 import constants from '../../../../store/actions/actionType/order';
+import DeleteDialog from './deleteDialog'
 import Moment from 'react-moment';
-
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+import InfoIcon from '@material-ui/icons/Info';
 const useStyles = makeStyles((theme) => ({
     detailPanel: {
         height: '315px',
@@ -35,6 +37,8 @@ export default function Orders(props) {
     const loading = useSelector(state => state.orders.loading)
     const selected = useSelector(state => state.inventory.selected)
     const classes = useStyles()
+    const [deleteToggle, setDeleteView] = useState(false);
+    const [rowDataDelete, setRowData] = useState({})
 
     useEffect(() => {
         dispatch({ type: constants.ORDER_LOADING })
@@ -49,6 +53,14 @@ export default function Orders(props) {
 
         })
     }, [selected])
+
+    const handleOpenDelete = (row) => {
+        setRowData(row)
+        setDeleteView(true)
+    }
+    const handleDeleteClose = () => {
+        setDeleteView(false)
+    }
 
     return (
         <>
@@ -97,19 +109,34 @@ export default function Orders(props) {
                     data={data}
                     detailPanel={rowData => {
                         return (
-                            <DetailPanel date={rowData.date} expected={rowData.expected} tracking={rowData.tracking} />
+                            <DetailPanel logs={rowData.log} date={rowData.date} expected={rowData.expected} tracking={rowData.tracking} />
                         )
                     }}
                     options={
                         {
+                            actionsColumnIndex: -1,
                             exportButton: true,
                             pageSize: 10,
                             pageSizeOptions: [10, 15, 20, 25, 50]
                         }
                     }
+                    actions={[
+                        {
+                            icon: InfoIcon,
+                            tooltip: 'View More Details',
+                            onClick: (event, rowData) => handleOpenDelete(rowData)
+                        },
+                        {
+                            icon: DeleteForeverIcon,
+                            tooltip: 'Delete Order',
+                            onClick: (event, rowData) => handleOpenDelete(rowData)
+                        }
+                    ]}
 
                 />
             </div>
+            <DeleteDialog open={deleteToggle} handleClose={handleDeleteClose} rowData={rowDataDelete} />
+
             <Backdrop className={classes.backdrop} open={loading}>
                 <CircularProgress color="inherit" />
             </Backdrop>
@@ -121,13 +148,28 @@ const DetailPanel = (props) => {
     const classes = useStyles();
     const list = props.list;
     const date = props.date;
+    const logs = props.logs;
     const expected = props.expected;
     const trackingNum = props.tracking;
+    console.log(logs)
     return (
         <>
             <Grid container className={classes.detailPanel}>
-                <Grid item xs={7}>
-
+                <Grid item xs={7} style={{ height: 300, overflow: "auto" }}>
+                    {
+                        logs.map(log => {
+                            return (
+                                <p>
+                                    <Moment format="MMM-D-YYYY h:mm a" >
+                                        {
+                                            log.date
+                                        }
+                                    </Moment>
+                                    {log.message}
+                                </p>
+                            )
+                        })
+                    }
                 </Grid>
                 <Divider orientation="vertical" />
                 <Grid item xs={4}>

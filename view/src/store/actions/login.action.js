@@ -13,6 +13,7 @@ export const loginPayload = (email, password, dispatch) => {
             if (data.response) {
                 cookies.set('token', data.Content.token, { path: "/", expires: new Date(Date.now() + (60 * 1000 * 30)) })
                 //sessionStorage.setItem('token', data.Content.token);
+
                 dispatch({
                     type: constant.LOGIN_SUCCESS, payload: {
                         token: data.Content.token,
@@ -33,6 +34,7 @@ export const loginPayload = (email, password, dispatch) => {
 }
 
 export const logoutPayload = (dispatch) => {
+    cookies.remove("token", { path: '/' });
+    console.log(cookies.get("token"))
     dispatch({ type: constant.LOGIN_LOGOUT })
-    cookies.remove("token");
 }

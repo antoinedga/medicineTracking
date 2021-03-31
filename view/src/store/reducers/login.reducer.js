@@ -39,7 +39,7 @@ export default function loginReducer(state = initialState, action) {
             return {
                 ...state,
                 login: false,
-                token: "",
+                token: "logged out",
                 refresh: ""
             }
         }

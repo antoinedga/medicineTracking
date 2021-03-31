@@ -16,11 +16,33 @@ export const getOrders = (dispatch) => {
         path: state.inventory.selected,
     }
 
-    return axios.post("/api/order/by_path/recursive", bodyParam, config)
+    return axios.post("http://localhost:8080/api/order/by_path/recursive", bodyParam, config)
         .then((res) => res.data).
         then(data => {
             console.log(data.Content)
             dispatch({ type: constants.ORDER_PATH_SET, payload: { orders: data.Content } })
+            return data
+        }).catch((error) => {
+            return error
+        })
+}
+
+export const deleteOrder = async (dispatch, orderId) => {
+    let state = store.state.getState();
+
+    let config = {
+        headers: { Authorization: `Bearer ${state.login.token}` }
+    };
+
+    let bodyParam = {
+        _id: orderId,
+    }
+    dispatch({ type: constants.ORDER_LOADING })
+
+    return axios.delete("http://localhost:8080/api/order/by_id", bodyParam, config)
+        .then((res) => res.data).
+        then(data => {
+            console.log(data.Content)
             return data
         }).catch((error) => {
             return error

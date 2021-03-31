@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const {ProductSchema} = require('./EachesDatabase');
+const { ProductSchema } = require('./EachesDatabase');
 
 const Schema = mongoose.Schema;
 
@@ -66,9 +66,9 @@ const orderSchema = new mongoose.Schema({
       },
     }],
   },
-}, {timestamps: true});
+}, { timestamps: true });
 
-orderSchema.index( {path: 1} );
-orderSchema.index( {orderNumber: 1} );
+orderSchema.index({ path: 1 });
+orderSchema.index({ orderNumber: 1 });
 
-module.exports = mongoose.model('order', orderSchema );
+module.exports = mongoose.model('order', orderSchema);
