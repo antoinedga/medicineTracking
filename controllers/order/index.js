@@ -147,7 +147,11 @@ exports.updateByID = (req, res) => {
 
 exports.updateLogByID = (req, res) => {
   const obj = {};
-  if (req.body.currentLocation) obj.currentLocation = req.body.currentLocation;
+  const msgs = [{message: req.body.message}];
+  if (req.body.currentLocation) {
+    obj.currentLocation = req.body.currentLocation;
+    msgs.push({message: `Arrived at - ${req.body.currentLocation}`});
+  }
   Order
       .findOneAndUpdate(
           {
@@ -155,7 +159,7 @@ exports.updateLogByID = (req, res) => {
           },
           {
             $set: obj,
-            $push: {log: {message: req.body?.message}},
+            $push: {log: {$each: msgs}},
           },
           {
             setDefaultsOnInsert: true,
@@ -167,7 +171,11 @@ exports.updateLogByID = (req, res) => {
 
 exports.updateLogByOrderNumber = (req, res) => {
   const obj = {};
-  if (req.body.currentLocation) obj.currentLocation = req.body.currentLocation;
+  const msgs = [{message: req.body.message}];
+  if (req.body.currentLocation) {
+    obj.currentLocation = req.body.currentLocation;
+    msgs.push({message: `Arrived at - ${req.body.currentLocation}`});
+  }
   Order
       .findOneAndUpdate(
           {
@@ -175,7 +183,7 @@ exports.updateLogByOrderNumber = (req, res) => {
           },
           {
             $set: obj,
-            $push: {log: {message: req.body?.message}},
+            $push: {log: {$each: msgs}},
           },
           {
             setDefaultsOnInsert: true,
