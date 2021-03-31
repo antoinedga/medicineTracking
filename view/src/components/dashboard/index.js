@@ -135,12 +135,11 @@ function Dashboard(props) {
         dispatch({ type: constants.CHANGE_LOCATION, payload: { selected: event.target.value } })
     }
     useEffect(() => {
-        console.log(state.getState())
+
     })
 
     useEffect(() => {
         inventAction.getAllPath(dispatch);
-        console.log(location)
     }, [])
 
     return (

@@ -12,9 +12,13 @@ import DeleteDialog from './deleteDialog'
 import Moment from 'react-moment';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import InfoIcon from '@material-ui/icons/Info';
+import ImportExcel from './importExcel'
 const useStyles = makeStyles((theme) => ({
     detailPanel: {
         height: '315px',
+    },
+    buttonRow: {
+        marginBottom: 10,
     },
     paper: {
         height: '90%',
@@ -44,7 +48,6 @@ export default function Orders(props) {
         dispatch({ type: constants.ORDER_LOADING })
 
         getOrders(dispatch).then((data) => {
-
             dispatch({ type: constants.ORDER_DONE })
 
         }).catch((error) => {
@@ -52,7 +55,7 @@ export default function Orders(props) {
             dispatch({ type: constants.ORDER_DONE })
 
         })
-    }, [selected])
+    }, [selected, deleteToggle])
 
     const handleOpenDelete = (row) => {
         setRowData(row)
@@ -65,10 +68,18 @@ export default function Orders(props) {
     return (
         <>
             <h3>Order History</h3>
-            <Grid container fluid>
-                <Grid container items>
-                    <Grid items xs={1}>
+            <Grid container direction="row"
+                alignItems="center"
+                justify="flex-start"
+                padding={2}
+                className={classes.buttonRow}
+            >
+                <Grid container items >
+                    <Grid items xs={2}>
                         <PlaceOrder />
+                    </Grid>
+                    <Grid items xs={2}>
+                        <ImportExcel />
                     </Grid>
                 </Grid>
 

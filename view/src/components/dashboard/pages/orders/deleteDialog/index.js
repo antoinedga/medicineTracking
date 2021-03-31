@@ -17,6 +17,8 @@ export default function DeleteDialog(props) {
     const [openAlert, setAlert] = React.useState(false);
     const [message, setMessage] = React.useState("");
     const [success, setSuccess] = React.useState(false)
+    const [disableButton, setDisable] = React.useState(false)
+
     const dispatch = useDispatch();
     let rowData = props.rowData;
 
@@ -30,18 +32,30 @@ export default function DeleteDialog(props) {
     };
 
     const deleteOrderEvent = () => {
+        setDisable(true)
         deleteOrder(dispatch, rowData._id).then(result => {
-            console.log(result.response)
             dispatch({ type: constants.ORDER_DONE })
+
+            if (result.response) {
+                setMessage("Successfully deleted Order");
+                setSuccess(true);
+                setAlert(true);
+            } else {
+                setDisable(false)
+                setMessage("Failed to Delete Order");
+                setSuccess(false);
+                setAlert(true);
+            }
         }).catch(error => {
-            console.log(error.response)
+            setDisable(false)
+            setMessage("Failed to Delete Order: " + error.response.data.message);
+            setSuccess(false);
+            setAlert(true);
             dispatch({ type: constants.ORDER_DONE })
         })
-        setAlert(true);
     }
 
     useEffect(() => {
-        console.log(rowData)
         setOpen(props.open)
     })
 
@@ -49,7 +63,7 @@ export default function DeleteDialog(props) {
         if (reason === 'clickaway') {
             return;
         }
-        setAlert(false);
+        handleClose()
     };
 
 
@@ -84,16 +98,16 @@ export default function DeleteDialog(props) {
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleClose} variant="contained" color="secondary">
+                    <Button disabled={disableButton} onClick={handleClose} variant="contained" color="secondary">
                         Disagree
                     </Button>
-                    <Button onClick={deleteOrderEvent} variant="contained" color="primary">
+                    <Button disabled={disableButton} onClick={deleteOrderEvent} variant="contained" color="primary">
                         Agree
                     </Button>
                 </DialogActions>
             </Dialog>
             <Snackbar open={openAlert} anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-                autoHideDuration={3000} onClose={handleAlertClose}>
+                autoHideDuration={1750} onClose={handleAlertClose}>
                 <Alert onClose={handleAlertClose} severity={success ? "success" : "error"}>
                     {message}
                 </Alert>

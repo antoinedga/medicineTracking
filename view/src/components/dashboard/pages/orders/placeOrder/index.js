@@ -21,6 +21,16 @@ const useStyles = makeStyles((theme) => ({
         marginLeft: theme.spacing(2),
         flex: 1,
     },
+    buttonFont: {
+        fontSize: '.725rem',
+        textAlign: "center",
+        '@media (min-width:600px)': {
+            fontSize: '.650rem',
+        },
+
+        margin: theme.spacing(1),
+        height: '2.2rem'
+    }
 }));
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -104,7 +114,7 @@ export default function FullScreenDialog() {
 
     return (
         <div>
-            <Button variant="outlined" color="primary" onClick={handleClickOpen}>
+            <Button variant="outlined" color="primary" className={classes.buttonFont} onClick={handleClickOpen}>
                 New Order
       </Button>
             <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>

@@ -39,13 +39,13 @@ export const deleteOrder = async (dispatch, orderId) => {
     }
     dispatch({ type: constants.ORDER_LOADING })
 
-    return axios.delete("http://localhost:8080/api/order/by_id", bodyParam, config)
+    return axios.delete("http://localhost:8080/api/order/by_id", config, bodyParam)
         .then((res) => res.data).
         then(data => {
-            console.log(data.Content)
-            return data
+            return Promise.resolve(data)
         }).catch((error) => {
-            return error
+
+            return Promise.reject(error)
         })
 }
 

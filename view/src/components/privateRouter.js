@@ -9,7 +9,6 @@ import { useSelector } from 'react-redux'
 const PrivateRoute = ({ children, ...rest }) => {
     let login = useSelector(state => state.login.login)
     let token = useSelector(state => state.login.token)
-    console.log(token)
     return (
         <Route
             {...rest}
