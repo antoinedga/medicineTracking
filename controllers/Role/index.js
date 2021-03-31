@@ -23,7 +23,7 @@ function createAdmin(name, email, password) {
   ).exec((err, doc) => {
     if (err) return console.log(err);
     User.findOneAndUpdate(
-        {_id: '111111111111111111111112'},
+        {_id: '111111111111111111111111'},
         {
           name,
           email,
@@ -42,7 +42,7 @@ function createAdmin(name, email, password) {
   });
 }
 
-createAdmin('admin', 'an.gordonalvarez@gmail.com', 'admin');
+createAdmin('admin', 'admin@admin.com', 'admin');
 
 exports.getAll = (req, res) => {
   if (process.env.NODE_ENV === config.dev) {
