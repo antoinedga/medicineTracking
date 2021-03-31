@@ -84,7 +84,6 @@ exports.uploadOrderData = (req, res) => {
                     .json(doc);
               })
               .catch((err) => {
-                console.log('error', err);
                 return res
                     .status(400)
                     .json({
@@ -147,12 +146,15 @@ exports.updateByID = (req, res) => {
 };
 
 exports.updateLogByID = (req, res) => {
+  const obj = {};
+  if (req.body.currentLocation) obj.currentLocation = req.body.currentLocation;
   Order
       .findOneAndUpdate(
           {
             _id: req.body?._id,
           },
           {
+            $set: obj,
             $push: {log: {message: req.body?.message}},
           },
           {
@@ -164,13 +166,15 @@ exports.updateLogByID = (req, res) => {
 };
 
 exports.updateLogByOrderNumber = (req, res) => {
-  console.log(req.auth.permissions[action.UPDATE][resource.ORDER]);
+  const obj = {};
+  if (req.body.currentLocation) obj.currentLocation = req.body.currentLocation;
   Order
       .findOneAndUpdate(
           {
             orderNumber: req.body?.orderNumber,
           },
           {
+            $set: obj,
             $push: {log: {message: req.body?.message}},
           },
           {

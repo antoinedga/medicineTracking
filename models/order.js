@@ -50,6 +50,9 @@ const orderSchema = new mongoose.Schema({
     type: Schema.Types.ObjectId,
     ref: 'user',
   },
+  currentLocation: {
+    type: String,
+  },
   log: {
     type: [{
       date: {
