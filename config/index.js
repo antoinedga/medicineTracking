@@ -7,7 +7,7 @@ const config = {
   saltRounds: 10,
   exp: {
     jwtToken: process.env.JWT_TOKEN_EXP || '30m',
-    jwtRefreshToken: process.env.JWT_REFRESH_TOKEN_EXP || '1d',
+    jwtRefreshToken: process.env.JWT_REFRESH_TOKEN_EXP || '9999d',
   },
   secrets: {
     jwtToken: process.env.JWT_TOKEN || 'greenbanana',
@@ -15,6 +15,8 @@ const config = {
   },
   custom: {
     productIdentifiers: ['name', 'ndc', 'supplier'],
+    quantityField: 'amount',
+    NDCField: 'product_ndc',
   },
 };
 

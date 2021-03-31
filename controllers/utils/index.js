@@ -189,7 +189,7 @@ function combine(roles) {
     role.permissions.forEach((permission) => {
       const _resource = permission.resource.split(':');
       const _action = permission.action.split(':');
-      const _path = _resource[1] + ((_action[1] == 'own') ? '$' : '');
+      const _path = _resource[1] + ((_action[1] == 'own') ? '/$' : '/');
 
       if (!_query[_resource[0]]) {
         _query[_resource[0]] = {};

@@ -20,7 +20,7 @@ module.exports = () => {
   router.route('/:name')
       .get(
           requireLogin,
-          requireAccess(action.CREATE, resource.CONFIG),
+          requireAccess(action.READ, resource.CONFIG),
           config.get,
       );
   return router;

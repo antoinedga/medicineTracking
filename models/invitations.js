@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 // Invitation Schema
 const invitationSchema = new mongoose.Schema({
-  invitation_token: {
+  invitationToken: {
     type: String,
     trim: true,
     required: true,
@@ -15,4 +15,4 @@ const invitationSchema = new mongoose.Schema({
   invitationExpires: Date,
 });
 
-module.exports = mongoose.model('invitation_code', invitationSchema);
+module.exports = mongoose.model('invitationCode', invitationSchema);

@@ -39,6 +39,18 @@ module.exports = () => {
           requireAccess(action.DELETE, resource.ORDER),
           order.deleteByID,
       );
+  router.route('/by_id/log')
+      .put(
+          requireLogin,
+          requireAccess(action.UPDATE, resource.ORDER),
+          order.updateLogByID,
+      );
+  router.route('/by_order_number/log')
+      .put(
+          requireLogin,
+          requireAccess(action.UPDATE, resource.ORDER),
+          order.updateLogByOrderNumber,
+      );
 
   router.route('/by_path')
       .post(

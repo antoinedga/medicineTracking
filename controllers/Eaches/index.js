@@ -3,6 +3,9 @@
 const {ProductDefinition, Eaches} = require('../../models/EachesDatabase');
 const config = require('../../config');
 const {callback} = require('../Callbacks');
+const {toArray} = require('../utils');
+const {objectToKeyValuePairs} = require('../order/utils');
+const {getEaches} = require('./ndc');
 
 
 // const terms = [
@@ -68,21 +71,22 @@ function evaluateSuccess(action) {
 }
 
 /**
- *
+ * find or create eaches and increment its score
  * @param {UnitPair} eaches
  * @param {string} productId
+ * @param {Number} inc - amount to increment score
  * @return {Promise<ResponseObject>}
  */
-async function incrementEaches(eaches, productId) {
+async function incrementEaches(eaches, productId, inc=1) {
   return Eaches
       .findOneAndUpdate(
           {
             eaches: eaches,
-            product_definition_id: productId,
+            productDefinition: productId,
           },
           {
             $set: {
-              product_definition_id: productId,
+              productDefinition: productId,
               eaches: eaches,
             },
             $inc: {score: 1},
@@ -109,13 +113,43 @@ async function incrementEaches(eaches, productId) {
         };
       });
 }
-
 /**
- *
- * @param {UserDefinedProduct} userDefinedProduct
+ * take a user defined product and save it as a product definition
+ * @param {[*]} products
  * @return {Promise<ResponseObject>}
  */
-async function createProductDefinition(userDefinedProduct) {
+exports.createProductDefinitionUsingNdc = async (products) => {
+  products = toArray(products);
+  const promises = products.map((product) => {
+    return getEaches(product[config.custom.NDCField])
+        .then((res) => {
+          if (!res.success || res.content == undefined) return null;
+          return {
+            identifiers: objectToKeyValuePairs(product),
+            eaches: res.content,
+          };
+        });
+  });
+  Promise.all(promises).then((ndcDefinedProducts) => {
+    ndcDefinedProducts.map((product) => {
+      if (product == undefined) return null;
+      product.eaches.forEach((eaches) => {
+        createProductDefinition({
+          identifiers: product.identifiers,
+          eaches,
+        }, 0);
+      });
+    });
+  });
+};
+
+/**
+ * take a user defined product and save it as a product definition
+ * @param {UserDefinedProduct} userDefinedProduct
+ * @param {Number} inc - amount to increment score
+ * @return {Promise<ResponseObject>}
+ */
+async function createProductDefinition(userDefinedProduct, inc=1) {
   const identifiers = userDefinedProduct.identifiers;
   const eaches = userDefinedProduct.eaches;
   const definingIdentifiers = identifiers.filter( (pair) => {
@@ -145,7 +179,7 @@ async function createProductDefinition(userDefinedProduct) {
             new: true,
           },
       ).then(async (doc) => {
-        return await incrementEaches(eaches, doc._id);
+        return await incrementEaches(eaches, doc._id, inc);
       })
       .catch(evaluateSuccess('defining product'));
 };
@@ -198,21 +232,43 @@ exports.saveAllConfirmedProductData = (req, res) => {
 
 exports.search = (req, res) => {
   ProductDefinition
-      .find({
-        '$text': {
-          '$search': makeNGrams(req.body.query, 2, 8).join(','),
+      .aggregate([
+        {
+          $match: {
+            $text: {
+              $search: makeNGrams(req.body.query, 2, 8).join(','),
+            },
+          },
         },
-      },
-      {
-        '_id': true,
-        'identifiers': true,
-        'score': {
-          '$meta': 'textScore',
+        {$set: {score: {'$meta': 'textScore'}}},
+        {$sort: {score: -1}},
+        {
+          $lookup: {
+            from: 'eaches',
+            let: {productId: '$_id'},
+            pipeline: [
+              {$match: {$expr: {$eq: ['$productDefinition', '$$productId']}}},
+              {$sort: {score: -1}},
+              {$limit: 1},
+            ],
+            as: '_eaches',
+          },
         },
-      },
-      ).sort({'score': 1})
+        {
+          $unwind: {path: '$_eaches', preserveNullAndEmptyArrays: true},
+        },
+        {
+          $set: {
+            eaches: '$_eaches.eaches',
+            eachesScore: '$_eaches.score',
+          },
+        },
+        {$unset: ['fromEaches', '_nGrams', '_prefixNGrams', '_eaches']},
+      ])
       .exec(callback(req, res, 'search product definitions'));
 };
+
+// function eachesByProductDefinitionId(productId)
 // a = a.toLowerCase();
 // b = b.toLowerCase();
 // (a < b)? 1: (a > b)? -1 : 0;
@@ -280,3 +336,38 @@ function makeNGrams(str, minSize=3, maxSize=8, prefixOnly=false) {
   }
   return nGrams;
 }
+
+
+// ProductDefinition.aggregate([
+//   {
+//     $match: {
+//       $text: {
+//         $search: makeNGrams('7 Select Aspirin', 2, 8).join(','),
+//       },
+//     },
+//   },
+//   {$set: {score: {'$meta': 'textScore'}}},
+//   {$sort: {score: -1}},
+//   {
+//     $lookup: {
+//       from: 'eaches',
+//       let: {productId: '$_id'},
+//       pipeline: [
+//         {$match: {$expr: {$eq: ['$productDefinition', '$$productId']}}},
+//         {$sort: {score: -1}},
+//         {$limit: 1},
+//       ],
+//       as: '_eaches',
+//     },
+//   },
+//   {
+//     $unwind: {path: '$_eaches', preserveNullAndEmptyArrays: true},
+//   },
+//   {
+//     $set: {
+//       eaches: '$_eaches.eaches',
+//       eachesScore: '$_eaches.score',
+//     },
+//   },
+//   {$unset: ['fromEaches', '_nGrams', '_prefixNGrams', '_eaches']},
+// ]);

@@ -4,7 +4,7 @@ const {
 } = require('../../config').custom;
 const Order = require('../../models/order');
 
-Order.schema.obj;
+// Order.schema.obj;
 // {
 //     path: String,
 //     orderNumber: String,
@@ -38,6 +38,15 @@ Order.schema.obj;
 //       ref: 'user',
 //     },
 //   }
+
+/**
+ *
+ * @typedef {[{
+ *      product: {identifiers:[{key: string, value: string}]},
+ *      quantity: Number,
+ *      desired: {identifiers:[{key: string, value: string}]},
+ *  }]} OrderItems
+ */
 /**
  *
  * @param {*} order1
@@ -47,7 +56,7 @@ Order.schema.obj;
 function combineOrders(order1, order2) {
   const combinedOrder = {};
   Object.keys(Order.schema.obj).forEach((key) => {
-    if (order1[key] != undefined || order2[key] != undefined) {
+    if (order1[key] == undefined || order2[key] == undefined) {
       combinedOrder[key] = order1[key] || order2[key];
     }
   });
@@ -57,55 +66,52 @@ function combineOrders(order1, order2) {
 
 /**
  *
- * @param {*} products
- * @param {[{
- *      product: {identifiers:[{key: string, value: string}]},
- *      quantity: Number,
- *      desired: {identifiers:[{key: string, value: string}]},
- *  }]} items
- * @return {*}
+ * @param {[*]} orderData
+ * @param {{items: OrderItems}} userOrder
+ */
+function combineOrderDataAndUserOrder(orderData, userOrder) {
+
+}
+/**
+ *
+ * @param {[*]} products
+ * @param {OrderItems} items
+ * @return {OrderItems} combinedItems
  */
 function combineProductsAndDesiredItems(products, items) {
-  const combinedOrder = [];
+  const combinedItems = [];
   const _desired = {};
   const _products = {};
   // turn items into objects and save them to _desired
   // with a key made from its product identifers
   //
   items.forEach((item) => {
-    const _item = keyValuePairsToObject(item.desired.identifiers);
-    _item[quantityField] = item.quantity;
-    _desired[pIDs.map((id) => _item[pid]).join(',')] = _item;
+    if (!item.desired) return;
+    const identifiers = keyValuePairsToObject(item.desired.identifiers);
+    _desired[pIDs.map((id) => identifiers[id]).join(',')] = item;
   });
 
   // save each product to _products with a key made from its product identifers
   products.forEach((product) => {
-    _products[pIDs.map((id) => product[pid]).join(',')] = product;
+    _products[pIDs.map((id) => product[id]).join(',')] = product;
   });
-
   //
   Object.entries(_products).forEach(([key, value]) => {
     const item = {};
     item['quantity'] = value[quantityField];
     delete value[quantityField];
-    item['product'] = objectToKeyValuePairs(value);
+    item['product'] = {identifiers: objectToKeyValuePairs(value)};
     if (_desired[key]) {
-      delete value[quantityField];
-      item['desired'] = objectToKeyValuePairs(_desired[key]);
+      item['desired'] = _desired[key].desired;
       delete _desired[key];
     }
-    combinedOrder.push(item);
+    combinedItems.push(item);
   });
-
   Object.values(_desired).forEach((value) => {
-    const item = {};
-    item['quantity'] = value[quantityField];
-    delete value[quantityField];
-    item['desired'] = objectToKeyValuePairs(_desired[key]);
-    combinedOrder.push(item);
+    combinedItems.push(value);
   });
 
-  return combinedOrder;
+  return combinedItems;
 }
 
 /**
@@ -115,7 +121,7 @@ function combineProductsAndDesiredItems(products, items) {
  */
 function objectToKeyValuePairs(object) {
   return Object.entries(object).reduce(function(result, [key, value]) {
-    if (value == undefined) return result;
+    if (value == undefined || value == '') return result;
     result.push({key, value});
     return result;
   }, []);

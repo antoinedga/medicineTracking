@@ -6,7 +6,7 @@ exports.requireLogin = (req, res, next) => {
         .status(401)
         .json({
           response: false,
-          message: `Unauthorized user`,
+          message: `Unauthorized user!`,
           Content: null,
         });
   }

@@ -20,7 +20,7 @@ const NDC_URL = 'https://api.fda.gov/drug/ndc.json';
  * @return {Promise<SuccessObject>}
  */
 async function search(query, limit=1, skip=0) {
-  return axios.get(`${NDC_URL}?search=${query}`)
+  return axios.get(`${NDC_URL}?search=${query}&limit=${limit}&skip=${skip}`)
       .then( (response) => {
         if (response.data.error != undefined) throw response.data;
         return {
@@ -44,19 +44,46 @@ async function search(query, limit=1, skip=0) {
  * @return {Boolean}
  */
 function isFullNDC(ndc) {
-  const regexPackageNDC = /^\d{5}-\d{3}-\d{2}$/;
-  return !ndc.replace(regexPackageNDC, '');
+  // eslint-disable-next-line max-len
+  const regexPackageNDC = [
+    /^\d{5}-\d{3}-\d{2}?$/,
+    /^\d{4}-\d{4}-\d{2}?$/,
+    /^\d{5}-\d{4}-\d{1}?$/,
+  ];
+  const result = regexPackageNDC.reduce((result, regex) => {
+    result |= !ndc.replace(regex, '');
+    return result;
+  }, false);
+  return result;
 }
-
 /**
  *
  * @param {String} ndc
  * @return {Boolean}
  */
 function isValidNDC(ndc) {
-  const validNDC = /^\d{5}-\d{3}-(\d{2})?$/;
-  return !ndc.replace(validNDC, '');
+  if (ndc == undefined) return false;
+  // eslint-disable-next-line max-len
+  const validNDC = [
+    /^\d{5}-\d{3}(-\d{2})?$/,
+    /^\d{4}-\d{4}(-\d{2})?$/,
+    /^\d{5}-\d{4}(-\d{1})?$/,
+  ];
+  const result = validNDC.reduce((result, regex) => {
+    result |= !ndc.replace(regex, '');
+    return result;
+  }, false);
+  return result;
 }
+
+// 73126-010 ndc
+// [0] 73126-010 invalid
+// [0] 72920-2018 ndc
+// [0] 72920-2018 invalid
+// [0] 72827-100-05 ndc
+// [0] 73408-609-33 ndc
+// [0] 73126-010 ax
+// [0] 72920-2018 ax
 
 /**
  * Searches the ndc database for the given ndc
@@ -65,11 +92,17 @@ function isValidNDC(ndc) {
  * @return {Promise<SuccessObject>}
  */
 async function searchNDC(ndc) {
+  if (!isValidNDC(ndc)) {
+    return {
+      success: false,
+      message: `Invalid ndc`,
+      content: ndc,
+    };
+  };
   const searchField = (isFullNDC(ndc)) ? 'packaging.package_ndc': 'product_ndc';
 
   return search(`${searchField}:${ndc}`)
       .then((val) => {
-        console.log(val);
         if (!val.success) throw val.content;
         return {
           success: true,
@@ -204,7 +237,6 @@ function parsePackageDescription(description) {
 async function getEaches(ndc) {
   return searchNDC(ndc)
       .then((res) => {
-        console.log(res);
         if (!res.success) throw res.content;
         const product = res.content[0];
         const packages = product.packaging;

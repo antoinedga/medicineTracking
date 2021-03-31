@@ -1,9 +1,12 @@
+/* eslint-disable no-throw-literal */
 const config = require('../../config');
 const {Order, Inventory} = require('../../models');
 const {callback} = require('../Callbacks');
 const csv = require('csv-parser');
 const fs = require('fs');
 const {action, resource} = require('../Role/enum');
+const {combineProductsAndDesiredItems} = require('./utils');
+const {createProductDefinitionUsingNdc} = require('../Eaches');
 
 
 /**
@@ -74,12 +77,21 @@ exports.uploadOrderData = (req, res) => {
         .pipe(csv())
         .on('data', (data) => results.push(data))
         .on('end', () => {
-          return res
-              .status(200)
-              .json({
-                response: true,
-                message: `Successfully uploaded order data`,
-                Content: results,
+          updateOrderData(req.body.orderNumber, results)
+              .then((doc) => {
+                return res
+                    .status(200)
+                    .json(doc);
+              })
+              .catch((err) => {
+                console.log('error', err);
+                return res
+                    .status(400)
+                    .json({
+                      response: false,
+                      message: `Error ocurred while saving uploaded order data`,
+                      Content: err,
+                    });
               });
         });
     fs.unlink(file.tempFilePath, () => { });
@@ -96,24 +108,34 @@ exports.uploadOrderData = (req, res) => {
 /**
  *
  * @param {String} orderNumber
- * @param {[*]} data
+ * @param {[*]} orderData
  */
-async function updateOrderData(orderNumber, data) {
-  const products = data.map((product) => {
-    return Object.entries(product).map(([key, value]) => {
-      return {key, value};
-    });
-  });
-  const session = await Order.db.startSession();
-  session.startTransaction();
-
-  Order
+async function updateOrderData(orderNumber, orderData) {
+  return Order
       .findOne({orderNumber})
       .then((doc) => {
-
+        if (doc == undefined) {
+          throw new Error('No matching order');
+        }
+        console.log(doc.items);
+        doc.items = combineProductsAndDesiredItems(orderData, doc.items);
+        createProductDefinitionUsingNdc(orderData);
+        return doc.save();
+      })
+      .then((doc) => {
+        return {
+          response: true,
+          message: `Successfully updated order`,
+          Content: doc,
+        };
+      })
+      .catch((err) => {
+        return {
+          response: false,
+          message: `Error while updating order`,
+          Content: err,
+        };
       });
-
-  session.endSession();
 }
 
 exports.updateByID = (req, res) => {
@@ -207,5 +229,4 @@ exports.deleteByID = (req, res) => {
 exports.test = (req, res) => {
   console.log(req);
   return res.status(200).json({message: 'Success!'});
-}
-;
+};

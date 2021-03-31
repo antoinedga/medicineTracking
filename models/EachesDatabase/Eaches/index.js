@@ -30,5 +30,9 @@ const eachesSchema = new Schema({
   },
 });
 
+eachesSchema.index( {productDefinition: 1, score: -1} );
+
 exports.Eaches = mongoose.model('eaches', eachesSchema);
 exports.EachesSchema = eachesSchema;
+
+
