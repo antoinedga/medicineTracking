@@ -5,8 +5,7 @@ const {callback} = require('../Callbacks');
 const csv = require('csv-parser');
 const fs = require('fs');
 const {action, resource} = require('../Role/enum');
-const {combineProductsAndDesiredItems} = require('./utils');
-const {createProductDefinitionUsingNdc} = require('../Eaches');
+const {doWork} = require('./utils');
 
 
 /**
@@ -76,24 +75,7 @@ exports.uploadOrderData = (req, res) => {
     fs.createReadStream(file.tempFilePath)
         .pipe(csv())
         .on('data', (data) => results.push(data))
-        .on('end', () => {
-          updateOrderData(req.body.orderNumber, results)
-              .then((doc) => {
-                return res
-                    .status(200)
-                    .json(doc);
-              })
-              .catch((err) => {
-                return res
-                    .status(400)
-                    .json({
-                      response: false,
-                      message: `Error ocurred while saving uploaded order data`,
-                      Content: err,
-                    });
-              });
-        });
-    fs.unlink(file.tempFilePath, () => { });
+        .on('end', doWork(req, res, results, file.tempFilePath));
   } catch (err) {
     return res
         .status(500)
@@ -104,38 +86,7 @@ exports.uploadOrderData = (req, res) => {
         });
   }
 };
-/**
- *
- * @param {String} orderNumber
- * @param {[*]} orderData
- */
-async function updateOrderData(orderNumber, orderData) {
-  return Order
-      .findOne({orderNumber})
-      .then((doc) => {
-        if (doc == undefined) {
-          throw new Error('No matching order');
-        }
-        console.log(doc.items);
-        doc.items = combineProductsAndDesiredItems(orderData, doc.items);
-        createProductDefinitionUsingNdc(orderData);
-        return doc.save();
-      })
-      .then((doc) => {
-        return {
-          response: true,
-          message: `Successfully updated order`,
-          Content: doc,
-        };
-      })
-      .catch((err) => {
-        return {
-          response: false,
-          message: `Error while updating order`,
-          Content: err,
-        };
-      });
-}
+
 
 exports.updateByID = (req, res) => {
   Order
@@ -230,10 +181,13 @@ exports.deleteByPath = (req, res) => {
 };
 
 exports.deleteByID = (req, res) => {
+  console.log(req.auth);
   Order
       .deleteOne({
         _id: req.body._id,
-        path: {$in: req.auth.permissions[action.DELETE][resource.ORDER]},
+        path: {
+          $in: req.auth.permissions?.[action.DELETE]?.[resource.ORDER],
+        },
       })
       .exec(callback(req, res, 'delete order by _id'));
 };
@@ -242,3 +196,4 @@ exports.test = (req, res) => {
   console.log(req);
   return res.status(200).json({message: 'Success!'});
 };
+
