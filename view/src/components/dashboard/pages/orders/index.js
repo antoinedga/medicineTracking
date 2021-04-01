@@ -12,6 +12,7 @@ import DeleteDialog from './deleteDialog'
 import Moment from 'react-moment';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import InfoIcon from '@material-ui/icons/Info';
+import EditIcon from '@material-ui/icons/Edit';
 import ImportExcel from './importExcel'
 import ViewDetail from "./viewDetail"
 
@@ -143,11 +144,11 @@ export default function Orders(props) {
 
                     icons={icons}
                     data={data}
-                    detailPanel={rowData => {
-                        return (
-                            <DetailPanel items={rowData.items} date={rowData.date} expected={rowData.expected} tracking={rowData.tracking} />
-                        )
-                    }}
+                    // detailPanel={rowData => {
+                    //     return (
+                    //         <DetailPanel items={rowData.items} date={rowData.date} expected={rowData.expected} tracking={rowData.tracking} />
+                    //     )
+                    // }}
                     options={
                         {
                             actionsColumnIndex: -1,
@@ -161,6 +162,11 @@ export default function Orders(props) {
                             icon: InfoIcon,
                             tooltip: 'View More Details',
                             onClick: (event, rowData) => handleOpenDetail(rowData)
+                        },
+                        {
+                            icon: EditIcon,
+                            tooltip: 'Edit Order',
+                            onClick: (event, rowData) => alert("das")
                         },
                         {
                             icon: DeleteForeverIcon,

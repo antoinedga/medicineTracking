@@ -2,6 +2,7 @@ import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
+import { Grid } from '@material-ui/core'
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import MuiDialogContent from '@material-ui/core/DialogContent';
 import MuiDialogActions from '@material-ui/core/DialogActions';
@@ -94,7 +95,7 @@ export default function CustomizedDialogs(props) {
                 scroll={"paper"}
                 open={open}
                 fullWidth={true}
-                maxWidth={"sm"}>
+                maxWidth={"lg"}>
                 <DialogTitle id="customized-dialog-title" onClose={handleClose}>
                     Order
                 </DialogTitle>
@@ -123,25 +124,56 @@ export default function CustomizedDialogs(props) {
                             }
                         </Moment>
                     </Typography>
-                    <Typography variant="h6">
-                        Items:
-                    </Typography>
-                    <Divider />
-                    <List dense={true} style={{ maxHeight: 300, overflow: 'auto' }}>
-                        {
-                            dataView.items?.map((item) => {
-                                return (
-                                    <ListItem>
-                                        <ListItemText primary={
-                                            ListIdentifier(item.product.identifiers)
-                                        }
-                                            secondary={"Quantity: " + item.quantity} />
-                                    </ListItem>
-                                )
-                            })
-                        }
+                    <Grid container>
+                        <Grid item container>
+                            <Grid item xs={6}>
+                                <Typography variant="h6">
+                                    Products:
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={6}>
+                                <Typography variant="h6">
+                                    Desired Products:
+                                </Typography>
+                            </Grid>
+                        </Grid>
 
-                    </List>
+                        <Grid item container style={{ maxHeight: 300, overflow: 'auto' }}>
+                            {
+                                dataView.items?.map((item) => {
+                                    return (
+                                        <Grid item container>
+                                            <Grid item xs={12}>
+                                                <Typography>
+                                                    Quantity: {item.quantity}
+                                                </Typography>
+                                                <Divider />
+                                            </Grid>
+                                            <Grid item xs={6}>
+                                                <ListItem>
+                                                    <ListItemText primary={
+                                                        ListIdentifier(item.product?.identifiers)
+                                                    }
+                                                    />
+                                                </ListItem>
+                                            </Grid>
+                                            <Grid item xs={6}>
+                                                <ListItem>
+                                                    <ListItemText primary={ListIdentifier(item.desired?.identifiers)
+                                                    }
+                                                    />
+                                                </ListItem>
+                                            </Grid>
+
+                                        </Grid>
+                                    )
+                                })
+                            }
+                        </Grid>
+
+                    </Grid>
+
+
                     <Typography variant="h6">
                         Logs:
                     </Typography>
@@ -174,7 +206,7 @@ export default function CustomizedDialogs(props) {
 }
 
 function ListIdentifier(item) {
-
+    console.log(item)
     return (
         <>
             {item?.map(key => {
