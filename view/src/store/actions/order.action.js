@@ -33,6 +33,7 @@ export const deleteOrder = async (dispatch, orderId) => {
     let config = {
         headers: { Authorization: `Bearer ${state.login.token}` }
     };
+    console.log(config)
 
     let bodyParam = {
         _id: orderId,
@@ -49,3 +50,26 @@ export const deleteOrder = async (dispatch, orderId) => {
         })
 }
 
+export const getOrderByID = async (dispatch, orderId) => {
+    let state = store.state.getState();
+
+    let config = {
+        headers: { Authorization: `Bearer ${state.login.token}` }
+    };
+    // console.log(config)
+
+    let bodyParam = {
+        _id: orderId,
+    }
+    dispatch({ type: constants.ORDER_LOADING })
+
+    return axios.post("http://localhost:8080/api/order/by_id", bodyParam, config)
+        .then((res) => res.data).
+        then(data => {
+            console.log(data)
+            return Promise.resolve(data)
+        }).catch((error) => {
+
+            return Promise.reject(error)
+        })
+}

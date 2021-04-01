@@ -13,6 +13,8 @@ import Moment from 'react-moment';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import InfoIcon from '@material-ui/icons/Info';
 import ImportExcel from './importExcel'
+import ViewDetail from "./viewDetail"
+
 const useStyles = makeStyles((theme) => ({
     detailPanel: {
         height: '315px',
@@ -41,15 +43,19 @@ export default function Orders(props) {
     const loading = useSelector(state => state.orders.loading)
     const selected = useSelector(state => state.inventory.selected)
     const classes = useStyles()
+
     const [deleteToggle, setDeleteView] = useState(false);
     const [rowDataDelete, setRowData] = useState({})
+
+    const [viewDetailToggle, setViewDetail] = useState(false);
+    const [rowDataView, setRowDataView] = useState({})
 
     useEffect(() => {
         dispatch({ type: constants.ORDER_LOADING })
 
         getOrders(dispatch).then((data) => {
             dispatch({ type: constants.ORDER_DONE })
-
+            console.log(data.response)
         }).catch((error) => {
 
             dispatch({ type: constants.ORDER_DONE })
@@ -63,6 +69,14 @@ export default function Orders(props) {
     }
     const handleDeleteClose = () => {
         setDeleteView(false)
+    }
+
+    const handleOpenDetail = (row) => {
+        setRowDataView(row)
+        setViewDetail(true)
+    }
+    const handleDetailClose = () => {
+        setViewDetail(false)
     }
 
     return (
@@ -120,7 +134,7 @@ export default function Orders(props) {
                     data={data}
                     detailPanel={rowData => {
                         return (
-                            <DetailPanel logs={rowData.log} date={rowData.date} expected={rowData.expected} tracking={rowData.tracking} />
+                            <DetailPanel items={rowData.items} date={rowData.date} expected={rowData.expected} tracking={rowData.tracking} />
                         )
                     }}
                     options={
@@ -135,7 +149,7 @@ export default function Orders(props) {
                         {
                             icon: InfoIcon,
                             tooltip: 'View More Details',
-                            onClick: (event, rowData) => handleOpenDelete(rowData)
+                            onClick: (event, rowData) => handleOpenDetail(rowData)
                         },
                         {
                             icon: DeleteForeverIcon,
@@ -147,7 +161,7 @@ export default function Orders(props) {
                 />
             </div>
             <DeleteDialog open={deleteToggle} handleClose={handleDeleteClose} rowData={rowDataDelete} />
-
+            <ViewDetail open={viewDetailToggle} data={rowDataView} handleClose={handleDetailClose} />
             <Backdrop className={classes.backdrop} open={loading}>
                 <CircularProgress color="inherit" />
             </Backdrop>
@@ -157,27 +171,22 @@ export default function Orders(props) {
 
 const DetailPanel = (props) => {
     const classes = useStyles();
-    const list = props.list;
     const date = props.date;
-    const logs = props.logs;
+    const items = props.items;
     const expected = props.expected;
     const trackingNum = props.tracking;
-    console.log(logs)
+    console.log(items)
     return (
         <>
             <Grid container className={classes.detailPanel}>
                 <Grid item xs={7} style={{ height: 300, overflow: "auto" }}>
+                    Items
                     {
-                        logs.map(log => {
+                        items.map(item => {
                             return (
-                                <p>
-                                    <Moment format="MMM-D-YYYY h:mm a" >
-                                        {
-                                            log.date
-                                        }
-                                    </Moment>
-                                    {log.message}
-                                </p>
+                                <Typography>
+
+                                </Typography>
                             )
                         })
                     }
