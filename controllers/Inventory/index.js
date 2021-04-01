@@ -1,7 +1,7 @@
 const config = require('../../config');
 const {Inventory} = require('../../models');
 const {callback} = require('../Callbacks');
-const {getPathsObject, getCompletePaths} = require('../utils');
+const {getPathsObject, getCompletePaths, inventoryExists} = require('../utils');
 
 
 /**
@@ -24,31 +24,9 @@ exports.create = (req, res) => {
   if (!req.body.name) req.body.name = req.body.path.split('/').pop();
   const newInventory = new Inventory(req.body);
 
-  Inventory
-      .findOne({path: newInventory.path})
-      .exec((err, inv) => {
-        if (err) {
-          return res
-              .status(400)
-              .json({
-                response: false,
-                message: `Error while checking uniqueness of inventory path`,
-                Content: err,
-              });
-        } else if (inv) {
-          return res
-              .status(400)
-              .json({
-                response: false,
-                message: `Inventory: ${newInventory.path}, already exists`,
-                Content: null,
-              });
-        } else {
-          newInventory
-              .save(callback(req, res, 'create inventory'))
-          ;
-        };
-      });
+  inventoryExists(req.body.path, false)
+      .then(() => newInventory.save(callback(req, res, 'create inventory')))
+      .catch((err) => sendError(req, res, err, 'create inventory'));
 };
 
 exports.getPaths = (req, res) => {
