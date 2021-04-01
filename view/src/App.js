@@ -15,9 +15,9 @@ import { Provider } from 'react-redux'
 
 import thunk from 'redux-thunk'
 
+import EditView from './components/dashboard/pages/orders/EditOrder'
 
 const Store = require('./store/store')
-const middleware = [thunk];
 let store = null;
 
 if (window?.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) {
@@ -32,8 +32,8 @@ function App() {
             <Router>
                 <Switch>
 
-                    <Route exact path="/" component={Login}>
-
+                    <Route exact path="/">
+                        <EditView />
                     </Route>
 
                     <Route path="/signup/:token?" component={Register}>

@@ -1,12 +1,12 @@
 const Invitations = require('../../models/invitations');
-const {v1: uuidv1} = require('uuid');
+const { v1: uuidv1 } = require('uuid');
 const nodemailer = require('nodemailer');
 
 
 // Show Invitation Page
 exports.get_invitation = (req, res) => {
   // res.render('forgot');
-  return res.json({response: true, message: 'Invitation Page', Content: null});
+  return res.json({ response: true, message: 'Invitation Page', Content: null });
 };
 
 exports.post_invitation = (req, res) => {
@@ -20,7 +20,7 @@ exports.post_invitation = (req, res) => {
 
   addInvitation.save((err, success) => {
     if (err) {
-      console.log(err);
+      console.log("s" + err);
       return;
     }
   });

@@ -7,9 +7,9 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
-import { TextField, FormHelperText } from '@material-ui/core'
+import { TextField, FormHelperText, CircularProgress, Grid } from '@material-ui/core'
 import { useForm } from "react-hook-form";
-
+import { inviteUser } from '../../../../../../store/actions/userManagement'
 function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
@@ -18,6 +18,8 @@ export default function InviteDialog(props) {
     const [open, setOpen] = React.useState(false);
     const [openAlert, setAlert] = React.useState(false);
     const [success, setSuccess] = React.useState(false);
+    const [loading, setLoading] = React.useState(false);
+    const [errorMsg, setErrorMsg] = React.useState(false);
     const { register, errors, handleSubmit, setError, clearErrors, getValues } = useForm({ mode: 'onTouched' });
 
     const handleClickOpen = () => {
@@ -34,9 +36,25 @@ export default function InviteDialog(props) {
 
     const handleOnSubmit = () => {
         let email = getValues();
-        setAlert(true)
-        setSuccess(true)
-
+        setLoading(true)
+        inviteUser(email).then((data) => {
+            console.log(data)
+            if (data.response) {
+                setLoading(false)
+                setAlert(true)
+                setSuccess(true)
+            } else {
+                setLoading(false)
+                setAlert(true)
+                setErrorMsg(data.message)
+                setSuccess(false)
+            }
+        }).catch(error => {
+            setErrorMsg(error.response)
+            setLoading(false)
+            setAlert(true)
+            setSuccess(false)
+        })
     }
 
 
@@ -55,6 +73,15 @@ export default function InviteDialog(props) {
             >
                 <DialogTitle id="alert-dialog-title">{"Invite New User"}</DialogTitle>
                 <DialogContent>
+                    <Grid container
+                        direction="row"
+                        justify="center"
+                        alignItems="center">
+                        <Grid item >
+                            {(loading) ? <CircularProgress /> : ""}
+                        </Grid>
+                    </Grid>
+
                     <DialogContentText id="alert-dialog-description">
                         <form noValidate autoComplete="off" onSubmit={handleSubmit(handleOnSubmit)}>
                             <TextField required label="Email to send Invite" fullWidth={true} size={'medium'}
@@ -89,7 +116,7 @@ export default function InviteDialog(props) {
                                 This is a success message!
                             </Alert>) : (
                             <Alert onClose={handleAlertClose} severity="error">
-                                USER ALREADY HAS AN ACCOUNT
+                                {errorMsg}
                             </Alert>)
                     }
                 </Snackbar>
