@@ -1,5 +1,7 @@
+
+
 ```js
-// example - user defined product
+// example - user defined product with eaches
 {
     _id: '603440394fb2b12220dbd4da',
     identifiers: [
@@ -8,9 +10,43 @@
         { key: 'supplier', value: '7-Eleven' },
         { key: 'price', value: '$12.08' },
     ],
-    product: '603445014fb2b12220dbd4ds',
-    eaches: '603445014fb2b12220dbd4dc',
-    info: '603445014fb2b12220dbd4de',
+    eaches: 
+        {
+            quantity: 1,
+            unit: "BOTTLE",
+            contains: [
+                {
+                    quantity: 355,
+                    unit: "mL",
+                    contains: []
+                }
+            ]
+        }
+}
+```
+
+```js
+// example - product definition with eaches
+{
+    _id: '603440394fb2b12220dbd4da',
+    identifiers: [
+        { key: 'name', value: '7 Select Aspirin' },
+        { key: 'ndc', value: '10202-416-78' },
+        { key: 'supplier', value: '7-Eleven' },
+        { key: 'price', value: '$12.08' },
+    ],
+    eaches: 
+        {
+            quantity: 1,
+            unit: "BOTTLE",
+            contains: [
+                {
+                    quantity: 355,
+                    unit: "mL",
+                    contains: []
+                }
+            ]
+        }
 }
 ```
 
@@ -24,11 +60,9 @@
         { key: 'supplier', value: '7-Eleven' },
         { key: 'price', value: '$12.08' },
     ],
-    eaches: [
-        { quantity: 1, unit: 'CARTON' },
-        { quantity: 1, unit: 'BOTTLE' },
-        { quantity: 100, unit: 'TABLET, FILM COATED' },
-    ],
+    product: '603445014fb2b12220dbd4ds',
+    eaches: '603445014fb2b12220dbd4dc',
+    info: '603445014fb2b12220dbd4de',
 }
 ```
 
