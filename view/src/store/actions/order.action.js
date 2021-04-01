@@ -1,5 +1,7 @@
 import axios from 'axios'
 import constants from './actionType/order';
+import fs from 'fs'
+
 var store = require("../store");
 
 export const getOrders = (dispatch) => {
@@ -80,20 +82,29 @@ export const getOrderByID = async (dispatch, orderId) => {
 
 export const uploadOrder = async (dispatch, file, orderNum) => {
     let state = store.state.getState();
-    var formData = new FormData();
-    let config = {
+    var data = new FormData();
+    data.append('orderData', file[0]);
+    data.append('file', file[0])
+    console.log(file)
+    data.append('orderNumber', orderNum);
+    var config = {
+        method: 'post',
+        url: '/api/order/upload',
         headers: {
-            Authorization: `Bearer ${state.login.token}`,
-            ContentType: 'multipart/form-data'
-        }
+            'Authorization':
+                `Bearer ${state.login.token}`,
+            'Content-Type': 'multipart/form-data'
+
+        },
+        data: data
     };
 
-    formData.append('orderNumber', orderNum)
-    formData.append('file', file);
-
-    return axios.post("/api/order/upload", formData, config).then(data => {
-
-    }).catch(error => {
-
-    })
+    return axios(config)
+        .then(function (response) {
+            return Promise.resolve(response.data)
+        })
+        .catch(function (error) {
+            console.log(error.response);
+            return Promise.reject(error.data)
+        });
 }

@@ -50,6 +50,8 @@ export default function Orders(props) {
     const [viewDetailToggle, setViewDetail] = useState(false);
     const [rowDataView, setRowDataView] = useState({})
 
+    const [importToggle, setImportToggle] = useState(false)
+
     useEffect(() => {
         dispatch({ type: constants.ORDER_LOADING })
 
@@ -61,12 +63,13 @@ export default function Orders(props) {
             dispatch({ type: constants.ORDER_DONE })
 
         })
-    }, [selected, deleteToggle])
+    }, [selected, deleteToggle, importToggle])
 
     const handleOpenDelete = (row) => {
         setRowData(row)
         setDeleteView(true)
     }
+
     const handleDeleteClose = () => {
         setDeleteView(false)
     }
@@ -77,6 +80,14 @@ export default function Orders(props) {
     }
     const handleDetailClose = () => {
         setViewDetail(false)
+    }
+
+    const handleImportClose = () => {
+        setImportToggle(false)
+    }
+
+    const handleImportOpen = () => {
+        setImportToggle(true)
     }
 
     return (
@@ -93,7 +104,7 @@ export default function Orders(props) {
                         <PlaceOrder />
                     </Grid>
                     <Grid items xs={2}>
-                        <ImportExcel />
+                        <ImportExcel open={importToggle} handleOpen={handleImportOpen} handleClose={handleImportClose} />
                     </Grid>
                 </Grid>
 

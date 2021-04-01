@@ -56,10 +56,13 @@ exports.create = (req, res) => {
 };
 
 exports.uploadOrderData = (req, res) => {
+  console.log("req.files " + JSON.stringify(req.files, null, 1))
+  console.log("req.body " + JSON.stringify(req.body, null, 1))
   try {
     if (
       !req.files ||
-      req.files.orderData.mimetype != 'text/csv' ||
+      !(req.files.orderData.mimetype == 'text/csv' ||
+        req.files.orderData.mimetype == 'application/vnd.ms-excel') ||
       !req.body.orderNumber
     ) {
       return res

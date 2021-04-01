@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { makeStyles } from '@material-ui/core/styles';
 import { Button, Grid, Snackbar, Dialog, AppBar, IconButton, Typography, Backdrop, CircularProgress, Slide } from '@material-ui/core';
@@ -9,6 +9,8 @@ import { DialogActions, DialogContent, TextField, InputLabel, FormHelperText, Fo
 import PublishIcon from '@material-ui/icons/Publish';
 import ClearIcon from '@material-ui/icons/Clear';
 import MuiAlert from '@material-ui/lab/Alert'
+import { uploadOrder } from '../../../../../store/actions/order.action'
+import { useDispatch } from 'react-redux';
 
 const useStyles = makeStyles((theme) => ({
     appBar: {
@@ -52,7 +54,7 @@ function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
-export default function FullScreenDialog() {
+export default function FullScreenDialog(props) {
 
     const classes = useStyles();
     const [open, setDialogOpen] = React.useState(false);
@@ -60,13 +62,16 @@ export default function FullScreenDialog() {
     const [openSnackbar, setSnackBar] = React.useState(false);
     const [enabled, setEnabled] = React.useState(false);
     const [files, setFiles] = React.useState([]);
+    const [message, setMessage] = React.useState("")
+    const [orderNumber, setOrderNumber] = React.useState("")
+    const dispatch = useDispatch()
 
     const handleClickOpen = () => {
-        setDialogOpen(true);
+        props.handleOpen()
     };
 
     const handleDialogClose = () => {
-        setDialogOpen(false);
+        props.handleClose();
     };
 
     const {
@@ -96,8 +101,13 @@ export default function FullScreenDialog() {
 
     const handleSubmit = () => {
         setLoading(true);
-        console.log(acceptedFiles)
-        setTimeout(() => setLoading(false), 3000);
+        uploadOrder(dispatch, acceptedFiles, orderNumber).then(data => {
+            if (data.response) {
+                setMessage(data.message)
+                setLoading(false)
+                setSnackBar(true)
+            }
+        })
     }
 
     const baseStyle = {
@@ -146,6 +156,13 @@ export default function FullScreenDialog() {
         </li>
     ));
 
+    useEffect(() => {
+        if (files.length > 0 && orderNumber != "") {
+            setEnabled(true)
+        }
+        setDialogOpen(props.open)
+    })
+
 
     return (
         <>
@@ -167,7 +184,9 @@ export default function FullScreenDialog() {
                     <Grid className="container">
                         <FormControl style={{ margin: 10 }} size={'medium'} required>
                             <InputLabel htmlFor="my-input">Order Number</InputLabel>
-                            <Input id="my-input" aria-describedby="my-helper-text" />
+                            <Input id="my-input" defaultValue="" onChange={event => {
+                                setOrderNumber(event.target.value)
+                            }} aria-describedby="my-helper-text" />
                             <FormHelperText id="my-helper-text">i.e 123456</FormHelperText>
                         </FormControl>
                         <div {...getRootProps({ style })}>
@@ -189,8 +208,8 @@ export default function FullScreenDialog() {
                     </DialogActions>
                     <Snackbar open={openSnackbar} autoHideDuration={6000} >
                         <Alert onClose={() => setSnackBar(false)} severity="success">
-                            Successfully removed file!
-                            </Alert>
+                            {message}
+                        </Alert>
                     </Snackbar>
                 </DialogContent>
                 <Backdrop className={classes.backdrop} open={loading}>
