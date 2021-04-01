@@ -51,7 +51,12 @@ module.exports = () => {
           requireAccess(action.UPDATE, resource.ORDER),
           order.updateLogByOrderNumber,
       );
-
+  router.route('/by_order_number')
+      .put(
+          requireLogin,
+          requireAccess(action.UPDATE, resource.ORDER),
+          order.updateByOrderNumber,
+      );
   router.route('/by_path')
       .post(
           requireLogin,

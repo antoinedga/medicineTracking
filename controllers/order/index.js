@@ -79,11 +79,34 @@ exports.uploadOrderData = (req, res) => {
 };
 
 
+exports.updateByOrderNumber = (req, res) => {
+  Order
+      .findOneAndUpdate(
+          {
+            orderNumber: req.body?.orderNumber,
+          },
+          req.body,
+          {
+            setDefaultsOnInsert: true,
+            useFindAndModify: false,
+            new: true,
+          })
+      .exec(callback(req, res, 'update order by orderNumber'));
+};
+
 exports.updateByID = (req, res) => {
   Order
-      .findOneAndUpdate({
-        _id: req.body?._id,
-      }, req.body)
+      .findOneAndUpdate(
+          {
+            _id: req.body?._id,
+          },
+          req.body,
+          {
+            setDefaultsOnInsert: true,
+            useFindAndModify: false,
+            new: true,
+          },
+      )
       .exec(callback(req, res, 'update order by id'));
 };
 
@@ -106,6 +129,7 @@ exports.updateLogByID = (req, res) => {
           {
             setDefaultsOnInsert: true,
             useFindAndModify: false,
+            new: true,
           },
       )
       .exec(callback(req, res, 'update order log by id'));
