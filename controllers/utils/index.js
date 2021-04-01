@@ -72,14 +72,12 @@ function grantsToRolls(grants) {
  */
 function can(_query, action, resource, path) {
   if (!_query?.[resource]?.[action]) return false;
-
   const paths = _query[resource][action];
 
   if (paths[path + '$']) return true;
   while (path.length > 0) {
-    // console.log(path, paths[path], paths[path+'$']);
     if (paths[path]) return true;
-    path = path.replace(/\/\w*$/, '');
+    path = path.replace(/\w*(\/)?$/, '');
   }
 
   return (paths[path]) ? true : false;
@@ -243,7 +241,7 @@ function requireAccess(action, resource) {
     if (!req.auth.permissions[action]) {
       req.auth.permissions[action] = {};
     };
-    req.auth.permissions[action][resource] = paths;
+    req.auth.permissions[action][resource] = new RegExp(paths);
 
     next();
   };
@@ -255,14 +253,14 @@ function requireAccess(action, resource) {
 function createAdminRole() {
   const _role = {
     role: 'admin:',
-    path: '',
+    path: '/',
     permissions: [],
   };
 
   Object.values(resource).forEach((r) => {
     Object.values(action).forEach((a) => {
       _role.permissions.push({
-        resource: r + ':',
+        resource: r + ':/',
         action: a + ':any',
       });
     });
