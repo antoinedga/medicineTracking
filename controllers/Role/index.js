@@ -42,7 +42,7 @@ function createAdmin(name, email, password) {
   });
 }
 
-createAdmin('admin', 'admin@admin.com', 'admin');
+createAdmin('admin', 'admin@admin.com', 'admin123');
 
 exports.getAll = (req, res) => {
   if (process.env.NODE_ENV === config.dev) {
