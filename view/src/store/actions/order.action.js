@@ -37,7 +37,14 @@ export const deleteOrder = async (dispatch, orderId) => {
     }
     dispatch({ type: constants.ORDER_LOADING })
 
-    return axios.delete("http://localhost:8080/api/order/by_id", config, bodyParam)
+    return axios.delete("http://localhost:8080/api/order/by_id", {
+        headers: {
+            Authorization: `Bearer ${state.login.token}`
+        }, data: {
+            _id: orderId
+        }
+    }
+    )
         .then((res) => res.data).
         then(data => {
             return Promise.resolve(data)

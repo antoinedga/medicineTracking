@@ -59,6 +59,10 @@ export default function DeleteDialog(props) {
         setOpen(props.open)
     })
 
+    useEffect(() => {
+        setDisable(false)
+    }, [rowData])
+
     const handleAlertClose = (event, reason) => {
         if (reason === 'clickaway') {
             return;
