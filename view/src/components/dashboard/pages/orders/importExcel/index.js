@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Button, Grid, Snackbar, Dialog, AppBar, IconButton, Typography, Backdrop, CircularProgress, Slide } from '@material-ui/core';
 import Toolbar from '@material-ui/core/Toolbar';
 import CloseIcon from '@material-ui/icons/Close';
-import { DialogActions, DialogContent } from '@material-ui/core';
+import { DialogActions, DialogContent, TextField, InputLabel, FormHelperText, FormControl, Input } from '@material-ui/core';
 
 import PublishIcon from '@material-ui/icons/Publish';
 import ClearIcon from '@material-ui/icons/Clear';
@@ -58,7 +58,7 @@ export default function FullScreenDialog() {
     const [open, setDialogOpen] = React.useState(false);
     const [loading, setLoading] = React.useState(false);
     const [openSnackbar, setSnackBar] = React.useState(false);
-
+    const [enabled, setEnabled] = React.useState(false);
     const [files, setFiles] = React.useState([]);
 
     const handleClickOpen = () => {
@@ -77,7 +77,7 @@ export default function FullScreenDialog() {
         isDragReject,
         acceptedFiles
     } = useDropzone({
-        accept: '.csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel', maxFiles: 1,
+        accept: '.csv', maxFiles: 1,
         onDrop: file => handleFile(file)
     });
 
@@ -165,10 +165,15 @@ export default function FullScreenDialog() {
                 </AppBar>
                 <DialogContent>
                     <Grid className="container">
+                        <FormControl style={{ margin: 10 }} size={'medium'} required>
+                            <InputLabel htmlFor="my-input">Order Number</InputLabel>
+                            <Input id="my-input" aria-describedby="my-helper-text" />
+                            <FormHelperText id="my-helper-text">i.e 123456</FormHelperText>
+                        </FormControl>
                         <div {...getRootProps({ style })}>
                             <input {...getInputProps()} />
                             <p>Drag 'n' drop some files here, or click to select files</p>
-                            <em>(Only .csv, .xlsx, and .xls files will be accepted)</em>
+                            <em>(Only .csv)</em>
                         </div>
                     </Grid>
                     <div style={{ margin: 16, fontSize: 26 }}>
@@ -178,7 +183,7 @@ export default function FullScreenDialog() {
                         <Button variant="contained" onClick={clearFile} size="large" endIcon={<ClearIcon />} className={classes.cancel}>
                             Clear
                             </Button>
-                        <Button variant="contained" onClick={handleSubmit} size="large" endIcon={<PublishIcon />} className={classes.submit}>
+                        <Button disabled={!enabled} variant="contained" onClick={handleSubmit} size="large" endIcon={<PublishIcon />} className={classes.submit}>
                             Submit
                             </Button>
                     </DialogActions>

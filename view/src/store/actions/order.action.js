@@ -1,8 +1,5 @@
-import constant from './actionType/login'
 import axios from 'axios'
-import Cookies from 'universal-cookie';
 import constants from './actionType/order';
-const cookies = new Cookies();
 var store = require("../store");
 
 export const getOrders = (dispatch) => {
@@ -17,8 +14,8 @@ export const getOrders = (dispatch) => {
     }
 
     return axios.post("http://localhost:8080/api/order/by_path/recursive", bodyParam, config)
-        .then((res) => res.data).
-        then(data => {
+        .then((res) => res.data)
+        .then(data => {
             console.log(data.Content)
             dispatch({ type: constants.ORDER_PATH_SET, payload: { orders: data.Content } })
             return data
@@ -72,4 +69,24 @@ export const getOrderByID = async (dispatch, orderId) => {
 
             return Promise.reject(error)
         })
+}
+
+export const uploadOrder = async (dispatch, file, orderNum) => {
+    let state = store.state.getState();
+    var formData = new FormData();
+    let config = {
+        headers: {
+            Authorization: `Bearer ${state.login.token}`,
+            ContentType: 'multipart/form-data'
+        }
+    };
+
+    formData.append('orderNumber', orderNum)
+    formData.append('file', file);
+
+    return axios.post("/api/order/upload", formData, config).then(data => {
+
+    }).catch(error => {
+
+    })
 }
