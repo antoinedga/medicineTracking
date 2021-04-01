@@ -105,7 +105,7 @@ function combineProductsAndDesiredItems(products, items) {
   // with a key made from its product identifers
   items.forEach((item) => {
     if (!item.desired) return;
-    addProductToDictionary(item.desired, _desired);
+    addProductToDictionary(item.desired, _desired, false, item);
   });
 
   // save each product to _products with a key made from its product identifers
@@ -137,8 +137,9 @@ function combineProductsAndDesiredItems(products, items) {
  * @param {UserDefinedProduct} product
  * @param {*} dictionary
  * @param {Boolean} keepObject
+ * @param {*} value
  */
-function addProductToDictionary(product, dictionary, keepObject=false) {
+function addProductToDictionary(product, dictionary, keepObject=false, value) {
   const identifiers = keyValuePairsToObject(product.identifiers);
   const key = pIDs.map((id) => identifiers[id]).join(',');
   let ext = 0;
@@ -148,7 +149,11 @@ function addProductToDictionary(product, dictionary, keepObject=false) {
   if (keepObject) {
     product.identifiers = identifiers;
   }
-  dictionary[key + ext] = product;
+  if (value != undefined) {
+    dictionary[key + ext] = value;
+  } else {
+    dictionary[key + ext] = product;
+  }
 }
 
 /**
