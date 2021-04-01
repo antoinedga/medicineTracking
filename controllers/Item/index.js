@@ -1,5 +1,5 @@
 const config = require('../../config');
-const {Item, Inventory} = require('../../models');
+const {Item} = require('../../models');
 const {callback} = require('../Callbacks');
 
 
@@ -24,24 +24,9 @@ exports.getAll = (req, res) => {
 exports.create = (req, res) => {
   const newItem = new Item(req.body);
 
-  Inventory
-      .findOne({path: newItem.path})
-      .exec((err, inv) => {
-        if (err) {
-          return res
-              .status(400)
-              .json({
-                response: false,
-                message: `Error while checking if inventory exists`,
-                Content: err,
-              })
-          ;
-        } else {
-          newItem
-              .save(callback(req, res, 'create item'))
-          ;
-        };
-      });
+  inventoryExists(req.body.path, true)
+      .then(() => newItem.save(callback(req, res, 'create item')))
+      .catch((err) => sendError(req, res, err, 'create inventory'));
 };
 
 exports.findRecursivelyByPath = (req, res) => {

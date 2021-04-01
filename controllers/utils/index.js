@@ -369,8 +369,8 @@ async function verifyRefreshToken(refreshToken) {
             });
       });
 }
-
 module.exports = {
+  ...require('./checks'),
   combine,
   can,
   getPaths,

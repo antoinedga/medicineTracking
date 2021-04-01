@@ -18,5 +18,19 @@ exports.callback = (req, res, action) => {
           });
     };
   };
-}
-;
+};
+
+exports.sendError = (req, res, error, action) => {
+  if (error.hasOwnProperty('response')) {
+    return res
+        .status(400)
+        .json(error);
+  }
+  return res
+      .status(400)
+      .json({
+        response: false,
+        message: `Error during ${action}`,
+        Content: error,
+      });
+};
