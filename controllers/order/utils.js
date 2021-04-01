@@ -1,43 +1,12 @@
+const fs = require('fs');
 const {
   productIdentifiers: pIDs,
   quantityField,
 } = require('../../config').custom;
 const Order = require('../../models/order');
-
-// Order.schema.obj;
-// {
-//     path: String,
-//     orderNumber: String,
-//     orderDate: Date,
-//     items: [{
-//         product: {
-//           identifiers: [{key,value}]
-//         },
-//         quantity: {
-//           type: Number,
-//           required: true,
-//         },
-//         desired: {
-//           identifiers: [{key,value}],
-//         },
-//       }],
-//       required: true,
-//       _id: false,
-//     },
-//     status: {
-//       type: String,
-//     },
-//     expectedDelivery: {
-//       type: Date,
-//     },
-//     trackingNumber: {
-//       type: String,
-//     },
-//     user: {
-//       type: Schema.Types.ObjectId,
-//       ref: 'user',
-//     },
-//   }
+const {
+  addEachesToProducts,
+} = require('../Eaches/utils');
 
 /**
  *
@@ -47,34 +16,83 @@ const Order = require('../../models/order');
  *      desired: {identifiers:[{key: string, value: string}]},
  *  }]} OrderItems
  */
+
+/**
+ * @typedef {import('../Eaches/utils').UserDefinedProduct} UserDefinedProduct
+ */
+
+
 /**
  *
- * @param {*} order1
- * @param {*} order2
- * @return {*}
+ * get eaches for each product
+ * if no eaches in database put product has ndc
+ *    get eaches by ndc
+ * combine products and old order
+ * save
+ * @param {*} req
+ * @param {*} res
+ * @param {*} orderData
+ * @param {String} uploadPath
+ * @return {Function}
  */
-function combineOrders(order1, order2) {
-  const combinedOrder = {};
-  Object.keys(Order.schema.obj).forEach((key) => {
-    if (order1[key] == undefined || order2[key] == undefined) {
-      combinedOrder[key] = order1[key] || order2[key];
-    }
-  });
-
-  return combinedOrder;
+function doWork(req, res, orderData, uploadPath) {
+  return () => {
+    addEachesToProducts(objectsToProducts(orderData))
+        .then((_products) => updateOrderData(req.body.orderNumber, _products))
+        .then((doc) => {
+          return res
+              .status(200)
+              .json(doc);
+        })
+        .catch((err) => {
+          return res
+              .status(400)
+              .json({
+                response: false,
+                message: `Error ocurred while saving uploaded order data`,
+                Content: err,
+              });
+        }).finally( () => {
+          fs.unlink(uploadPath, () => { });
+        });
+  };
 }
 
 /**
  *
- * @param {[*]} orderData
- * @param {{items: OrderItems}} userOrder
- */
-function combineOrderDataAndUserOrder(orderData, userOrder) {
-
-}
-/**
- *
+ * @param {String} orderNumber
  * @param {[*]} products
+ */
+async function updateOrderData(orderNumber, products) {
+  return Order
+      .findOne({orderNumber})
+      .then((doc) => {
+        if (doc == undefined) {
+          throw new Error('No matching order');
+        }
+        doc.items = combineProductsAndDesiredItems(products, doc.items);
+        return doc.save();
+      })
+      .then((doc) => {
+        return {
+          response: true,
+          message: `Successfully updated order`,
+          Content: doc,
+        };
+      })
+      .catch((err) => {
+        return {
+          response: false,
+          message: `Error while updating order`,
+          Content: err,
+        };
+      });
+}
+
+
+/**
+ *
+ * @param {[UserDefinedProduct]} products
  * @param {OrderItems} items
  * @return {OrderItems} combinedItems
  */
@@ -82,25 +100,25 @@ function combineProductsAndDesiredItems(products, items) {
   const combinedItems = [];
   const _desired = {};
   const _products = {};
+
   // turn items into objects and save them to _desired
   // with a key made from its product identifers
-  //
   items.forEach((item) => {
     if (!item.desired) return;
-    const identifiers = keyValuePairsToObject(item.desired.identifiers);
-    _desired[pIDs.map((id) => identifiers[id]).join(',')] = item;
+    addProductToDictionary(item.desired, _desired);
   });
 
   // save each product to _products with a key made from its product identifers
   products.forEach((product) => {
-    _products[pIDs.map((id) => product[id]).join(',')] = product;
+    addProductToDictionary(product, _products, true);
   });
   //
   Object.entries(_products).forEach(([key, value]) => {
     const item = {};
-    item['quantity'] = value[quantityField];
-    delete value[quantityField];
-    item['product'] = {identifiers: objectToKeyValuePairs(value)};
+    item['quantity'] = value.identifiers[quantityField];
+    delete value.identifiers[quantityField];
+    value.identifiers = objectToKeyValuePairs(value.identifiers);
+    item['product'] = value;
     if (_desired[key]) {
       item['desired'] = _desired[key].desired;
       delete _desired[key];
@@ -115,6 +133,25 @@ function combineProductsAndDesiredItems(products, items) {
 }
 
 /**
+ * adds products to a dictionary based on their pIDs
+ * @param {UserDefinedProduct} product
+ * @param {*} dictionary
+ * @param {Boolean} keepObject
+ */
+function addProductToDictionary(product, dictionary, keepObject=false) {
+  const identifiers = keyValuePairsToObject(product.identifiers);
+  const key = pIDs.map((id) => identifiers[id]).join(',');
+  let ext = 0;
+  while (dictionary.hasOwnProperty(key + ext)) {
+    ext++;
+  }
+  if (keepObject) {
+    product.identifiers = identifiers;
+  }
+  dictionary[key + ext] = product;
+}
+
+/**
  *
  * @param {Object} object
  * @return {[{key: string, value: *}]}
@@ -125,6 +162,25 @@ function objectToKeyValuePairs(object) {
     result.push({key, value});
     return result;
   }, []);
+}
+/**
+ *
+ * @param {Object} object
+ * @return {UserDefinedProduct}
+ */
+function objectToProduct(object) {
+  return {
+    identifiers: objectToKeyValuePairs(object),
+  };
+}
+
+/**
+ *
+ * @param {[Object]} array
+ * @return {[UserDefinedProduct]}
+ */
+function objectsToProducts(array) {
+  return array.map(objectToProduct);
 }
 
 /**
@@ -139,8 +195,11 @@ function keyValuePairsToObject(pairs) {
 }
 
 module.exports = {
-  combineOrders,
+  doWork,
+  updateOrderData,
   objectToKeyValuePairs,
+  objectToProduct,
+  objectsToProducts,
   keyValuePairsToObject,
   combineProductsAndDesiredItems,
 };

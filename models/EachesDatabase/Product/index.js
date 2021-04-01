@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const {ProductDefinitionSchema} = require('../ProductDefinition');
-const {EachesSchema} = require('../Eaches');
+const {EachesStructureSchema} = require('../Eaches');
 const {AdditionalInfoSchema} = require('../AdditionalInfo');
 
 const Schema = mongoose.Schema;
@@ -22,7 +22,7 @@ const productSchema = new Schema({
   },
   productDefinition: ProductDefinitionSchema,
   eaches: {
-    type: EachesSchema,
+    type: EachesStructureSchema,
   },
   additionalInfo: {
     type: AdditionalInfoSchema,

@@ -27,6 +27,7 @@ const productDefinitionSchema = new Schema({
   },
 });
 
+productDefinitionSchema.index({identifiers: 1});
 productDefinitionSchema.index( {
   _nGrams: 'text',
   _prefixNGrams: 'text',
