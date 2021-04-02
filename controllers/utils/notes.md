@@ -4,8 +4,8 @@
  * if sent like this they will work right now
  */
 roleObject = {
-  role: "user:/home/inv1",  // name of role. the path makes the name unique
-  path: "/home/inv1",        // location of role
+  role: "user:/home",  // name of role. the path makes the name unique
+  path: "/home",        // location of role
   permissions: [
     {
       resource: "order:/home/inv1",   // name of resource with location
@@ -34,16 +34,16 @@ roleObject = {
  */
 roleObject = {
   name: "user",       // name of role
-  path: "/home/inv1"  // location of role
+  path: "/home"  // location of role
   permissions: [
     {
       resource: "order"   // name of resource
       path: "/home/inv1"  // location of resource
       actions: [
         {
-          action: "read",     // action they can take on recourse at location
-          recursive: true,    // if this also applies or recourse at sub locations
-          attributes: ['*']   // attributes of the recourse that this applies to 
+          action: "read",     // action they can take on resources at location
+          recursive: true,    // if this also applies to resources at sub locations
+          attributes: ['*']   // attributes of the resource that this applies to 
                               // (attributes are not being used at the moment)
         },
         { action: "create", recursive: false, attributes: ['*']}
@@ -67,7 +67,7 @@ roleObject = {
  * I already have a function to reformat them before saving
  */
 roleObject = {
-    "user:/home/inv1": {
+    "user:/home": {
         "order:/home/inv1":{
             "read:all": ['*'],
             "create:own": ['*']
