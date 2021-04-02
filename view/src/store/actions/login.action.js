@@ -3,10 +3,10 @@ import axios from 'axios'
 import Cookies from 'universal-cookie';
 const cookies = new Cookies();
 
-export const loginPayload = (email, password, dispatch) => {
+export const loginPayload = async (email, password, dispatch) => {
     dispatch({ type: constant.LOGIN_SENT });
 
-    axios.post("http://localhost:8080/api/user/login", { email, password })
+    return axios.post("http://localhost:8080/api/user/login", { email, password })
         .then((res) => res.data).
         then(data => {
             console.log(data)
@@ -20,9 +20,11 @@ export const loginPayload = (email, password, dispatch) => {
                         refresh: data.Content.refreshToken
                     }
                 })
+                return Promise.resolve(data)
             } // user exist but incorrect credentials 
             else {
                 dispatch({ type: constant.LOGIN_ERROR, payload: { error: "INCORRECT CREDENTIAL" } })
+                return Promise.reject(data)
             }
 
         }).catch((error) => {
@@ -30,6 +32,7 @@ export const loginPayload = (email, password, dispatch) => {
             let msg = error.response?.data?.message;
             console.log(error.response)
             dispatch({ type: constant.LOGIN_ERROR, payload: { error: msg } })
+            return Promise.reject(error)
         })
 }
 

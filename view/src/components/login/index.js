@@ -71,15 +71,21 @@ export default function SignIn(props) {
 
     const onSubmit = () => {
         let data = getValues();
-        loginPayload(data.email, data.password, dispatch)
-
-        if (errorMsg == "INCORRECT CREDENTIAL") {
+        loginPayload(data.email, data.password, dispatch).then(data => {
+            console.log(data)
+            if (errorMsg == "INCORRECT CREDENTIAL") {
+                setError("password", {
+                    message: "INCORRECT CREDENTIAL"
+                })
+            } else {
+                setError("email", { message: errorMsg })
+            }
+        }).catch(error => {
             setError("password", {
                 message: "INCORRECT CREDENTIAL"
             })
-        } else {
-            setError("email", { message: errorMsg })
-        }
+        })
+
 
     };
 
