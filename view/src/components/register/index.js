@@ -60,10 +60,17 @@ export default function SignUp() {
             name: `${formData.firstName} ${formData.lastName}`
         }
         registration(toSend, dispatch).then(data => {
-
+            if (data.response) {
+                setMessage("Successfully Created An ACCOUNT")
+                setAlertOpen(true)
+            }
+            else {
+                setMessage(data.message)
+                setAlertOpen(true)
+            }
             console.log(data)
         }).catch(error => {
-            console.log(error.response.data.message)
+            console.log(error.response.data)
             setMessage(error.response.data.message)
             setAlertOpen(true)
         })
