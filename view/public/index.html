@@ -20,19 +20,7 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
-  <script type="text/javascript">
-    if (typeof (renderReCaptchaCallback) === "undefined") {
-      var reCaptchaWidgets = {};
-      var renderReCaptchaCallback = function () {
-        jQuery.each(reCaptchaWidgets, function (widgetId, widgetOptions) {
-          grecaptcha.render(document.getElementById(widgetId), widgetOptions);
-        });
-      };
-    }
-  </script>
   <title>Medicine Tracking</title>
-  <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback" async defer></script>
-
 </head>
 
 <body>
@@ -48,6 +36,7 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
+
 
 </body>
 

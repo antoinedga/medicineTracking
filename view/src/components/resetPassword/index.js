@@ -19,7 +19,6 @@ import { useForm } from "react-hook-form";
 import Brand from '../../resources/logo_1.png'
 import { sendResetPassword } from '../../store/actions/reset.action'
 import { useDispatch, useSelector } from 'react-redux';
-import ReCAPTCHA from "react-google-recaptcha";
 import { constant } from '../../store/actions/actionType/reset';
 
 
@@ -69,6 +68,10 @@ export default function Forgot() {
     const password = useRef({});
     password.current = watch("new_password", "");
 
+
+    const asyncScriptOnLoad = () => {
+        console.log("scriptLoad - reCaptcha Ref-", this._reCaptchaRef);
+    };
     const onSubmit = () => {
 
         clearErrors()
@@ -106,7 +109,13 @@ export default function Forgot() {
             setHuman(false);
         }
     }
-
+    const recaptchaRef = React.createRef();
+    const onLoadRecaptcha = () => {
+        if (this.captchaDemo) {
+            this.captchaDemo.reset();
+            this.captchaDemo.execute();
+        }
+    }
     const handleClose = (event, reason) => {
         if (reason === 'clickaway') {
             return;
@@ -190,13 +199,6 @@ export default function Forgot() {
                         </Typography>
                     </FormHelperText>
 
-                    <div style={{ paddingTop: 10 }}>
-                        <ReCAPTCHA
-                            sitekey="6LencYkaAAAAAFrCw5kZmC9cXoNJZQNOvwZrEIe2"
-                            onChange={verifyState}
-                        />
-                    </div>
-
                     <Button
                         type="submit"
                         fullWidth
@@ -204,7 +206,6 @@ export default function Forgot() {
                         color="primary"
                         className={classes.submit}
                         onClick={handleSubmit(onSubmit)}
-                        disabled={!human}
                     >
                         Submit
                     </Button>

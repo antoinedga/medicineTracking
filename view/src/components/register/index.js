@@ -1,22 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { Redirect } from 'react-router-dom'
 import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
 import { Link, useParams } from 'react-router-dom';
-import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
+import { Box, Grid, Button, TextField, CircularProgress, Backdrop, Typography } from '@material-ui/core';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
 import { useForm } from "react-hook-form";
-import { FormHelperText } from "@material-ui/core";
+import { FormHelperText, Container } from "@material-ui/core";
 import Copyright from '../copyRight'
 import BrandNav from '../brandNav'
 import Brand from '../../resources/logo_1.png'
-
+import { registration } from '../../store/actions/register.action'
+import { useSelector, useDispatch } from 'react-redux';
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -36,6 +34,10 @@ const useStyles = makeStyles((theme) => ({
     submit: {
         margin: theme.spacing(3, 0, 2),
     },
+    backdrop: {
+        zIndex: theme.zIndex.drawer + 1,
+        color: '#fff',
+    },
     invalid: {
         height: "85vh",
     }
@@ -43,13 +45,31 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignUp() {
     const classes = useStyles();
-    const { register, errors, handleSubmit, setError, clearErrors, watch, setValue } = useForm({ mode: 'onTouched' });
-
-    const [isValidInvite, setInvite] = useState(true)
+    const { register, errors, handleSubmit, setError, clearErrors, watch, setValue, getValues } = useForm({ mode: 'onTouched' });
+    const loading = useSelector(state => state.register.loading)
+    const success = useSelector(state => state.register.success)
+    const [message, setMessage] = React.useState("")
+    const dispatch = useDispatch()
 
     const onSubmit = (data, e) => {
+        let formData = getValues();
+        let toSend = {
+            email: formData.email,
+            password: formData.password,
+            token: formData.token,
+            name: `${formData.firstName} ${formData.lastName}`
+        }
+        registration(toSend, dispatch).then(data => {
+
+            console.log(data)
+        }).catch(error => {
+            console.log(error.response.data.message)
+            setMessage(error.response.data.message)
+            setAlertOpen(true)
+        })
 
     }
+
     let { token } = useParams();
     useEffect(() => {
 
@@ -59,6 +79,17 @@ export default function SignUp() {
 
     }, []);
 
+    const [openAlert, setAlertOpen] = React.useState(false);
+    const handleClick = () => {
+        setAlertOpen(true);
+    };
+
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setAlertOpen(false);
+    };
 
 
     return (
@@ -96,9 +127,6 @@ export default function SignUp() {
                                 {errors?.firstName?.message}
                             </FormHelperText>
                         </Grid>
-
-
-
 
                         <Grid item xs={12} sm={6}>
                             <TextField
@@ -159,7 +187,7 @@ export default function SignUp() {
                                 fullWidth
                                 id="invite-code"
                                 label="Invitation Code"
-                                name="invite"
+                                name="token"
                                 inputRef={
                                     register(
                                         {
@@ -245,9 +273,21 @@ export default function SignUp() {
                     </Grid>
                 </form>
             </div>
+            <Backdrop className={classes.backdrop} open={loading}>
+                <CircularProgress color="inherit" />
+            </Backdrop>
+            <Snackbar open={openAlert} autoHideDuration={6000} onClose={handleClose} anchorOrigin={{ vertical: "top", horizontal: "center" }}>
+                <Alert onClose={handleClose} severity={success ? "success" : "error"}>
+                    {message}
+                </Alert>
+            </Snackbar>
             <Box mt={5}>
                 <Copyright />
             </Box>
         </Container>
     );
+}
+
+function Alert(props) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
 }

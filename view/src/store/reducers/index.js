@@ -4,12 +4,13 @@ import forgotReducer from './forgot.reducer'
 import inventoryReducer from './inventory.reducer'
 import resetReducer from './reset.reducer'
 import orderReducer from './order.reducer'
-
+import registerReducer from './register.reducer'
 export default combineReducers(
     {
         login: loginReducer,
         forgot: forgotReducer,
         inventory: inventoryReducer,
         reset: resetReducer,
-        orders: orderReducer
+        orders: orderReducer,
+        register: registerReducer
     })

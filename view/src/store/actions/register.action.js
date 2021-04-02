@@ -1,17 +1,17 @@
-import constant from './actionType/login'
+import constant from './actionType/register'
 import axios from 'axios'
 
-export const loginPayload = (email, password, dispatch) => {
-    dispatch({ type: constant.LOGIN_SENT });
-
-    axios.post("http://localhost:8080/api/user/login", { email, password })
+export const registration = async (formData, dispatch) => {
+    dispatch({ type: constant.REG_SENT });
+    return axios.post("http://localhost:8080/api/user/login", formData)
         .then((res) => res.data).
         then(data => {
             console.log(data)
-            dispatch({ type: constant.LOGIN_SUCCESS, payload: { token: data.content } })
-
+            dispatch({ type: constant.REG_SUCCESS })
+            return Promise.resolve(data)
         }).catch(error => {
             console.log(error);
-            dispatch({ type: constant.LOGIN_ERROR, payload: {} })
+            dispatch({ type: constant.REG_ERROR, payload: {} })
+            return Promise.reject(error)
         })
 }
