@@ -20,6 +20,7 @@ import LocationOnIcon from '@material-ui/icons/LocationOn';
 import PeopleIcon from '@material-ui/icons/People';
 import ReceiptIcon from '@material-ui/icons/Receipt';
 import HomeIcon from '@material-ui/icons/Home';
+import Button from '@material-ui/core/Button'
 import StorefrontIcon from '@material-ui/icons/Storefront';
 import { Link } from 'react-router-dom';
 import HomePage from './pages/MainPage'
@@ -166,9 +167,13 @@ function Dashboard(props) {
                             <MenuIcon />
                         </IconButton>
 
-                        <Typography className={classes.header} variant="h6">
-                            Medicine Tracking
-                        </Typography>
+                        <Link to="/dashboard" style={{ textDecoration: "none" }}>
+                            <Button>
+                                <Typography className={classes.header} variant="h6">
+                                    Medicine Tracking
+                            </Typography>
+                            </Button>
+                        </Link>
                         <div className={classes.appName}>
                             <UserMenu />
                         </div>
@@ -198,7 +203,7 @@ function Dashboard(props) {
 
                         <ListItem button component={Link} to="/dashboard">
                             <ListItemIcon>
-                                <Tooltip title="Dashboard">
+                                <Tooltip title="Dashboard" arrow>
                                     <HomeIcon />
                                 </Tooltip>
                             </ListItemIcon>
@@ -207,7 +212,7 @@ function Dashboard(props) {
 
                         <ListItem button component={Link} to="/dashboard/inventory">
                             <ListItemIcon>
-                                <Tooltip title="Inventory">
+                                <Tooltip title="Inventory" arrow>
                                     <StorefrontIcon />
                                 </Tooltip>
                             </ListItemIcon>
@@ -216,7 +221,7 @@ function Dashboard(props) {
 
                         <ListItem button component={Link} to="/dashboard/orders">
                             <ListItemIcon>
-                                <Tooltip title="Order History">
+                                <Tooltip title="Order History" arrow>
                                     <ReceiptIcon />
                                 </Tooltip>
                             </ListItemIcon>
@@ -225,7 +230,7 @@ function Dashboard(props) {
 
                         <ListItem button component={Link} to="/dashboard/users">
                             <ListItemIcon>
-                                <Tooltip title="User Management">
+                                <Tooltip title="User Management" arrow>
                                     <PeopleIcon />
                                 </Tooltip>
                             </ListItemIcon>
@@ -234,7 +239,7 @@ function Dashboard(props) {
 
                         <ListItem button component={Link} to="/dashboard/locations" >
                             <ListItemIcon>
-                                <Tooltip title="Location Management">
+                                <Tooltip title="Location Management" arrow>
                                     <LocationOnIcon />
                                 </Tooltip>
                             </ListItemIcon>

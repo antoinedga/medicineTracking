@@ -10,6 +10,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import constants from '../../../../store/actions/actionType/login'
 import { shallowEqual, useSelector, useDispatch } from 'react-redux'
 import { Redirect, Link } from 'react-router-dom'
+import SettingsIcon from '@material-ui/icons/Settings';
+import Tooltip from '@material-ui/core/Tooltip';
 
 const loginAction = require('../../../../store/actions/login.action')
 
@@ -53,15 +55,17 @@ export default function SimpleMenu(props) {
 
     return (
         <div>
-            <Button
-                ref={anchorRef}
-                aria-controls={open ? 'menu-list-grow' : undefined}
-                aria-haspopup="true"
-                onClick={handleToggle}
-                className={classes.userBtn}
-            >
-                Toggle Menu Grow
-            </Button>
+            <Tooltip title="Settings" arrow placement="left-start">
+                <Button
+                    ref={anchorRef}
+                    aria-controls={open ? 'menu-list-grow' : undefined}
+                    aria-haspopup="true"
+                    onClick={handleToggle}
+                    className={classes.userBtn}
+                >
+                    <SettingsIcon />
+                </Button>
+            </Tooltip>
             <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
                 {({ TransitionProps, placement }) => (
                     <Grow
