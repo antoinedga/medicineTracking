@@ -284,7 +284,7 @@ function requireAccess(action, resource) {
  */
 function createAdminRole() {
   const _role = {
-    role: 'admin:',
+    role: 'admin:/',
     path: '/',
     permissions: [],
   };

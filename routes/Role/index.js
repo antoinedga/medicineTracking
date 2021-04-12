@@ -17,6 +17,10 @@ module.exports = () => {
       );
 
   router.route('/user')
+      .get(
+          requireLogin,
+          role.getUsersWithRoles,
+      )
       .post(
           requireLogin,
           requireAccess(action.GRANT, resource.ROLE),

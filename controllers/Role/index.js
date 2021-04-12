@@ -12,7 +12,7 @@ const config = require('../../config');
  */
 function createAdmin(name, email, password) {
   Role.findOneAndUpdate(
-      {role: 'admin:'},
+      {role: 'admin:/'},
       utils.createAdminRole(),
       {
         upsert: true,
@@ -117,6 +117,13 @@ exports.deleteByID = (req, res) => {
 exports.test = (req, res) => {
   console.log(req);
   return res.status(200).json({message: 'Success!'});
+};
+
+exports.getUsersWithRoles = (req, res) => {
+  User
+      .find({}, {password: 0})
+      .populate('roles', 'role path')
+      .exec(callback(req, res, 'get users with roles'));
 };
 
 
