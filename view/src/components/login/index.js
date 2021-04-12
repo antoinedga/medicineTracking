@@ -100,6 +100,8 @@ export default function SignIn(props) {
             console.log(data)
             localStorage.setItem("credential", JSON.stringify(data))
             console.log(localStorage.getItem("credential"))
+        } else {
+            localStorage.setItem("credential", "")
         }
     }
 
