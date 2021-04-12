@@ -9,7 +9,7 @@ export const loginPayload = async (email, password, dispatch) => {
     return axios.post("http://localhost:8080/api/user/login", { email, password })
         .then((res) => res.data).
         then(data => {
-            console.log(data)
+
             if (data.response) {
                 cookies.set('token', data.Content.token, { path: "/", expires: new Date(Date.now() + (60 * 1000 * 30)) })
                 //sessionStorage.setItem('token', data.Content.token);

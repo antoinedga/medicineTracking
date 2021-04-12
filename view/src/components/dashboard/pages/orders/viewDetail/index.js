@@ -105,17 +105,13 @@ export default function CustomizedDialogs(props) {
                         Order Number: {dataView.orderNumber}
                     </Typography>
                     <Typography gutterBottom>
-                        Order Date: {dataView.orderDate}
+                        Order Date:
+                        <Moment format="MMM-D-YYYY h:mm a" >
+                            {dataView.orderDate}
+                        </Moment>
                     </Typography>
                     <Typography gutterBottom>
                         Path: {dataView.path}
-                    </Typography>
-                    <Typography gutterBottom>
-                        Created at: <Moment format="MMM-D-YYYY h:mm a" >
-                            {
-                                dataView.createdAt
-                            }
-                        </Moment>
                     </Typography>
                     <Typography gutterBottom>
                         Last Updated at: <Moment format="MMM-D-YYYY h:mm a" >

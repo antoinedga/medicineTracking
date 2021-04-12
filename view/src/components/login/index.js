@@ -61,18 +61,24 @@ function Alert(props) {
 
 export default function SignIn(props) {
     const classes = useStyles();
-    const { register, errors, handleSubmit, setError, clearErrors, getValues } = useForm({ mode: 'onTouched' });
+    const { register, errors, handleSubmit, setError, clearErrors, getValues, setValue } = useForm({ mode: 'onTouched' });
 
     let isLogin = useSelector(state => state.login.login)
     let isLoading = useSelector(state => state.login.loading)
     let errorMsg = useSelector(state => state.login.error)
     const [open, setOpen] = React.useState(false);
+    const [remember, setRemember] = React.useState(false)
     const dispatch = useDispatch()
 
     const onSubmit = () => {
-        let data = getValues();
-        loginPayload(data.email, data.password, dispatch).then(data => {
-            console.log(data)
+        let formData = getValues();
+        loginPayload(formData.email, formData.password, dispatch).then(data => {
+
+            if (data.response) {
+                console.log(formData)
+                handleRememberMe(formData)
+            }
+
             if (errorMsg == "INCORRECT CREDENTIAL") {
                 setError("password", {
                     message: "INCORRECT CREDENTIAL"
@@ -88,6 +94,14 @@ export default function SignIn(props) {
 
 
     };
+
+    const handleRememberMe = (data) => {
+        if (remember) {
+            console.log(data)
+            localStorage.setItem("credential", JSON.stringify(data))
+            console.log(localStorage.getItem("credential"))
+        }
+    }
 
     // for the alert 
 
@@ -108,6 +122,15 @@ export default function SignIn(props) {
         console.log(props.location.state?.msg)
         if (props.location.state?.msg) {
             setOpen(true)
+        }
+
+        if (localStorage.getItem("credential") != "") {
+            let credential = localStorage.getItem("credential");
+            console.log(credential)
+            credential = JSON.parse(credential)
+            setValue('email', credential.email, { shouldValidate: true })
+            setValue('password', credential.password, { shouldValidate: true })
+            setRemember(true)
         }
     }, []);
 
@@ -168,7 +191,7 @@ export default function SignIn(props) {
 
 
                         <FormControlLabel
-                            control={<Checkbox value="remember" color="primary" />}
+                            control={<Checkbox value="remember" color="primary" checked={remember} onChange={() => setRemember(!remember)} />}
                             label="Remember me"
                         />
                         <Button
