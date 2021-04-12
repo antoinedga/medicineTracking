@@ -1,5 +1,6 @@
 exports.callback = (req, res, action) => {
   return (err, doc) => {
+    console.log(err, doc);
     if (err) {
       return res
           .status(400)

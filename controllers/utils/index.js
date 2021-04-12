@@ -22,6 +22,7 @@ function toArray(value) {
  * @return {Array} grants
  */
 function flattenDBRoles(dbRoles) {
+  dbRoles = toArray(dbRoles);
   const _grants = [];
   dbRoles.forEach((role) => {
     role.permissions.forEach((permission) => {
@@ -36,7 +37,7 @@ function flattenDBRoles(dbRoles) {
 
 /**
  * converts and array of grant objects into Roles
- * @param {Array} grants
+ * @param {*} grants
  * @return {Array<Role>} Roles - shape needed to store in DB
  */
 function grantsToRolls(grants) {
@@ -52,6 +53,37 @@ function grantsToRolls(grants) {
           resource: resource,
           action: action,
           attributes: grants[role][resource][action],
+        });
+      });
+    });
+
+    _roles.push(_role);
+  });
+  return _roles;
+}
+
+/**
+ * converts and array of grant objects into Roles
+ * @param {Array} grants
+ * @return {Array<Role>} Roles - shape needed to store in DB
+ */
+function objectToRolls(grants) {
+  grants = toArray(grants);
+  const _roles = [];
+  grants.forEach((role) => {
+    const _role = {
+      role: `${role.name}:${role.path}`,
+      path: role.path,
+      permissions: [],
+    };
+
+    role.permissions.forEach((resourceObj) => {
+      const resource = `${resourceObj.resource}:${resourceObj.path}`;
+      resourceObj.actions.forEach((actionObj) => {
+        _role.permissions.push({
+          resource: resource,
+          action: `${actionObj.action}:${actionObj.recursive ? 'all':'own'}`,
+          attributes: actionObj.attributes,
         });
       });
     });
@@ -252,7 +284,7 @@ function requireAccess(action, resource) {
  */
 function createAdminRole() {
   const _role = {
-    role: 'admin:/',
+    role: 'admin:',
     path: '/',
     permissions: [],
   };
@@ -379,6 +411,7 @@ module.exports = {
   toArray,
   flattenDBRoles,
   grantsToRolls,
+  objectToRolls,
   requireAccess,
   createAdminRole,
   createToken,

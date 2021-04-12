@@ -14,7 +14,7 @@ roleObject = {
     },
     {
       resource: "order:/home/inv1",
-      action: "crate:own",
+      action: "create:own",
       attributes: ['*']
     },
     {
@@ -34,11 +34,11 @@ roleObject = {
  */
 roleObject = {
   name: "user",       // name of role
-  path: "/home"  // location of role
+  path: "/home",  // location of role
   permissions: [
     {
-      resource: "order"   // name of resource
-      path: "/home/inv1"  // location of resource
+      resource: "order",   // name of resource
+      path: "/home/inv1",  // location of resource
       actions: [
         {
           action: "read",     // action they can take on resources at location
@@ -50,8 +50,8 @@ roleObject = {
       ]
     },
     {
-      resource: "order"
-      path: "/home"
+      resource: "order",
+      path: "/home",
       actions: [
         { action: "update", recursive: true, attributes: ['status','log','currentLocation']}
       ]

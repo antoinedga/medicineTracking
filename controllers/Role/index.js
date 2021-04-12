@@ -57,8 +57,7 @@ exports.getAll = (req, res) => {
 exports.create = (req, res) => {
   roles = req.body;
 
-  Role.insertMany(roles)
-      .then(callback(req, res, 'create role(s)'));
+  Role.insertMany(roles, callback(req, res, 'create role(s)'));
 };
 
 /*
@@ -74,8 +73,8 @@ exports.grantUserRole = (req, res) => {
       .updateMany(
           {_id: {$in: utils.toArray(grant.user)}},
           {$addToSet: {roles: utils.toArray(grant.role)}},
-      )
-      .then(callback(req, res, 'grant role(s)'));
+          callback(req, res, 'grant role(s)'),
+      );
 };
 
 
