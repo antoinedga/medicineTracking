@@ -125,8 +125,8 @@ export default function SignIn(props) {
         if (props.location.state?.msg) {
             setOpen(true)
         }
-
-        if (localStorage.getItem("credential") != "") {
+        console.log(localStorage.getItem("credential"))
+        if (localStorage.getItem("credential") != null && localStorage.getItem("credential") != "") {
             let credential = localStorage.getItem("credential");
             console.log(credential)
             credential = JSON.parse(credential)
