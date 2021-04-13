@@ -5,6 +5,8 @@ const Schema = mongoose.Schema;
 const unitSchema = new Schema({
   name: {
     type: String,
+    unique: true,
+    required: true,
   },
   Description: {
     type: String,
