@@ -3,17 +3,20 @@ const User = require('../../models/user');
 const {callback} = require('../Callbacks');
 const utils = require('../utils');
 const config = require('../../config');
+const {action} = require('./enum/actions');
+const {resource} = require('./enum/resources');
 
 /**
  * creates and admin with access to all actions
  * @param {String} name
+ * @param {String} path
  * @param {String} email - form - `xxxx@xxxx.xxx`
  * @param {String} password
  */
-function createAdmin(name, email, password) {
+function createAdmin(name, path, email, password) {
   Role.findOneAndUpdate(
-      {role: 'admin:/'},
-      utils.createAdminRole(),
+      {role: `${name}:${path}`},
+      utils.createAdminRole(name, path),
       {
         upsert: true,
         setDefaultsOnInsert: true,
@@ -42,7 +45,7 @@ function createAdmin(name, email, password) {
   });
 }
 
-createAdmin('admin', 'admin@admin.com', 'admin123');
+createAdmin('admin', '/', 'admin@admin.com', 'admin123');
 
 exports.getAll = (req, res) => {
   if (process.env.NODE_ENV === config.dev) {
@@ -139,3 +142,18 @@ exports.getUserWithRolls = (userId) => {
 };
 
 
+exports.getActions = (req, res) => {
+  callback(
+      req,
+      res,
+      `get actions ${req.params.name}`,
+  )(null, Object.values(action));
+};
+
+exports.getResources = (req, res) => {
+  callback(
+      req,
+      res,
+      `get actions ${req.params.name}`,
+  )(null, Object.values(resource));
+};

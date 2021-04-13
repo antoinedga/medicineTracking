@@ -62,6 +62,17 @@ module.exports = () => {
           role.deleteRecursivelyByPath,
       );
 
+  router.route('/actions')
+      .get(
+          requireLogin,
+          role.getActions,
+      );
+  router.route('/resources')
+      .get(
+          requireLogin,
+          role.getResources,
+      );
+
   return router;
 };
 

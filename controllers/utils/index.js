@@ -278,21 +278,24 @@ function requireAccess(action, resource) {
     next();
   };
 }
+
 /**
  * creates an admin role with all permissions
+ * @param {*} name
+ * @param {*} path
  * @return {Object}
  */
-function createAdminRole() {
+function createAdminRole(name, path) {
   const _role = {
-    role: 'admin:/',
-    path: '/',
+    role: `${name}:${path}`,
+    path: `${path}`,
     permissions: [],
   };
 
   Object.values(resource).forEach((r) => {
     Object.values(action).forEach((a) => {
       _role.permissions.push({
-        resource: r + ':/',
+        resource: r + `:${path}`,
         action: a + ':any',
       });
     });
