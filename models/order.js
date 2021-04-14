@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-const { ProductSchema } = require('./EachesDatabase');
+const config = require('../config');
+const {ProductSchema} = require('./EachesDatabase');
 
 const Schema = mongoose.Schema;
 
@@ -30,13 +31,17 @@ const orderSchema = new mongoose.Schema({
       desired: {
         type: ProductSchema,
       },
+      confirmedEaches: {
+        type: Boolean,
+        default: false,
+      },
     }],
     required: true,
     _id: false,
   },
   status: {
     type: String,
-    enum: ['COMPLETE', 'PENDING', 'CANCELED', 'DELAYED'],
+    enum: config.custom.orderStatusOptions,
     default: 'PENDING',
     required: true,
   },
@@ -66,9 +71,9 @@ const orderSchema = new mongoose.Schema({
       },
     }],
   },
-}, { timestamps: true });
+}, {timestamps: true});
 
-orderSchema.index({ path: 1 });
-orderSchema.index({ orderNumber: 1 });
+orderSchema.index({path: 1});
+orderSchema.index({orderNumber: 1});
 
 module.exports = mongoose.model('order', orderSchema);
