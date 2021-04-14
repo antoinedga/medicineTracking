@@ -24,5 +24,13 @@ module.exports = () => {
           eaches.search,
       );
 
+  router.route('/units')
+      .get(
+          eaches.getUnits,
+      )
+      .post(
+          eaches.addUnits,
+      );
+
   return router;
 };

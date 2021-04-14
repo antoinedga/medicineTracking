@@ -1,7 +1,8 @@
 
 // eslint-disable-next-line max-len
-const {ProductDefinition} = require('../../models/EachesDatabase');
+const {ProductDefinition, Unit} = require('../../models/EachesDatabase');
 const {callback} = require('../Callbacks');
+const {toArray} = require('../utils');
 const {
   createProductDefinitionWithEaches,
   aggregate: {
@@ -63,4 +64,23 @@ exports.search = (req, res) => {
           attachTopEaches(),
       ))
       .exec(callback(req, res, 'search product definitions'));
+};
+
+
+exports.getUnits = (req, res) => {
+  Unit.find({})
+      .exec(callback(req, res, 'get eaches units'));
+};
+
+// http://data.bioontology.org/documentation <- get definitions
+exports.addUnits = (req, res) => {
+  const units = toArray(req.body).reduce((result, name) => {
+    if (name) {
+      result.push({name});
+    }
+    return result;
+  }, []);
+
+  console.log(units);
+  Unit.create(units, callback(req, res, 'add eaches units'));
 };
