@@ -7,19 +7,14 @@ export const loginPayload = async (email, password, dispatch) => {
     dispatch({ type: constant.LOGIN_SENT });
 
     return axios.post("http://localhost:8080/api/user/login", { email, password })
-        .then((res) => res.data).
-        then(data => {
+        .then((res) => res.data)
+        .then(data => {
 
             if (data.response) {
-<<<<<<< Updated upstream
                 cookies.set('token', data.Content.token, { path: "/", expires: new Date(Date.now() + (60 * 1000 * 30)) })
                 cookies.set('reFreshToken', data.Content.refresh, { path: "/", expires: new Date(Date.now() + (60 * 1000 * 30)) })
 
                 //sessionStorage.setItem('token', data.Content.token);
-=======
-                cookies.set('token', data.content.token, { path: "/", expires: new Date(Date.now() + (60 * 1000 * 30)) })
-                //sessionStorage.setItem('token', data.content.token);
->>>>>>> Stashed changes
 
                 dispatch({
                     type: constant.LOGIN_SUCCESS, payload: {

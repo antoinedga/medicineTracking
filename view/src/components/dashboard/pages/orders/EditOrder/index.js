@@ -56,9 +56,9 @@ export default function FullScreenDialog({orderId}) {
 
     const MyInput = ({index}) => {
         const [items, setItems] = React.useState([]);
-        useEffect(()=>{
-            setItems(getValues("items"))
-        },[items])
+        // useEffect(()=>{
+        //     setItems(getValues("items"))
+        // },[items])
         return (
         <div>
             {
