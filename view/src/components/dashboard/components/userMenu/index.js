@@ -7,9 +7,10 @@ import Popper from '@material-ui/core/Popper';
 import MenuItem from '@material-ui/core/MenuItem';
 import MenuList from '@material-ui/core/MenuList';
 import { makeStyles } from '@material-ui/core/styles';
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import SettingsIcon from '@material-ui/icons/Settings';
 import Tooltip from '@material-ui/core/Tooltip';
+import { Typography } from '@material-ui/core';
 
 const loginAction = require('../../../../store/actions/login.action')
 
@@ -27,7 +28,7 @@ export default function SimpleMenu(props) {
     const anchorRef = React.useRef(null);
     const classes = useStyles();
     const dispatch = useDispatch();
-
+    const name = useSelector(state => state.login.name)
     const handleToggle = () => {
         setOpen((prevOpen) => !prevOpen);
     };
@@ -53,6 +54,9 @@ export default function SimpleMenu(props) {
 
     return (
         <div>
+            <div style={{ width: "7rem", textOverflow: "ellipsis", overflow: "hidden", whiteSpace: "nowrap", display: "inline", align: "right" }}>
+                {name}
+            </div>
             <Tooltip title="Settings" arrow placement="left-start">
                 <Button
                     ref={anchorRef}
@@ -80,6 +84,6 @@ export default function SimpleMenu(props) {
                     </Grow>
                 )}
             </Popper>
-        </div>
+        </div >
     );
 }

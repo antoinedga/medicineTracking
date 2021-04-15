@@ -59,7 +59,7 @@ export const createNewRoleConfig = async () => {
     const actions = axios.get("http://localhost:8080/api/role/actions", config)
 
     return Promise.all([getAllPath, resource, actions]).then((values) => {
-        let temp = [values[0].data.Content, values[1].data.Content, values[2].data.Content]
+        let temp = [values[0].data.content, values[1].data.content, values[2].data.content]
         return temp;
     })
 }
@@ -81,7 +81,7 @@ export const getSubInventory = async (path) => {
     return axios.post(`http://localhost:8080/api/inventory/paths`, body, config)
         .then((res) => res.data).
         then(data => {
-            let content = data.Content
+            let content = data.content
             let str = path.substring(1, path.length)
             let parse = str.split("/")
             let current = content[parse[0]]

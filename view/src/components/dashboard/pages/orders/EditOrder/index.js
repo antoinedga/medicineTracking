@@ -10,7 +10,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import { useForm } from "react-hook-form";
 import DeleteIcon from "@material-ui/icons/Delete";
 
-import {useDispatch} from "react-redux"
+import { useDispatch } from "react-redux"
 
 
 import { FormControl, InputLabel, MenuItem, Select, Typography, Slide, DialogContent, Grid, TextField }
@@ -48,51 +48,52 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 
 
-export default function FullScreenDialog({orderId}) {
+export default function FullScreenDialog({ orderId }) {
     const dispatch = useDispatch();
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
-    const { register, unregister, errors, handleSubmit, setError, clearErrors, getValues, setValue, reset,  watch} = useForm({ mode: 'onTouched' });
+    const { register, unregister, errors, handleSubmit, setError, clearErrors, getValues, setValue, reset, watch } = useForm({ mode: 'onTouched' });
+    const [localList, setList] = React.useState([])
 
-    const MyInput = ({index}) => {
+    const MyInput = ({ list }) => {
         const [items, setItems] = React.useState([]);
-        useEffect(()=>{
-            setItems(getValues("items"))
-        },[])
+        useEffect(() => {
+            setItems(list)
+        }, [])
         return (
-        <div>
-            {
-                items.map((key, index) => {
-                console.log("mapping", items)
-                return (
-                    <Grid item xs={9}>
-                        <Grid container xs={12}>
-                            <Grid item xs={6}>
-                                <input {...register(`items[${index}].product`)} defaultValue={getValues(`items[${index}].product`)} />
-                            </Grid>
-                            <Grid item xs={6}>
-                                <input {...register(`items[${index}].desired`)} defaultValue={getValues(`items[${index}].desired`)} />
-                            </Grid>
-                            <IconButton
-                                aria-label="delete"
-                                className={classes.margin}
-                                onClick={() => {
-                                    let _items = getValues("items").filter((item,i) => i != index)
+            <div>
+                {
+                    items.map((key, index) => {
+                        console.log("mapping", items)
+                        return (
+                            <Grid item xs={9}>
+                                <Grid container xs={12}>
+                                    <Grid item xs={6}>
+                                        <input {...register(`items[${index}].product`)} defaultValue={getValues(`items[${index}].product`)} />
+                                    </Grid>
+                                    <Grid item xs={6}>
+                                        <input {...register(`items[${index}].desired`)} defaultValue={getValues(`items[${index}].desired`)} />
+                                    </Grid>
+                                    <IconButton
+                                        aria-label="delete"
+                                        className={classes.margin}
+                                        onClick={() => {
+                                            let _items = getValues("items").filter((item, i) => i != index)
 
-                                    unregister("items")
-                                    register("items")
-                                    setValue("items", _items)
+                                            unregister("items")
+                                            register("items")
+                                            setValue("items", _items)
 
-                                    setItems(_items)
-                                }}
-                                >
-                                <DeleteIcon fontSize="small" />
-                            </IconButton>
-                        </Grid>
-                    </Grid>
-                )
-                })}
-        </div>
+                                            setItems(_items)
+                                        }}
+                                    >
+                                        <DeleteIcon fontSize="small" />
+                                    </IconButton>
+                                </Grid>
+                            </Grid>
+                        )
+                    })}
+            </div>
         )
     }
     orderId = "60662f89a37f721134c89f51"
@@ -101,29 +102,30 @@ export default function FullScreenDialog({orderId}) {
 
     useEffect(() => {
         console.log("useEffect")
-        getOrderByID(dispatch,orderId)
-        .then( data => {
-            if (!data.response) throw data
-            reset(data.content)
-            Object.keys(data.content).forEach(key => {
-                register(key)
-            })
-        })
-        .then(() => {
-            getConfig(dispatch,"orderStatusOptions")
-            .then( data => {
+        getOrderByID(dispatch, orderId)
+            .then(data => {
                 if (!data.response) throw data
-                register("orderStatusOptions")
-                setValue("orderStatusOptions",data.content)
+                reset(data.content)
+                setList(data.content.items)
+                Object.keys(data.content).forEach(key => {
+                    register(key)
+                })
+            })
+            .then(() => {
+                getConfig(dispatch, "orderStatusOptions")
+                    .then(data => {
+                        if (!data.response) throw data
+                        register("orderStatusOptions")
+                        setValue("orderStatusOptions", data.content)
+                    })
+                    .catch(err => {
+                        alert("config " + err.message + "\n" + err.content)
+                    })
             })
             .catch(err => {
-                alert("config " +err.message + "\n" + err.content)
+                alert("order " + err.message + "\n" + err.content)
             })
-        })
-        .catch(err => {
-            alert("order " + err.message + "\n" + err.content)
-        })
-    },[]);
+    }, []);
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -162,20 +164,20 @@ export default function FullScreenDialog({orderId}) {
                             <Grid item xs={3}>
                                 <label for="orderNumber">Order Number:</label>
                                 <input id="orderNumber" disabled {...register("orderNumber")} defaultValue={getValues("orderNumber")} />
-                                <br/>
+                                <br />
                                 <label for="user">Ordered by:</label>
                                 <input id="user" disabled {...register("user.name")} defaultValue={getValues("user.name")} />
-                                <br/>
+                                <br />
                                 <label for="status">Status:</label>
-                                <select id="status" {...register("status", { required: true }) } defaultValue={getValues("status")}>
+                                <select id="status" {...register("status", { required: true })} defaultValue={getValues("status")}>
                                     {watch("orderStatusOptions", false) && getValues("orderStatusOptions").map(status => (<option value={status}>{`${status}`}</option>))}
                                 </select>
                                 <input type="submit" />
                             </Grid>
                             <Grid item xs={9}>
-                                <MyInput></MyInput>
+                                <MyInput listLocal={localList}></MyInput>
                             </Grid>
-                            
+
                         </Grid>
                     </form>
                 </DialogContent>

@@ -173,6 +173,7 @@ function Dashboard(props) {
                             </Button>
                         </Link>
                         <div className={classes.appName}>
+
                             <UserMenu />
                         </div>
                     </Toolbar>

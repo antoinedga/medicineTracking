@@ -115,7 +115,7 @@ export default function SignIn(props) {
 
     useEffect(() => {
         if (cookies.get("token") != "logged out" && cookies.get("token") != null && cookies.get("token") != undefined) {
-            dispatch({ type: constant.LOGIN_SUCCESS, payload: { token: cookies.get('token'), refresh: "" } })
+            dispatch({ type: constant.LOGIN_SUCCESS, payload: { token: cookies.get('token'), refresh: cookies.get("reFreshToken"), name: cookies.get("name") } })
         }
         if (props.location.state?.msg) {
             setOpen(true)

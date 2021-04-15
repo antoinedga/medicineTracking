@@ -3,8 +3,7 @@ import thunk from 'redux-thunk'
 import { applyMiddleware, createStore, compose } from 'redux'
 import axios from 'axios'
 import Cookies from 'universal-cookie';
-const cookies = new Cookies();
-let lastCheck = null;
+
 const middleware = [thunk];
 
 export var state = null;

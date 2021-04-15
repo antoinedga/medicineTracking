@@ -24,7 +24,7 @@ export default function RoleManagement(props) {
         getAllRoles().then(data => {
             console.log(data)
 
-            dispatch({ type: constants.ADMIN_ROLES, payload: data.Content })
+            dispatch({ type: constants.ADMIN_ROLES, payload: data.content })
         }).catch(error => {
             dispatch({ type: constants.ADMIN_ERROR })
 

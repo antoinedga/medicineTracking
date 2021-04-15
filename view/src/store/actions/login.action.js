@@ -2,6 +2,7 @@ import constant from './actionType/login'
 import axios from 'axios'
 import Cookies from 'universal-cookie';
 const cookies = new Cookies();
+var jwt = require('jsonwebtoken');
 
 export const loginPayload = async (email, password, dispatch) => {
     dispatch({ type: constant.LOGIN_SENT });
@@ -11,15 +12,19 @@ export const loginPayload = async (email, password, dispatch) => {
         .then(data => {
 
             if (data.response) {
-                cookies.set('token', data.Content.token, { path: "/", expires: new Date(Date.now() + (60 * 1000 * 30)) })
-                cookies.set('reFreshToken', data.Content.refresh, { path: "/", expires: new Date(Date.now() + (60 * 1000 * 30)) })
+                cookies.set('token', data.content.token, { path: "/", expires: new Date(Date.now() + (60 * 1000 * 30)) })
+                cookies.set('reFreshToken', data.content.refresh, { path: "/", expires: new Date(Date.now() + (60 * 1000 * 30)) })
 
-                //sessionStorage.setItem('token', data.Content.token);
+                //sessionStorage.setItem('token', data.content.token);
+                let decoded = jwt.decode(data.content.token)
+                console.log()
+                cookies.set('name', decoded.user.name, { path: "/", expires: new Date(Date.now() + (60 * 1000 * 30)) })
 
                 dispatch({
                     type: constant.LOGIN_SUCCESS, payload: {
-                        token: data.Content.token,
-                        refresh: data.Content.refreshToken,
+                        token: data.content.token,
+                        refresh: data.content.refreshToken,
+                        name: decoded.user.name
                     }
                 })
                 return Promise.resolve(data)
