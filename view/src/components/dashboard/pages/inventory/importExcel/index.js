@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { makeStyles } from '@material-ui/core/styles';
-import { Button, Grid, Snackbar, Dialog, AppBar, IconButton, Typography, Backdrop, CircularProgress, Slide } from '@material-ui/core';
+import { Button, Grid, Snackbar, Dialog, AppBar, Typography, Backdrop, CircularProgress, Slide } from '@material-ui/core';
 import Toolbar from '@material-ui/core/Toolbar';
 import CloseIcon from '@material-ui/icons/Close';
 import { DialogActions, DialogContent } from '@material-ui/core';

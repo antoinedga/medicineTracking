@@ -24,6 +24,16 @@ const useStyles = makeStyles((theme) => ({
         zIndex: theme.zIndex.drawer + 1,
         color: '#fff',
     },
+    buttonFont: {
+        fontSize: '.725rem',
+        textAlign: "center",
+        '@media (min-width:600px)': {
+            fontSize: '.650rem',
+        },
+
+        margin: theme.spacing(1),
+        height: '2.2rem'
+    }
 }));
 
 

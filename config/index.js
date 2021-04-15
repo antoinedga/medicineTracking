@@ -6,7 +6,7 @@ const config = {
   port: process.env.PORT || 8080,
   saltRounds: 10,
   exp: {
-    jwtToken: process.env.JWT_TOKEN_EXP || '30m',
+    jwtToken: process.env.JWT_TOKEN_EXP || '30d',
     jwtRefreshToken: process.env.JWT_REFRESH_TOKEN_EXP || '9999d',
   },
   secrets: {

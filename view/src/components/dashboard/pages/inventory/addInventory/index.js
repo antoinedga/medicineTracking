@@ -1,12 +1,10 @@
 import React from 'react';
-import clsx from 'clsx';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import { Drawer, Divider, IconButton, Grid, Container, FormGroup, FormHelperText } from '@material-ui/core';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import { Drawer, Divider, IconButton, Container, FormGroup, FormHelperText } from '@material-ui/core';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import MuiAlert from '@material-ui/lab/Alert';
-import { TextField, Select, MenuItem, InputLabel, FormControl, Snackbar, CircularProgress, Backdrop } from '@material-ui/core'
+import { TextField, Select, MenuItem, InputLabel, Snackbar, CircularProgress, Backdrop } from '@material-ui/core'
 import { useForm, Controller } from "react-hook-form";
 import { useSelector, useDispatch } from 'react-redux';
 import { addNewInventory } from '../../../../../store/actions/inventory.action'
@@ -70,7 +68,7 @@ export default function SwipeableTemporaryDrawer() {
     const classes = useStyles();
     const theme = useTheme();
     const dispatch = useDispatch();
-    const { register, handleSubmit, watch, errors, control, getValues } = useForm('onTouched');
+    const { register, handleSubmit, errors, control, getValues } = useForm('onTouched');
     const [open, setOpen] = React.useState(false);
     const [openAlert, setAlertOpen] = React.useState(false);
     const [success, setSuccess] = React.useState(false);
@@ -106,14 +104,6 @@ export default function SwipeableTemporaryDrawer() {
             console.log(error)
         })
     }
-
-    const handleClose = (event, reason) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-
-        setOpen(false);
-    };
 
     return (
         <React.Fragment>
@@ -159,7 +149,7 @@ export default function SwipeableTemporaryDrawer() {
                                     </Select>
                                 }
                             />
-                            <FormHelperText error={errors.path != undefined}>
+                            <FormHelperText error={errors.path !== undefined}>
                                 {errors?.path?.message}
                             </FormHelperText>
                         </FormGroup>
@@ -172,7 +162,7 @@ export default function SwipeableTemporaryDrawer() {
                                     pattern: /^[a-zA-Z][a-zA-Z0-9]+$/
                                 })
                             } />
-                            <FormHelperText error={errors.name != undefined}>
+                            <FormHelperText error={errors.name !== undefined}>
                                 {errors?.name?.message}
                             </FormHelperText>
                         </FormGroup>

@@ -17,11 +17,10 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import { useForm } from "react-hook-form";
-import { Input } from "@material-ui/core";
 import Brand from '../../resources/logo_1.png'
 import { Redirect, Link } from 'react-router-dom'
 
-import { shallowEqual, useSelector, useDispatch } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import constant from '../../store/actions/actionType/login'
 import { loginPayload } from '../../store/actions/login.action'
 import Cookies from 'universal-cookie';
@@ -61,7 +60,7 @@ function Alert(props) {
 
 export default function SignIn(props) {
     const classes = useStyles();
-    const { register, errors, handleSubmit, setError, clearErrors, getValues, setValue } = useForm({ mode: 'onTouched' });
+    const { register, errors, handleSubmit, setError, getValues, setValue } = useForm({ mode: 'onTouched' });
 
     let isLogin = useSelector(state => state.login.login)
     let isLoading = useSelector(state => state.login.loading)
@@ -75,7 +74,6 @@ export default function SignIn(props) {
         loginPayload(formData.email, formData.password, dispatch).then(data => {
 
             if (data.response) {
-                console.log(formData)
                 handleRememberMe(formData)
             }
 
@@ -97,7 +95,6 @@ export default function SignIn(props) {
 
     const handleRememberMe = (data) => {
         if (remember) {
-            console.log(data)
             localStorage.setItem("credential", JSON.stringify(data))
             console.log(localStorage.getItem("credential"))
         } else {
@@ -118,17 +115,13 @@ export default function SignIn(props) {
 
     useEffect(() => {
         if (cookies.get("token") != "logged out" && cookies.get("token") != null && cookies.get("token") != undefined) {
-            console.log(cookies.get("token"))
             dispatch({ type: constant.LOGIN_SUCCESS, payload: { token: cookies.get('token'), refresh: "" } })
         }
-        console.log(props.location.state?.msg)
         if (props.location.state?.msg) {
             setOpen(true)
         }
-        console.log(localStorage.getItem("credential"))
         if (localStorage.getItem("credential") != null && localStorage.getItem("credential") != "") {
             let credential = localStorage.getItem("credential");
-            console.log(credential)
             credential = JSON.parse(credential)
             setValue('email', credential.email, { shouldValidate: true })
             setValue('password', credential.password, { shouldValidate: true })

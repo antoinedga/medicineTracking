@@ -24,7 +24,7 @@ export default function UserManagement(props) {
                         title: 'Roles', field: 'orderDate',
                     }
                 ]}
-                data={[{}, {}]}
+                data={[]}
                 icons={icons}
                 actions={[
                     {

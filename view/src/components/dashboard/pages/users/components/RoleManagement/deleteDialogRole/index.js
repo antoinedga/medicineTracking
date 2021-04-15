@@ -10,8 +10,8 @@ import Moment from 'react-moment';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import { useDispatch } from 'react-redux'
-
-
+import { deleteRole } from '../../../../../../../store/actions/role.action'
+import constant from '../../../../../../../store/actions/actionType/admin'
 export default function DeleteDialog(props) {
     const [open, setOpen] = React.useState(false);
     const [openAlert, setAlert] = React.useState(false);
@@ -33,6 +33,16 @@ export default function DeleteDialog(props) {
 
     const deleteRoleEvent = () => {
         setDisable(true)
+
+        deleteRole(rowData._id).then(data => {
+            console.log(data)
+            handleAlertClose();
+        }).catch(err => {
+            console.log(err.response)
+            handleAlertClose();
+        })
+        handleAlertClose();
+        console.log(rowData)
     }
 
     useEffect(() => {

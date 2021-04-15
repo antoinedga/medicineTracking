@@ -100,11 +100,11 @@ export default function Orders(props) {
                 padding={2}
                 className={classes.buttonRow}
             >
-                <Grid container items >
-                    <Grid items xs={2}>
+                <Grid container item >
+                    <Grid item xs={2}>
                         <PlaceOrder />
                     </Grid>
-                    <Grid items xs={2}>
+                    <Grid item xs={2}>
                         <ImportExcel open={importToggle} handleOpen={handleImportOpen} handleClose={handleImportClose} />
                     </Grid>
                 </Grid>

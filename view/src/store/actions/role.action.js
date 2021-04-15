@@ -39,7 +39,7 @@ export const deleteRole = async (roleID) => {
         then(data => {
             return Promise.resolve(data)
         }).catch(error => {
-
+            console.log(error.response)
             return Promise.reject(error)
         })
 }
@@ -89,6 +89,27 @@ export const getSubInventory = async (path) => {
                 current = current.next[parse[i]]
             }
             console.log(Object.keys(current.next))
+            return Promise.resolve(data)
+        }).catch(error => {
+            console.log(error)
+            return Promise.reject(error)
+        })
+}
+
+export const submitCreateRole = async (roleData) => {
+    let state = store.state.getState();
+    let body = roleData
+
+    let config = {
+        headers: {
+            'Authorization':
+                `Bearer ${state.login.token}`,
+        }
+    }
+    return axios.post(`http://localhost:8080/api/role`, body, config)
+        .then((res) => res.data).
+        then(data => {
+            console.log(data)
             return Promise.resolve(data)
         }).catch(error => {
             console.log(error)

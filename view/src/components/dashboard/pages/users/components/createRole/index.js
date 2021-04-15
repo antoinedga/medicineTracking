@@ -3,13 +3,14 @@ import { makeStyles } from '@material-ui/core/styles';
 import {
     TextField, MenuItem, InputLabel, FormControl, Select, Grid, Container,
     Checkbox, FormControlLabel, List, ListItem, ListItemText, ListItemIcon, Divider,
-    Card, CardHeader, Button, Typography
+    Card, CardHeader, Button, Typography, Switch
 } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux'
-import { createNewRoleConfig, getSubInventory } from '../../../../../../store/actions/role.action'
+import { createNewRoleConfig, getSubInventory, submitCreateRole } from '../../../../../../store/actions/role.action'
 import constants from '../../../../../../store/actions/actionType/admin'
 import { useForm } from "react-hook-form";
-
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -43,13 +44,18 @@ export default function CreateRole(props) {
     const [selected, setSelected] = React.useState("")
     const [listToSelect, setListToSelect] = React.useState([])
     const [listToConfig, setListToConfig] = React.useState([])
+    const [success, setSuccess] = React.useState(false)
+    const [errorMessage, setErrMessage] = React.useState("")
+    const [openSnackBar, setSnackBar] = React.useState(false)
     const resource = useSelector(state => state.admin.resource)
     const actions = useSelector(state => state.admin.actions)
 
-    const { register, errors, handleSubmit, setError, clearErrors, getValues, setValue } = useForm({ mode: 'onTouched' });
-
+    const formStuff = useForm({ mode: 'onTouched' });
+    const { register, errors, handleSubmit, setError, clearErrors, getValues, setValue, reset } = formStuff;
 
     useEffect(() => {
+        reset({ name: "", path: "" })
+        dispatch({ type: constants.ADMIN_LOADING })
         createNewRoleConfig().then(data => {
             console.log(data)
             let payload = {
@@ -64,27 +70,73 @@ export default function CreateRole(props) {
     }, [])
 
     useEffect(async () => {
-        // console.log(selected)
-        // let temp = await getSubInventory(selected)
-        // console.log(temp)
-        let parse = listOfPaths.filter((path) => {
-            return path.startsWith(selected)
-        })
+        console.log(selected)
+        let parse;
+        if (selected == "") {
+            parse = [];
+        } else {
+            parse = listOfPaths.filter((path) => {
+                return path.startsWith(selected)
+            })
+        }
         console.log(parse)
         setListToSelect(parse)
     }, [selected])
 
-    const onSubmit = () => {
-        console.log(getValues())
+    const onSubmit = (data, e) => {
+        let form = getValues();
+        console.log(JSON.stringify(form, null, 1))
+        // filters the null section if leaps around the form
+        form.permissions = form.permissions.filter(Boolean)
+        for (var i = 0; i < form.permissions.length; i++) {
+            let temp = form.permissions[i];
+            temp.actions = temp.actions.filter(Boolean)
+        }
+        //  console.log(JSON.stringify(form, null, 1))
+        dispatch({ type: constants.ADMIN_LOADING })
+        submitCreateRole(form).then(res => {
+            console.log(res)
+            if (res.response) {
+                setSuccess(true)
+                setSnackBar(true)
+                setErrMessage("Successfully Created New Role(s)!")
+            } else {
+                setSuccess(false)
+                setSnackBar(true)
+                setErrMessage(res.message)
+            }
+            dispatch({ type: constants.ADMIN_SUCCESS })
+        }).catch(error => {
+            //console.log(error.response.data.message)
+            setSuccess(false)
+            setSnackBar(true)
+            setErrMessage(error.response.data.message)
+            dispatch({ type: constants.ADMIN_ERROR })
+
+        })
+    }
+
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setErrMessage("")
+        setSnackBar(false);
+    };
+
+    const onError = (error, e) => {
+        console.log(error)
     }
     return (
         <React.Fragment>
             <Container maxWidth="md">
-                <form className={classes.form} noValidate autoComplete="off">
+                <form className={classes.form} noValidate autoComplete="off" onSubmit={handleSubmit(onSubmit, onError)}>
                     <Grid container alignItems="flex-start" spacing={1}>
 
                         <Grid item xs={6}>
-                            <TextField required label="Name" fullWidth />
+                            <TextField required label="Name" name="name" fullWidth inputRef={register({
+                                required: "Must have a name"
+                            })} />
                         </Grid>
                         <Grid item xs={6}>
                             <FormControl className={classes.formControl}>
@@ -92,11 +144,17 @@ export default function CreateRole(props) {
                                 <Select
                                     labelId="demo-simple-select-label"
                                     id="demo-simple-select"
+                                    name="path"
                                     fullWidth
-                                    onChange={(e) => setSelected(e.target.value)}
+                                    defaultValue=""
+                                    onChange={(e) => {
+                                        setSelected(e.target.value)
+                                        setValue('path', e.target.value)
+                                    }}
+                                    inputRef={register("path", { required: true })}
                                 >
                                     {listOfPaths.map(path =>
-                                        <MenuItem value={path}>{path}</MenuItem>
+                                        <option value={path}>{path}</option>
                                     )}
 
                                 </Select>
@@ -105,23 +163,36 @@ export default function CreateRole(props) {
                         <Grid item xs={12}>
                             <TransferList list={listToSelect} setConfig={setListToConfig} configs={listToConfig} />
                         </Grid>
-                        <Grid container item xs={12} style={{ height: '50vh', overflow: 'auto' }}>
+                        <Grid container item xs={12} style={{ maxHeight: '50vh', overflow: 'auto' }}>
                             {listToConfig.map(name =>
-                                configLocation(name, resource, actions, register)
+                                configLocation(name, resource, actions, formStuff)
                             )}
                         </Grid>
                     </Grid>
-                    <Button onClick={onSubmit}>Submit</Button>
+                    <Button variant="outlined" color="primary" type="submit">Submit</Button>
                 </form>
             </Container>
+
+            <Snackbar open={openSnackBar} autoHideDuration={6000} onClose={handleClose}>
+                <Alert onClose={handleClose} severity={(success) ? "success" : "error"}>
+                    {errorMessage}
+                </Alert>
+            </Snackbar>
+
+
         </React.Fragment >
 
     );
 
 }
 
+function Alert(props) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
-function configLocation(title, resource, actions, register) {
+
+function configLocation(title, resource, actions, formMethod) {
+    const { register, errors, handleSubmit, setError, clearErrors, getValues, setValue, watch, unregister } = formMethod;
 
     return (
         <Grid container>
@@ -129,22 +200,56 @@ function configLocation(title, resource, actions, register) {
                 <Typography variant="h5" style={{ padding: 10 }} >{title}</Typography>
                 <Divider />
             </Grid>
-            {resource.map(res =>
-                <Grid item xs={6}>
-                    <Typography variant="h6">{res}</Typography>
+            {resource.map((res, resIndex) =>
+                <Grid container item xs={6}>
+                    <Grid item xs={12}>
+                        <Typography variant="h6">{res}</Typography>
+
+                    </Grid>
                     {
-                        actions.map(action =>
-                            <FormControlLabel
-                                control={
-                                    <Checkbox
-                                        name={title + ":" + res}
-                                        color="primary"
-                                        value={action}
-                                        inputRef={register}
+                        actions.map((action, actionIndex) =>
+                            <>
+                                <Grid item xs={6}>
+                                    <FormControlLabel
+                                        control={
+                                            <Checkbox
+                                                name={`permissions[${resIndex}].actions[${actionIndex}].action`}
+                                                color="primary"
+                                                onChange={(e) => {
+                                                    if (e.target.checked) {
+                                                        register(`permissions[${resIndex}].actions[${actionIndex}].action`)
+                                                        setValue(`permissions[${resIndex}].actions[${actionIndex}].action`, action)
+                                                        register(`permissions[${resIndex}].resource`)
+                                                        setValue(`permissions[${resIndex}].resource`, res)
+                                                        register(`permissions[${resIndex}].path`)
+                                                        setValue(`permissions[${resIndex}].path`, title)
+                                                    } else {
+                                                        unregister(`permissions[${resIndex}].actions[${actionIndex}].action`)
+                                                        unregister(`permissions[${resIndex}].actions[${actionIndex}].recursive`)
+                                                    }
+                                                    console.log(e.target.checked)
+
+                                                }}
+                                                value={action}
+                                                type="checkBox"
+                                            />
+                                        }
+                                        label={action}
                                     />
-                                }
-                                label={action}
-                            />
+                                </Grid>
+                                <Grid item xs={6}>
+                                    {
+                                        (!!watch(`permissions[${resIndex}].actions[${actionIndex}].action`)) ? (<FormControlLabel
+                                            control={<Switch />}
+                                            label="Recursive"
+                                            name={`permissions[${resIndex}].actions[${actionIndex}].recursive`}
+                                            inputRef={register}
+
+                                        />) : null
+                                    }
+
+                                </Grid>
+                            </>
                         )
                     }
                 </Grid>
@@ -208,14 +313,17 @@ function TransferList(props) {
         setRight(not(right, rightChecked));
         setChecked(not(checked, rightChecked));
     };
+
     useEffect(() => {
+        console.log("called")
         props.setConfig(right)
         console.log(props.configs)
-    })
+    }, [right])
 
     useEffect(() => {
         console.log(props.list)
-        if (props.list != undefined || Object.is(props.list, list)) {
+        setList(props.list)
+        if (props.list != undefined && Object.is(props.list, list)) {
             setLeft(props.list)
         }
 

@@ -12,9 +12,6 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "shards-ui/dist/css/shards.min.css"
 
 import { Provider } from 'react-redux'
-
-import thunk from 'redux-thunk'
-
 import EditView from './components/dashboard/pages/orders/EditOrder'
 
 const Store = require('./store/store')
@@ -62,13 +59,3 @@ function App() {
 }
 
 export default App;
-
-
-function ProtoType() {
-
-    return (
-        <div>
-
-        </div>
-    )
-}

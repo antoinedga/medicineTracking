@@ -43,6 +43,12 @@ export default function loginReducer(state = initialState, action) {
                 refresh: ""
             }
         }
+        case constant.REFRESH_TOKEN: {
+            return {
+                ...state,
+                token: action.payload.token
+            }
+        }
         default:
             return state;
     }

@@ -15,6 +15,8 @@ export default function RoleManagement(props) {
     const loading = useSelector(state => state.admin.loading)
     const selected = useSelector(state => state.inventory.selected)
     const data = useSelector(state => state.admin.roles)
+    const [deleteToggle, setDeleteView] = useState(false);
+    const [rowDataDelete, setRowData] = useState({})
 
     useEffect(() => {
         console.log("ROLE is Loaded")
@@ -27,10 +29,8 @@ export default function RoleManagement(props) {
             dispatch({ type: constants.ADMIN_ERROR })
 
         })
-    }, [selected])
+    }, [rowDataDelete])
 
-    const [deleteToggle, setDeleteView] = useState(false);
-    const [rowDataDelete, setRowData] = useState({})
 
     const handleOpenDelete = (row) => {
         setRowData(row)
@@ -39,6 +39,8 @@ export default function RoleManagement(props) {
 
     const handleDeleteClose = () => {
         setDeleteView(false)
+        setRowData({})
+
     }
 
     return (

@@ -7,9 +7,7 @@ import Popper from '@material-ui/core/Popper';
 import MenuItem from '@material-ui/core/MenuItem';
 import MenuList from '@material-ui/core/MenuList';
 import { makeStyles } from '@material-ui/core/styles';
-import constants from '../../../../store/actions/actionType/login'
-import { shallowEqual, useSelector, useDispatch } from 'react-redux'
-import { Redirect, Link } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
 import SettingsIcon from '@material-ui/icons/Settings';
 import Tooltip from '@material-ui/core/Tooltip';
 

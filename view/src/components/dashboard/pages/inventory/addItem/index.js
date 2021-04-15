@@ -1,5 +1,4 @@
 import React from 'react';
-import clsx from 'clsx';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import { Drawer, Divider, IconButton, Grid, Container } from '@material-ui/core';
@@ -69,7 +68,7 @@ export default function AddItem() {
     const classes = useStyles();
     const theme = useTheme();
     const dispatch = useDispatch();
-    const { register, handleSubmit, watch, errors, control, getValues } = useForm('onTouched');
+    const { register, handleSubmit, getValues } = useForm('onTouched');
 
     const [open, setOpen] = React.useState(false);
     const [openAlert, setAlertOpen] = React.useState(false);
@@ -108,14 +107,6 @@ export default function AddItem() {
             console.log(error)
         })
     }
-
-    const handleClose = (event, reason) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-
-        setOpen(false);
-    };
 
     return (
         <React.Fragment>

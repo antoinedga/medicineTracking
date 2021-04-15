@@ -12,6 +12,8 @@ export const loginPayload = async (email, password, dispatch) => {
 
             if (data.response) {
                 cookies.set('token', data.Content.token, { path: "/", expires: new Date(Date.now() + (60 * 1000 * 30)) })
+                cookies.set('reFreshToken', data.Content.refresh, { path: "/", expires: new Date(Date.now() + (60 * 1000 * 30)) })
+
                 //sessionStorage.setItem('token', data.Content.token);
 
                 dispatch({
