@@ -47,8 +47,6 @@ exports.create = (req, res) => {
 };
 
 exports.uploadOrderData = (req, res) => {
-  console.log("req.files " + JSON.stringify(req.files, null, 1))
-  console.log("req.body " + JSON.stringify(req.body, null, 1))
   try {
     if (
       !req.files ||
@@ -61,7 +59,7 @@ exports.uploadOrderData = (req, res) => {
           .json({
             response: false,
             message: `Error: requires a csv file and and orderNumber`,
-            Content: null,
+            content: null,
           });
     }
     const file = req.files.orderData;
@@ -76,7 +74,7 @@ exports.uploadOrderData = (req, res) => {
         .json({
           response: false,
           message: `Error ocurred while uploading order data`,
-          Content: err,
+          content: err,
         });
   }
 };
@@ -199,8 +197,6 @@ exports.deleteByPath = (req, res) => {
 };
 
 exports.deleteByID = (req, res) => {
-  console.log(req.auth);
-  console.log('id is: ' + JSON.stringify(req.body, null, 1));
   Order
       .deleteOne({
         _id: req.body._id,

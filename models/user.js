@@ -40,7 +40,6 @@ userSchema.methods.authPassword = async (password, hashPassword) => {
 
 
 userSchema.pre('findOneAndUpdate', async function(next) {
-  console.log('pre: findOneAndUpdate');
   try {
     if (this._update.password) {
       const hashed = await bcrypt.hash(

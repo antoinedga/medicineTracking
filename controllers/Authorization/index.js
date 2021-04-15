@@ -13,7 +13,7 @@ exports.get_registration = (req, res) => {
   return res.json({
     response: true,
     message: 'Register Page',
-    Content: null,
+    content: null,
   });
 };
 
@@ -29,7 +29,7 @@ exports.post_registration = (req, res) => {
       return res.json({
         response: false,
         message: 'Invitation token is invalid or has expired',
-        Content: null,
+        content: null,
       });
       // res.redirect('back');
     }
@@ -39,7 +39,7 @@ exports.post_registration = (req, res) => {
         return res.json({
           response: false,
           message: 'User already exists',
-          Content: null,
+          content: null,
         });
       } else {
         bcrypt.hash(password, saltRounds, function(err, hash) {
@@ -54,7 +54,7 @@ exports.post_registration = (req, res) => {
               return res.json({
                 response: false,
                 message: 'User already exists',
-                Content: null,
+                content: null,
               });
             }
             Invitations.deleteOne({
@@ -64,7 +64,7 @@ exports.post_registration = (req, res) => {
             return res.json({
               response: true,
               message: 'Registration Successful',
-              Content: null,
+              content: null,
             });
           });
         });
@@ -79,7 +79,7 @@ exports.get_login = (req, res) => {
   res.json({
     response: true,
     message: 'Login Page.',
-    Content: null,
+    content: null,
   });
 };
 
@@ -92,13 +92,13 @@ exports.post_login = (req, res) => {
       return res.status(400), json({
         response: false,
         message: 'Login Error.',
-        Content: null,
+        content: null,
       });
     } else if (user == null) {
       res.status(400).json({
         response: false,
         message: 'User with this email does not exist',
-        Content: null,
+        content: null,
       });
     } else {
       user.authPassword(req.body.password, user.password)
@@ -107,14 +107,14 @@ exports.post_login = (req, res) => {
               res.json({
                 response: false,
                 message: 'Password is incorrect',
-                Content: null,
+                content: null,
               });
             } else {
               createRefreshToken(user._id).then((token) => {
                 res.json({
                   response: true,
                   message: 'Login Successful',
-                  Content: token,
+                  content: token,
                 });
               },
               ).catch((err) => console.log(err));
@@ -134,7 +134,7 @@ exports.refreshToken = (req, res) => {
               .json({
                 response: false,
                 message: 'Invalid refresh token',
-                Content: null,
+                content: null,
               });
         } else {
           res
@@ -142,7 +142,7 @@ exports.refreshToken = (req, res) => {
               .json({
                 response: true,
                 message: 'Successfully refreshed token',
-                Content: token,
+                content: token,
               });
         }
       });
@@ -156,14 +156,14 @@ exports.refreshToken = (req, res) => {
 //       return res.status(400), json({
 //         response: false,
 //         message: 'Login Error.',
-//         Content: null,
+//         content: null,
 //       });
 //     }
 //     if (user == null) {
 //       res.status(400).json({
 //         response: false,
 //         message: 'User with this email does not exist',
-//         Content: null,
+//         content: null,
 //       });
 //     } else {
 //       bcrypt.compare(req.body.password, user.password)
@@ -174,19 +174,19 @@ exports.refreshToken = (req, res) => {
 //               res.json({
 //                 response: true,
 //                 message: 'Login Successful',
-//                 Content: jwt.sign({user: user}, SECRET_KEY),
+//                 content: jwt.sign({user: user}, SECRET_KEY),
 //               });
 //             } else {
 //               res.json({
 //                 response: false,
 //                 message: 'Password is incorrect',
-//                 Content: null,
+//                 content: null,
 //               });
 //             }
 //           }).catch((err) => {
 //             res.json({
 //               response: false, message: 'Password is incorrect',
-//               Content: null,
+//               content: null,
 //             });
 //           });
 //     }
@@ -199,7 +199,7 @@ exports.get_forget = (req, res) => {
   return res.json({
     response: true,
     message: 'Forget Password Page',
-    Content: null,
+    content: null,
   });
 };
 
@@ -219,7 +219,7 @@ exports.post_forget = (req, res, next) => {
           // req.flash('error', 'No account with that email address exists.');
           return res.json({
             response: false, message: 'User does not exists',
-            Content: null,
+            content: null,
           });
           // res.redirect('/forgot');
         }
@@ -258,7 +258,7 @@ exports.post_forget = (req, res, next) => {
         console.log('mail sent');
         return res.json({
           response: true, message: 'Mail sent',
-          Content: null,
+          content: null,
         });
         // done(err, 'done');
       });
@@ -269,7 +269,7 @@ exports.post_forget = (req, res, next) => {
     return res.json({
       response: false,
       message: 'An error occurred',
-      Content: null,
+      content: null,
     });
   });
 };
@@ -286,14 +286,14 @@ exports.get_reset = (req, res) => {
       return res.json({
         response: false,
         message: 'Password reset token is invalid or has expired',
-        Content: null,
+        content: null,
       });
       // res.redirect('/forgot');
     }
     return res.json({
       response: true,
       message: 'Password Reset Page',
-      Content: null,
+      content: null,
     });
     // res.render('api_user/reset/', {token: req.params.token});
   });
@@ -311,7 +311,7 @@ exports.post_reset = (req, res) => {
           return res.json({
             response: false,
             message: 'Password reset token is invalid or has expired',
-            Content: null,
+            content: null,
           });
           // res.redirect('back');
         } else if (req.body.new_password === req.body.confirm_password) {
@@ -331,14 +331,14 @@ exports.post_reset = (req, res) => {
                 return res.json({
                   response: false,
                   message: 'An error occurred',
-                  Content: null,
+                  content: null,
                 });
               } else {
                 console.log('Password Updated!');
                 return res.json({
                   response: true,
                   message: 'Password updated',
-                  Content: null,
+                  content: null,
                 });
               }
             });
@@ -349,7 +349,7 @@ exports.post_reset = (req, res) => {
           return res.json({
             response: false,
             message: 'Passwords do not match',
-            Content: null,
+            content: null,
           });
           // res.redirect('back');
         }
@@ -359,7 +359,7 @@ exports.post_reset = (req, res) => {
     return res.json({
       response: true,
       message: 'An error occurred',
-      Content: null,
+      content: null,
     });
   });
 };

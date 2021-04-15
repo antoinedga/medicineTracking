@@ -1,13 +1,12 @@
-exports.callback = (req, res, action) => {
+exports.callback = (req, res, action, converter) => {
   return (err, doc) => {
-    console.log(err, doc);
     if (err) {
       return res
           .status(400)
           .json({
             response: false,
             message: `Error during ${action}`,
-            Content: err,
+            content: err,
           });
     } else {
       return res
@@ -15,7 +14,7 @@ exports.callback = (req, res, action) => {
           .json({
             response: true,
             message: `Successfully completed ${action}`,
-            Content: doc,
+            content: (converter) ? converter(doc): doc,
           });
     };
   };
@@ -32,6 +31,6 @@ exports.sendError = (req, res, error, action) => {
       .json({
         response: false,
         message: `Error during ${action}`,
-        Content: error,
+        content: error,
       });
 };

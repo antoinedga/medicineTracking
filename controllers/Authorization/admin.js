@@ -6,7 +6,7 @@ const nodemailer = require('nodemailer');
 // Show Invitation Page
 exports.get_invitation = (req, res) => {
   // res.render('forgot');
-  return res.json({ response: true, message: 'Invitation Page', Content: null });
+  return res.json({ response: true, message: 'Invitation Page', content: null });
 };
 
 exports.post_invitation = (req, res) => {
@@ -52,13 +52,13 @@ exports.post_invitation = (req, res) => {
       return res.json({
         response: false,
         message: 'An error occurred',
-        Content: err,
+        content: err,
       });
     } else {
       return res.json({
         response: true,
         message: 'An email has been send with an invitation code',
-        Content: null,
+        content: null,
       });
     }
   });

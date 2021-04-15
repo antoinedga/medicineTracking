@@ -9,13 +9,13 @@ exports.get_placeOrder = (req, res) => {
       return res.json({
         response: false,
         message: 'An error occurred',
-        Content: null,
+        content: null,
       });
     } else {
       return res.json({
         response: true,
         message: 'Place Order Page',
-        Content: null,
+        content: null,
       });
     }
   });
@@ -27,7 +27,7 @@ exports.post_placeOrder = (req, res) => {
       return res.json({
         response: false,
         message: 'Forbidden',
-        Content: null,
+        content: null,
       });
     } else {
       const generateOrderNumber = uuidv1();
@@ -44,14 +44,14 @@ exports.post_placeOrder = (req, res) => {
           return res.json({
             response: false,
             message: 'Error placing an order. Try again.',
-            Content: null,
+            content: null,
           });
         }
         console.log('Order Created Successfully');
         return res.json({
           response: true,
           message: 'Order Created Successfully',
-          Content: success,
+          content: success,
         });
       });
     }
@@ -65,13 +65,13 @@ exports.get_viewStoredOrder = (req, res) => {
       return res.json({
         response: false,
         message: 'Forbidden',
-        Content: null,
+        content: null,
       });
     } else {
       return res.json({
         response: false,
         message: 'Order Lookup Page',
-        Content: null,
+        content: null,
       });
     }
   });
@@ -85,7 +85,7 @@ exports.post_viewStoredOrder = (req, res) => {
         return res.json({
           response: false,
           message: 'Forbidden',
-          Content: null,
+          content: null,
         });
       }
       Order.findOne({orderNumber: req.body.orderNumber}, function(err, order) {
@@ -97,14 +97,14 @@ exports.post_viewStoredOrder = (req, res) => {
             response: false,
             message:
             'No order found. Please check the order number and enter again.',
-            Content: null,
+            content: null,
           });
         } else {
           console.log(order);
           return res.json({
             response: true,
             message: 'View Order',
-            Content: order,
+            content: order,
           });
         }
       });
@@ -114,7 +114,7 @@ exports.post_viewStoredOrder = (req, res) => {
     return res.json({
       response: false,
       message: 'An error occurred. Please Login again.',
-      Content: null,
+      content: null,
     });
   }
 };

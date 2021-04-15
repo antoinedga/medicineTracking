@@ -7,7 +7,7 @@ exports.requireLogin = (req, res, next) => {
         .json({
           response: false,
           message: `Unauthorized user!`,
-          Content: null,
+          content: null,
         });
   }
 };

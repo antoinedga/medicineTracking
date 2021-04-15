@@ -81,6 +81,5 @@ exports.addUnits = (req, res) => {
     return result;
   }, []);
 
-  console.log(units);
   Unit.create(units, callback(req, res, 'add eaches units'));
 };

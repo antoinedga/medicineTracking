@@ -81,8 +81,8 @@ export default function CustomizedDialogs(props) {
     useEffect(() => {
         if (open) {
             getOrderByID(dispatch, dataId).then(result => {
-                console.log(result.Content)
-                setDataView(result.Content)
+                console.log(result.content)
+                setDataView(result.content)
             }).catch(error => console.log(error.response))
             dispatch({ type: constants.ORDER_DONE })
         }

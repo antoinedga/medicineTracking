@@ -17,6 +17,7 @@ const config = {
     productIdentifiers: ['name', 'ndc', 'supplier'],
     quantityField: 'amount',
     NDCField: 'product_ndc',
+    orderStatusOptions: ['COMPLETE', 'PENDING', 'CANCELED', 'DELAYED'],
   },
 };
 

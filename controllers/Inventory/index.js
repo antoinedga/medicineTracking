@@ -37,7 +37,7 @@ exports.getPaths = (req, res) => {
             .json({
               response: true,
               message: `Successfully completed get path object`,
-              Content: paths,
+              content: paths,
             });
       }).catch((err) => {
         return res
@@ -45,7 +45,7 @@ exports.getPaths = (req, res) => {
             .json({
               response: false,
               message: `Error during get path object`,
-              Content: err,
+              content: err,
             });
       });
 };
@@ -58,7 +58,7 @@ exports.getCompletePaths = (req, res) => {
             .json({
               response: true,
               message: `Successfully completed get complete object`,
-              Content: paths,
+              content: paths,
             });
       }).catch((err) => {
         return res
@@ -66,7 +66,7 @@ exports.getCompletePaths = (req, res) => {
             .json({
               response: false,
               message: `Error during get complete path`,
-              Content: err,
+              content: err,
             });
       });
 };
@@ -103,7 +103,7 @@ exports.deleteByPath = (req, res) => {
 
 exports.deleteByID = (req, res) => {
   Inventory
-      .deleteByID(req.body._id)
+      .deleteOne({_id: req.body._id})
       .exec(callback(req, res, 'delete inventory by _id'));
 };
 

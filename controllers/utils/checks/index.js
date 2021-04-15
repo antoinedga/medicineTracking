@@ -16,12 +16,12 @@ function inventoryExists(path, desired=true) {
         const exists = {
           response: desired,
           message: `Inventory: ${path}, exists`,
-          Content: inv,
+          content: inv,
         };
         const notExist = {
           response: !desired,
           message: `Inventory: ${path}, does not exists`,
-          Content: inv,
+          content: inv,
         };
         const succ = (desired) ? exists : notExist;
         const err = (desired) ? notExist : exists;
@@ -49,12 +49,12 @@ function orderNumberExists(orderNumber, desired=true) {
         const exists = {
           response: desired,
           message: `OrderNumber: ${orderNumber}, exists`,
-          Content: order,
+          content: order,
         };
         const notExist = {
           response: !desired,
           message: `OrderNumber: ${orderNumber}, does not exists`,
-          Content: order,
+          content: order,
         };
         const succ = (desired) ? exists : notExist;
         const err = (desired) ? notExist : exists;
@@ -82,13 +82,13 @@ function orderNumberIsUnique(orderNumber) {
           return {
             response: true,
             message: `OrderNumber: ${orderNumber}, does not exists`,
-            Content: order,
+            content: order,
           };
         }
         throw {
           response: false,
           message: `OrderNumber: ${orderNumber}, already exists`,
-          Content: order,
+          content: order,
         };
       })
       .catch((err) => {

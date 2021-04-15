@@ -12,6 +12,7 @@ const configTypes = new Map([
   ['quantityField', validation.checkString],
   ['NDCField', validation.checkNDC],
   ['fieldsForWebsite', validation.checkArrayOfStrings],
+  ['orderStatusOptions', validation.checkArrayOfStrings],
 ]);
 
 module.exports = {

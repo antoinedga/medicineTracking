@@ -50,7 +50,7 @@ function doWork(req, res, orderData, uploadPath) {
               .json({
                 response: false,
                 message: `Error ocurred while saving uploaded order data`,
-                Content: err,
+                content: err,
               });
         }).finally( () => {
           fs.unlink(uploadPath, () => { });
@@ -77,14 +77,14 @@ async function updateOrderData(orderNumber, products) {
         return {
           response: true,
           message: `Successfully updated order`,
-          Content: doc,
+          content: doc,
         };
       })
       .catch((err) => {
         return {
           response: false,
           message: `Error while updating order`,
-          Content: err,
+          content: err,
         };
       });
 }

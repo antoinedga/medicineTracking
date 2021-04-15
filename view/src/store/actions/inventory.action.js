@@ -16,7 +16,7 @@ export const getAllPath = (dispatch) => {
     axios.post("http://localhost:8080/api/inventory/complete_paths", bodyParam, config)
         .then((res) => res.data).
         then(data => {
-            dispatch({ type: constant.INVENT_GET_ALL, payload: { location: data.Content } })
+            dispatch({ type: constant.INVENT_GET_ALL, payload: { location: data.content } })
         }).catch((error) => {
             // 400+ errors normally if user doesnt exist
             //console.log(error.response)
