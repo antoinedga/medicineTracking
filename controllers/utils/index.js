@@ -94,6 +94,47 @@ function objectToRolls(grants) {
 }
 
 /**
+ * converts and array of grant objects into Roles
+ * @param {Array<Role>} roles - from db
+ * @return {Array<Object>} Roles - shape desired by frontend
+ */
+function rollsToObjects(roles) {
+  roles = toArray(roles);
+  const _roles = [];
+  roles.forEach((role) => {
+    const _role = {
+      name: role.role.split(':')[0],
+      path: role.path,
+    };
+
+    const tmpPerm = {};
+    role.permissions.forEach((permission) => {
+      const resource = permission.resource.split(':');
+      const action = permission.action.split(':');
+      if (!tmpPerm.hasOwnProperty(permission.resource)) {
+        tmpPerm[permission.resource] = {
+          resource: resource[0],
+          path: resource[1],
+          actions: [],
+        };
+      }
+      tmpPerm[permission.resource].actions.push(
+          {
+            action: action[0],
+            recursive: (action[1] == 'all') ? true : false,
+            attributes: permission.attributes,
+          },
+      );
+    });
+
+    _role['permissions'] = Object.values(tmpPerm);
+
+    _roles.push(_role);
+  });
+  return _roles;
+}
+
+/**
  * Checks if the query has permission to ACTION the RESOURCE at PATH
  * Accounts for recursive permissions
  * @param {Object} _query
@@ -415,6 +456,7 @@ module.exports = {
   flattenDBRoles,
   grantsToRolls,
   objectToRolls,
+  rollsToObjects,
   requireAccess,
   createAdminRole,
   createToken,

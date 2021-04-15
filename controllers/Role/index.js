@@ -5,7 +5,7 @@ const utils = require('../utils');
 const config = require('../../config');
 const {action} = require('./enum/actions');
 const {resource} = require('./enum/resources');
-const {objectToRolls} = require('../utils');
+const {objectToRolls, rollsToObjects} = require('../utils');
 
 /**
  * creates and admin with access to all actions
@@ -85,19 +85,19 @@ exports.grantUserRole = (req, res) => {
 exports.findRecursivelyByPath = (req, res) => {
   Role
       .find({path: new RegExp('^' + req.body.path)})
-      .exec(callback(req, res, 'find roles by path'));
+      .exec(callback(req, res, 'find roles by path', rollsToObjects));
 };
 
 exports.findByPath = (req, res) => {
   Role
       .find({path: new RegExp('^' + req.body.path + '$')})
-      .exec(callback(req, res, 'find roles by path'));
+      .exec(callback(req, res, 'find roles by path', rollsToObjects));
 };
 
 exports.findByID = (req, res) => {
   Role
       .findById(req.body._id)
-      .exec(callback(req, res, 'find role by _id'));
+      .exec(callback(req, res, 'find role by _id', rollsToObjects));
 };
 
 exports.deleteRecursivelyByPath = (req, res) => {
@@ -115,6 +115,7 @@ exports.deleteByPath = (req, res) => {
 exports.deleteByID = (req, res) => {
   Role
       .deleteOne({_id: req.body._id})
+      .then()
       .exec(callback(req, res, 'delete role by _id'));
 };
 
