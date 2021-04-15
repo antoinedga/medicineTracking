@@ -34,6 +34,9 @@ import UserMenu from "./components/userMenu"
 import { useSelector, useDispatch } from 'react-redux'
 import constants from "../../store/actions/actionType/inventory";
 import { state } from '../../store/store'
+import axios from 'axios'
+
+var jwt = require('jsonwebtoken');
 
 const inventAction = require('../../store/actions/inventory.action')
 const drawerWidth = 240;
@@ -140,6 +143,43 @@ function Dashboard(props) {
         console.log("dashboard")
         inventAction.getAllPath(dispatch);
     }, [url])
+
+    setInterval(() => { }, 60 * 1000 * 3)
+
+    useEffect(() => {
+        const interval =
+            setInterval(customMiddleware, 60 * 1000 * 2)
+        return () => clearInterval(interval);
+    }, []);
+
+    const customMiddleware = () => {
+        console.log("called middleware in dashboard")
+        const store = state.getState();
+        const refreshToken = store.login.refresh;
+        const token = store.login.token;
+
+        if (token != null || token != undefined) {
+            let decoded = jwt.decode(token)
+            let expire = new Date(decoded.exp * 1000);
+            console.log("expires " + expire)
+            console.log(new Date(Date.now()))
+            if (Date.now() >= expire) {
+                console.log("its old")
+
+                axios.post("/api/user/token", { refreshToken: refreshToken }).then(data => {
+
+                    dispatch(
+                        {
+                            type: "REFRESH_TOKEN", payload: {
+                                token: data.Content
+                            }
+                        }
+                    )
+                })
+
+            }
+        }
+    }
 
     return (
         <>

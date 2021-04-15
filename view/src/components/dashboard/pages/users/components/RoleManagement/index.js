@@ -48,7 +48,7 @@ export default function RoleManagement(props) {
             <MaterialTable
                 title="List of Roles"
                 columns={[
-                    { title: 'Role', field: 'role' },
+                    { title: 'Role', field: 'name' },
                     {
                         title: 'Path', field: 'path',
                     },
@@ -90,7 +90,8 @@ export default function RoleManagement(props) {
     )
 }
 
-function DetailPanel(props) {
+function DetailPanel({ data }) {
+
     return (
         <>
             <div>

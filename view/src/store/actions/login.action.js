@@ -45,6 +45,8 @@ export const loginPayload = async (email, password, dispatch) => {
 
 export const logoutPayload = (dispatch) => {
     cookies.remove("token", { path: '/' });
-    console.log(cookies.get("token"))
+    // console.log(cookies.get("token"))
     dispatch({ type: constant.LOGIN_LOGOUT })
 }
+
+
