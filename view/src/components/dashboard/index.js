@@ -234,16 +234,6 @@ function Dashboard(props) {
                             </ListItemIcon>
                             <ListItemText primary={"User Management"} />
                         </ListItem>
-
-                        <ListItem button component={Link} to="/dashboard/locations" >
-                            <ListItemIcon>
-                                <Tooltip title="Location Management" arrow>
-                                    <LocationOnIcon />
-                                </Tooltip>
-                            </ListItemIcon>
-                            <ListItemText primary={"Location Management"} />
-                        </ListItem>
-
                     </List>
                 </Drawer>
                 <main className={classes.content}>
@@ -282,7 +272,6 @@ function Dashboard(props) {
                     <Route exact path={`${url}/`} render={() => (location == "None") ? <NoLocationAccess /> : <HomePage />} />
                     <Route exact path={`${url}/inventory`} render={() => (location == "None") ? <NoLocationAccess /> : <Inventory />} />
                     <Route exact path={`${url}/orders`} render={() => (location == "None") ? <NoLocationAccess /> : <Orders />} />
-                    <Route exact path={`${url}/locations`} render={() => (location == "None") ? <NoLocationAccess /> : <Locations />} />
                     <Route exact path={`${url}/users`} render={() => (location == "None") ? <NoLocationAccess /> : <Users />} />
                 </main>
             </div>

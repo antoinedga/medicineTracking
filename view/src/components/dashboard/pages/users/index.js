@@ -69,7 +69,7 @@ export default function Users(props) {
                     <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
                         <Tab label="Users" {...a11yProps(0)} />
                         <Tab label="Roles" {...a11yProps(1)} />
-                        <Tab label="Item Three" {...a11yProps(2)} />
+                        {/* <Tab label="Item Three" {...a11yProps(2)} /> */}
                     </Tabs>
                 </AppBar>
                 <TabPanel value={value} index={0}>
@@ -78,9 +78,9 @@ export default function Users(props) {
                 <TabPanel value={value} index={1}>
                     <RoleManagement />
                 </TabPanel>
-                <TabPanel value={value} index={2}>
+                {/* <TabPanel value={value} index={2}>
                     Item Three
-                 </TabPanel>
+                 </TabPanel> */}
                 <TabPanel value={value} index={3}>
                     <CreateRole />
                 </TabPanel>

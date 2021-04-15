@@ -24,7 +24,8 @@ export default function loginReducer(state = initialState, action) {
                 loading: false,
                 login: true,
                 token: action.payload.token,
-                refresh: action.payload.refresh
+                refresh: action.payload.refresh,
+                name: action.payload.email,
             }
         }
         case constant.LOGIN_ERROR: {

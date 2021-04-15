@@ -18,8 +18,8 @@ export const loginPayload = async (email, password, dispatch) => {
 
                 dispatch({
                     type: constant.LOGIN_SUCCESS, payload: {
-                        token: data.content.token,
-                        refresh: data.content.refreshToken
+                        token: data.Content.token,
+                        refresh: data.Content.refreshToken,
                     }
                 })
                 return Promise.resolve(data)
