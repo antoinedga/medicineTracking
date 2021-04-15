@@ -260,7 +260,7 @@ function requireAccess(action, resource) {
               response: false,
               message:
               `Unauthorized: cannot ${action} ${resource} at ${doc.path}`,
-              Content: null,
+              content: null,
             });
       }
     });

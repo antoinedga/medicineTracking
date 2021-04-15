@@ -5,6 +5,7 @@ const utils = require('../utils');
 const config = require('../../config');
 const {action} = require('./enum/actions');
 const {resource} = require('./enum/resources');
+const {objectToRolls} = require('../utils');
 
 /**
  * creates and admin with access to all actions
@@ -58,7 +59,7 @@ exports.getAll = (req, res) => {
     /mlc1/Outgoing|Orders|Inv|Outposts
 */
 exports.create = (req, res) => {
-  roles = req.body;
+  roles = objectToRolls(req.body);
 
   Role.insertMany(roles, callback(req, res, 'create role(s)'));
 };
