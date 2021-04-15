@@ -114,7 +114,7 @@ exports.deleteByPath = (req, res) => {
 
 exports.deleteByID = (req, res) => {
   Role
-      .deleteByID(req.body._id)
+      .deleteOne({_id: req.body._id})
       .exec(callback(req, res, 'delete role by _id'));
 };
 
