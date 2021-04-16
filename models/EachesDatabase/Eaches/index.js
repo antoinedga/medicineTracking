@@ -13,7 +13,7 @@ const eachesStructureSchema = new Schema({
   },
   _id: false,
 });
-eachesStructureSchema.add({contains: [eachesStructureSchema]});
+eachesStructureSchema.add({ contains: [eachesStructureSchema] });
 
 const eachesSchema = new Schema({
   productDefinition: {
@@ -28,9 +28,9 @@ const eachesSchema = new Schema({
     type: Number,
     required: true,
   },
-});
+}, { timestamps: true });
 
-eachesSchema.index( {productDefinition: 1, score: -1} );
+eachesSchema.index({ productDefinition: 1, score: -1 });
 
 exports.Eaches = mongoose.model('eaches', eachesSchema);
 exports.EachesSchema = eachesSchema;

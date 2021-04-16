@@ -15,8 +15,8 @@ const tokenSchema = new mongoose.Schema({
     trim: true,
     required: true,
   },
-});
+}, { timestamps: true });
 
-tokenSchema.index( {user: 1} );
+tokenSchema.index({ user: 1 });
 
 module.exports = mongoose.model('token', tokenSchema);

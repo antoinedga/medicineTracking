@@ -8,8 +8,7 @@ import Dashboard from "./components/dashboard"
 import Password from './components/forgotpassword'
 import ResetPassword from './components/resetPassword'
 import PrivateRoute from './components/privateRouter.js'
-import "bootstrap/dist/css/bootstrap.min.css";
-import "shards-ui/dist/css/shards.min.css"
+
 
 import { Provider } from 'react-redux'
 import EditView from './components/dashboard/pages/orders/EditOrder'

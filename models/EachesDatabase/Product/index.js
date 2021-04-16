@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
-const {ProductDefinitionSchema} = require('../ProductDefinition');
-const {EachesStructureSchema} = require('../Eaches');
-const {AdditionalInfoSchema} = require('../AdditionalInfo');
+const { ProductDefinitionSchema } = require('../ProductDefinition');
+const { EachesStructureSchema } = require('../Eaches');
+const { AdditionalInfoSchema } = require('../AdditionalInfo');
 
 const Schema = mongoose.Schema;
 
@@ -27,7 +27,7 @@ const productSchema = new Schema({
   additionalInfo: {
     type: AdditionalInfoSchema,
   },
-});
+}, { timestamps: true });
 
 exports.Product = mongoose.model('product', productSchema);
 exports.ProductSchema = productSchema;

@@ -13,6 +13,6 @@ const invitationSchema = new mongoose.Schema({
     required: true,
   },
   invitationExpires: Date,
-});
+}, { timestamps: true });
 
 module.exports = mongoose.model('invitationCode', invitationSchema);

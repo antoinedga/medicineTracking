@@ -25,23 +25,23 @@ const productDefinitionSchema = new Schema({
     type: String,
     required: true,
   },
-});
+}, { timestamps: true });
 
-productDefinitionSchema.index({identifiers: 1});
-productDefinitionSchema.index( {
+productDefinitionSchema.index({ identifiers: 1 });
+productDefinitionSchema.index({
   _nGrams: 'text',
   _prefixNGrams: 'text',
 },
-{
-  weights: {
-    _nGrams: 10,
-    _prefixNGrams: 20,
-  },
-  name: 'nGramIndex',
-} );
+  {
+    weights: {
+      _nGrams: 10,
+      _prefixNGrams: 20,
+    },
+    name: 'nGramIndex',
+  });
 
 exports.ProductDefinition = mongoose.model(
-    'productDefinition',
-    productDefinitionSchema,
+  'productDefinition',
+  productDefinitionSchema,
 );
 exports.ProductDefinitionSchema = productDefinitionSchema;

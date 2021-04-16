@@ -12,8 +12,8 @@ const inventorySchema = new Schema({
     default: '',
     unique: true,
   },
-});
+}, { timestamps: true });
 
-inventorySchema.index( {path: 1} );
+inventorySchema.index({ path: 1 });
 
 module.exports = mongoose.model('inventory', inventorySchema);

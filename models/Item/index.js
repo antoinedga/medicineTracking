@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const {ProductSchema} = require('../EachesDatabase');
+const { ProductSchema } = require('../EachesDatabase');
 
 // Item Schema
 const itemSchema = new mongoose.Schema({
@@ -15,7 +15,7 @@ const itemSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-});
+}, { timestamps: true });
 
-itemSchema.index( {path: 1} );
+itemSchema.index({ path: 1 });
 module.exports = mongoose.model('item', itemSchema);

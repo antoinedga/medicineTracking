@@ -6,8 +6,8 @@ import {
     Card, CardHeader, Button, Typography, Switch
 } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux'
-import { createNewRoleConfig, getSubInventory, submitCreateRole } from '../../../../../../store/actions/role.action'
-import constants from '../../../../../../store/actions/actionType/admin'
+import { createNewRoleConfig, getSubInventory, submitCreateRole } from '../../../../../../../../store/actions/role.action'
+import constants from '../../../../../../../../store/actions/actionType/admin'
 import { useForm } from "react-hook-form";
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export default function CreateRole(props) {
+export default function EditRole(props) {
     const classes = useStyles();
     const dispatch = useDispatch();
     const listOfPaths = useSelector(state => state.admin.paths)
@@ -52,13 +52,12 @@ export default function CreateRole(props) {
 
     const formStuff = useForm({ mode: 'onTouched' });
     const { register, errors, handleSubmit, setError, clearErrors, getValues, setValue, reset } = formStuff;
-    var counter = 0;
-
+    let data = props.rowData;
     useEffect(() => {
-        reset({ name: "", path: "" })
+        console.log(data)
         dispatch({ type: constants.ADMIN_LOADING })
         createNewRoleConfig().then(data => {
-            console.log(data)
+            //console.log(data)
             let payload = {
                 paths: data[0],
                 resource: data[1],
@@ -67,11 +66,16 @@ export default function CreateRole(props) {
 
             dispatch({ type: constants.ADMIN_CREATE_CONFIG, payload: payload })
 
+        }).then(() => {
+            reset({ name: data.name, path: data.path })
+            setSelected(data.path)
+            setValue('path', data.path)
+            getPathAndConfig(data)
         })
-    }, [])
+    }, [data])
 
     useEffect(async () => {
-        console.log(selected)
+        // console.log(selected)
         let parse;
         if (selected == "") {
             parse = [];
@@ -80,7 +84,7 @@ export default function CreateRole(props) {
                 return path.startsWith(selected)
             })
         }
-        console.log(parse)
+        //console.log(parse)
         setListToSelect(parse)
     }, [selected])
 
@@ -88,13 +92,12 @@ export default function CreateRole(props) {
         let form = getValues();
         console.log(JSON.stringify(form, null, 1))
         // filters the null section if leaps around the form
-        form.permissions = form.permissions.filter((ele) => { return ele != null })
-        console.log(JSON.stringify(form, null, 1))
+        form.permissions = form.permissions.filter(Boolean)
         for (var i = 0; i < form.permissions.length; i++) {
             let temp = form.permissions[i];
-            temp.actions = temp.actions.filter((ele) => { return ele != null })
+            temp.actions = temp.actions.filter(Boolean)
         }
-        console.log(JSON.stringify(form, null, 1))
+        //  console.log(JSON.stringify(form, null, 1))
         dispatch({ type: constants.ADMIN_LOADING })
         submitCreateRole(form).then(res => {
             console.log(res)
@@ -147,9 +150,9 @@ export default function CreateRole(props) {
                                     labelId="demo-simple-select-label"
                                     id="demo-simple-select"
                                     name="path"
-                                    value={selected}
                                     fullWidth
                                     defaultValue=""
+                                    value={selected}
                                     onChange={(e) => {
                                         setSelected(e.target.value)
                                         setValue('path', e.target.value)
@@ -167,10 +170,9 @@ export default function CreateRole(props) {
                             <TransferList list={listToSelect} setConfig={setListToConfig} configs={listToConfig} />
                         </Grid>
                         <Grid container item xs={12} style={{ maxHeight: '50vh', overflow: 'auto' }}>
-                            {
-                                listToConfig.map((name, index) =>
-                                    configLocation(name, resource, actions, formStuff, index, listToConfig.length)
-                                )}
+                            {listToConfig.map(name =>
+                                configLocation(name, resource, actions, formStuff)
+                            )}
                         </Grid>
                     </Grid>
                     <Button variant="outlined" color="primary" type="submit">Submit</Button>
@@ -195,7 +197,7 @@ function Alert(props) {
 }
 
 
-function configLocation(title, resource, actions, formMethod, base, length) {
+function configLocation(title, resource, actions, formMethod) {
     const { register, errors, handleSubmit, setError, clearErrors, getValues, setValue, watch, unregister } = formMethod;
 
     return (
@@ -211,53 +213,49 @@ function configLocation(title, resource, actions, formMethod, base, length) {
 
                     </Grid>
                     {
-                        actions.map((action, actionIndex) => {
+                        actions.map((action, actionIndex) =>
+                            <>
+                                <Grid item xs={6}>
+                                    <FormControlLabel
+                                        control={
+                                            <Checkbox
+                                                name={`permissions[${resIndex}].actions[${actionIndex}].action`}
+                                                color="primary"
+                                                onChange={(e) => {
+                                                    if (e.target.checked) {
+                                                        register(`permissions[${resIndex}].actions[${actionIndex}].action`)
+                                                        setValue(`permissions[${resIndex}].actions[${actionIndex}].action`, action)
+                                                        register(`permissions[${resIndex}].resource`)
+                                                        setValue(`permissions[${resIndex}].resource`, res)
+                                                        register(`permissions[${resIndex}].path`)
+                                                        setValue(`permissions[${resIndex}].path`, title)
+                                                    } else {
+                                                        unregister(`permissions[${resIndex}].actions[${actionIndex}].action`)
+                                                        unregister(`permissions[${resIndex}].actions[${actionIndex}].recursive`)
+                                                    }
+                                                    console.log(e.target.checked)
 
-                            return (
-                                <>
-                                    <Grid item xs={6}>
-                                        <FormControlLabel
-                                            control={
-                                                <Checkbox
-                                                    name={`permissions[${resIndex}].actions[${actionIndex}].action`}
-                                                    color="primary"
-                                                    onChange={(e) => {
-                                                        if (e.target.checked) {
-                                                            register(`permissions[${resIndex + (length * base)}].actions[${actionIndex}].action`)
-                                                            setValue(`permissions[${resIndex + (length * base)}].actions[${actionIndex}].action`, action)
-                                                            register(`permissions[${resIndex + (length * base)}].resource`)
-                                                            setValue(`permissions[${resIndex + (length * base)}].resource`, res)
-                                                            register(`permissions[${resIndex + (length * base)}].path`)
-                                                            setValue(`permissions[${resIndex + (length * base)}].path`, title)
-                                                        } else {
-                                                            unregister(`permissions[${resIndex + (length * base)}].actions[${actionIndex}].action`)
-                                                            unregister(`permissions[${resIndex + (length * base)}].actions[${actionIndex}].recursive`)
-                                                        }
-                                                        console.log(e.target.checked)
-
-                                                    }}
-                                                    value={action}
-                                                    type="checkBox"
-                                                />
-                                            }
-                                            label={action}
-                                        />
-                                    </Grid>
-                                    <Grid item xs={6}>
-                                        {
-                                            (!!watch(`permissions[${resIndex + (length * base)}].actions[${actionIndex}].action`)) ? (<FormControlLabel
-                                                control={<Switch defaultValue="false" />}
-                                                label="Recursive"
-                                                name={`permissions[${resIndex + (length * base)}].actions[${actionIndex}].recursive`}
-                                                inputRef={register}
-
-                                            />) : null
+                                                }}
+                                                value={action}
+                                                type="checkBox"
+                                            />
                                         }
+                                        label={action}
+                                    />
+                                </Grid>
+                                <Grid item xs={6}>
+                                    {
+                                        (!!watch(`permissions[${resIndex}].actions[${actionIndex}].action`)) ? (<FormControlLabel
+                                            control={<Switch />}
+                                            label="Recursive"
+                                            name={`permissions[${resIndex}].actions[${actionIndex}].recursive`}
+                                            inputRef={register}
 
-                                    </Grid>
-                                </>
-                            )
-                        }
+                                        />) : null
+                                    }
+
+                                </Grid>
+                            </>
                         )
                     }
                 </Grid>
@@ -323,13 +321,10 @@ function TransferList(props) {
     };
 
     useEffect(() => {
-        console.log("called")
         props.setConfig(right)
-        console.log(props.configs)
     }, [right])
 
     useEffect(() => {
-        console.log(props.list)
         setList(props.list)
         if (props.list != undefined && Object.is(props.list, list)) {
             setLeft(props.list)
@@ -413,4 +408,16 @@ function TransferList(props) {
             <Grid item>{customList('Selected', right)}</Grid>
         </Grid>
     );
+}
+
+function getPathAndConfig(rowData) {
+
+    let permis = rowData.permissions;
+    let permissionResource = new Set()
+
+    permis?.forEach(element => {
+        permissionResource.add(element.path)
+    });
+
+    console.log(permissionResource)
 }

@@ -13,8 +13,8 @@ const configSchema = new Schema({
     default: '',
     unique: true,
   },
-});
+}, { timestamps: true });
 
-configSchema.index( {name: 1} );
+configSchema.index({ name: 1 });
 
 module.exports = mongoose.model('config', configSchema);

@@ -118,7 +118,7 @@ export default function Orders(props) {
                         {
                             title: 'Order Date', field: 'orderDate',
                             render: rowData => {
-                                return <Moment format="MMM-D-YYYY h:mm a" >
+                                return <Moment format="MMM-D-YYYY hh:mm a" >
                                     {
                                         rowData.orderDate
                                     }

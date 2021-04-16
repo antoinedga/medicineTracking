@@ -10,6 +10,7 @@ import constants from '../../../../../../store/actions/actionType/admin'
 import { getAllRoles } from '../../../../../../store/actions/role.action'
 import DeleteDialog from './deleteDialogRole'
 import EditDialogRole from './editDialogRole'
+import Moment from 'react-moment';
 
 export default function RoleManagement(props) {
     const dispatch = useDispatch();
@@ -66,7 +67,8 @@ export default function RoleManagement(props) {
                         title: 'Path', field: 'path',
                     },
                     {
-                        title: 'Created', field: 'created',
+                        title: 'Created', field: 'createdAt',
+                        render: rowData => <Moment date={rowData.createdAt} format="MMM-D-YYYY hh:mm a" />
                     }
                 ]}
                 data={data}

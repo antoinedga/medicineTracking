@@ -30,9 +30,9 @@ const RoleSchema = new Schema({
     }],
     _id: false,
   },
-});
+}, { timestamps: true });
 
-RoleSchema.index( {path: 1} );
-RoleSchema.index( {name: 1} );
+RoleSchema.index({ path: 1 });
+RoleSchema.index({ name: 1 });
 
 module.exports = mongoose.model('role', RoleSchema);

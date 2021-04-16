@@ -26,10 +26,10 @@ const additionalInfoSchema = new Schema({
     type: Number,
     required: true,
   },
-});
+}, { timestamps: true });
 
 exports.AdditionalInfo = mongoose.model(
-    'additionalInfo',
-    additionalInfoSchema,
+  'additionalInfo',
+  additionalInfoSchema,
 );
 exports.AdditionalInfoSchema = additionalInfoSchema;
