@@ -113,10 +113,18 @@ exports.updateByID = (req, res) => {
 
 exports.updateLogByID = (req, res) => {
   const obj = {};
-  const msgs = [{message: req.body.message}];
+  const msgs = [];
+  if (req.body.message) {
+    obj.currentLocation = req.body.currentLocation;
+    msgs.push({message: req.body.message});
+  }
   if (req.body.currentLocation) {
     obj.currentLocation = req.body.currentLocation;
     msgs.push({message: `Arrived at - ${req.body.currentLocation}`});
+  }
+  if (req.body.status) {
+    obj.status = req.body.status;
+    msgs.push({message: `Status updated to - ${req.body.status}`});
   }
   Order
       .findOneAndUpdate(
@@ -138,10 +146,18 @@ exports.updateLogByID = (req, res) => {
 
 exports.updateLogByOrderNumber = (req, res) => {
   const obj = {};
-  const msgs = [{message: req.body.message}];
+  const msgs = [];
+  if (req.body.message) {
+    obj.currentLocation = req.body.currentLocation;
+    msgs.push({message: req.body.message});
+  }
   if (req.body.currentLocation) {
     obj.currentLocation = req.body.currentLocation;
     msgs.push({message: `Arrived at - ${req.body.currentLocation}`});
+  }
+  if (req.body.status) {
+    obj.status = req.body.status;
+    msgs.push({message: `Status updated to - ${req.body.status}`});
   }
   Order
       .findOneAndUpdate(
