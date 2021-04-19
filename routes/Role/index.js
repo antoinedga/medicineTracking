@@ -32,6 +32,11 @@ module.exports = () => {
           requireAccess(action.READ, resource.ROLE),
           role.findByID,
       )
+      .put(
+          requireLogin,
+          requireAccess(action.UPDATE, resource.ROLE),
+          role.updateByID,
+      )
       .delete(
           requireLogin,
           requireAccess(action.DELETE, resource.ROLE),
