@@ -1,11 +1,11 @@
-const { Role } = require('../../models');
+const {Role} = require('../../models');
 const User = require('../../models/user');
-const { callback } = require('../Callbacks');
+const {callback} = require('../Callbacks');
 const utils = require('../utils');
 const config = require('../../config');
-const { action } = require('./enum/actions');
-const { resource } = require('./enum/resources');
-const { objectToRolls, rollsToObjects } = require('../utils');
+const {action} = require('./enum/actions');
+const {resource} = require('./enum/resources');
+const {objectToRolls, rollsToObjects} = require('../utils');
 
 /**
  * creates and admin with access to all actions
@@ -16,29 +16,29 @@ const { objectToRolls, rollsToObjects } = require('../utils');
  */
 function createAdmin(name, path, email, password) {
   Role.findOneAndUpdate(
-    { role: `${name}:${path}` },
-    utils.createAdminRole(name, path),
-    {
-      upsert: true,
-      setDefaultsOnInsert: true,
-      useFindAndModify: false,
-      new: true,
-    },
-  ).exec((err, doc) => {
-    if (err) return console.log(err);
-    User.findOneAndUpdate(
-      { _id: '111111111111111111111111' },
-      {
-        name,
-        email,
-        password,
-        roles: [doc._id],
-      },
+      {role: `${name}:${path}`},
+      utils.createAdminRole(name, path),
       {
         upsert: true,
         setDefaultsOnInsert: true,
         useFindAndModify: false,
+        new: true,
       },
+  ).exec((err, doc) => {
+    if (err) return console.log(err);
+    User.findOneAndUpdate(
+        {_id: '111111111111111111111111'},
+        {
+          name,
+          email,
+          password,
+          roles: [doc._id],
+        },
+        {
+          upsert: true,
+          setDefaultsOnInsert: true,
+          useFindAndModify: false,
+        },
     ).exec((err, doc) => {
       if (err) return console.log(err);
       console.log('successfully created an admin');
@@ -52,7 +52,7 @@ exports.getAll = (req, res) => {
   if (process.env.NODE_ENV === config.dev) {
     Role.find({}, callback(req, res, 'get all roles'));
   } else {
-    return res.status(401).json({ message: 'Unauthorized user!' });
+    return res.status(401).json({message: 'Unauthorized user!'});
   }
 };
 /*
@@ -74,88 +74,100 @@ exports.grantUserRole = (req, res) => {
   grant = req.body;
 
   User
-    .updateMany(
-      { _id: { $in: utils.toArray(grant.user) } },
-      { $addToSet: { roles: utils.toArray(grant.role) } },
-      callback(req, res, 'grant role(s)'),
-    );
+      .updateMany(
+          {_id: {$in: utils.toArray(grant.user)}},
+          {$addToSet: {roles: utils.toArray(grant.role)}},
+          callback(req, res, 'grant role(s)'),
+      );
 };
 
 
 exports.findRecursivelyByPath = (req, res) => {
   Role
-    .find({ path: new RegExp('^' + req.body.path) })
-    .exec(callback(req, res, 'find roles by path', rollsToObjects));
+      .find({path: new RegExp('^' + req.body.path)})
+      .exec(callback(req, res, 'find roles by path', rollsToObjects));
 };
 
 exports.findByPath = (req, res) => {
   Role
-    .find({ path: new RegExp('^' + req.body.path + '$') })
-    .exec(callback(req, res, 'find roles by path', rollsToObjects));
+      .find({path: new RegExp('^' + req.body.path + '$')})
+      .exec(callback(req, res, 'find roles by path', rollsToObjects));
 };
 
 exports.findByID = (req, res) => {
   Role
-    .findById(req.body._id)
-    .exec(callback(req, res, 'find role by _id', rollsToObjects));
+      .findById(req.body._id)
+      .exec(callback(req, res, 'find role by _id', rollsToObjects));
 };
 
 exports.deleteRecursivelyByPath = (req, res) => {
   Role
-    .deleteMany({ path: new RegExp('^' + req.body.path) })
-    .exec(callback(req, res, 'delete roles by path'));
+      .deleteMany({path: new RegExp('^' + req.body.path)})
+      .exec(callback(req, res, 'delete roles by path'));
 };
 
 exports.deleteByPath = (req, res) => {
   Role
-    .deleteMany({ path: new RegExp('^' + req.body.path + '$') })
-    .exec(callback(req, res, 'delete roles by path'));
+      .deleteMany({path: new RegExp('^' + req.body.path + '$')})
+      .exec(callback(req, res, 'delete roles by path'));
 };
 
 exports.deleteByID = (req, res) => {
   Role
-    .deleteOne({ _id: req.body._id })
-    .then()
-    .exec(callback(req, res, 'delete role by _id'));
+      .deleteOne({_id: req.body._id})
+      .exec(callback(req, res, 'delete role by _id'));
 };
 
 exports.test = (req, res) => {
   console.log(req);
-  return res.status(200).json({ message: 'Success!' });
+  return res.status(200).json({message: 'Success!'});
 };
 
 exports.getUsersWithRoles = (req, res) => {
   User
-    .find({}, { password: 0 })
-    .populate('roles', 'role path')
-    .exec(callback(req, res, 'get users with roles'));
+      .find({}, {password: 0})
+      .populate('roles', '_id role')
+      .then((doc) => {
+        doc?.forEach((user) => {
+          user?.roles?.forEach((role, index) => {
+            const [name, path] = role.role.split(':');
+            user.roles[index] = {
+              _id: role._id,
+              name,
+              path,
+            };
+          });
+        });
+        callback(req, res, 'get users with roles')(undefined, doc);
+      })
+      .catch(callback(req, res, 'get users with roles'));
 };
 
 
 exports.getUserWithRolls = (userId) => {
   User
-    .findById(userId).populate('roles')
-    .then((doc) => {
-      return doc;
-    })
-    .catch(() => {
-      return null;
-    });
+      .findById(userId).populate('roles')
+      .then((doc) => {
+        return doc;
+      })
+      .catch(() => {
+        return null;
+      });
 };
 
 
 exports.getActions = (req, res) => {
   callback(
-    req,
-    res,
-    `get actions ${req.params.name}`,
+      req,
+      res,
+      `get actions ${req.params.name}`,
   )(null, Object.values(action));
 };
 
 exports.getResources = (req, res) => {
   callback(
-    req,
-    res,
-    `get actions ${req.params.name}`,
+      req,
+      res,
+      `get actions ${req.params.name}`,
   )(null, Object.values(resource));
 };
