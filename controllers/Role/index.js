@@ -100,6 +100,25 @@ exports.findByID = (req, res) => {
       .exec(callback(req, res, 'find role by _id', rollsToObjects));
 };
 
+exports.updateByID = (req, res) => {
+  roles = objectToRolls(req.body);
+
+  Role.findOneAndUpdate(
+      {
+        _id: req.body?._id,
+      },
+      {
+        $set: roles,
+      },
+      {
+        setDefaultsOnInsert: true,
+        useFindAndModify: false,
+        new: true,
+      },
+  )
+      .exec(callback(req, res, 'update role by id'));
+};
+
 exports.deleteRecursivelyByPath = (req, res) => {
   Role
       .deleteMany({path: new RegExp('^' + req.body.path)})
