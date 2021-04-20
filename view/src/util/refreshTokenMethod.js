@@ -11,25 +11,27 @@ export const refreshToken = async (dispatch) => {
 
     if (token != null || token != undefined) {
         let decoded = jwt.decode(token)
-        let expire = new Date(decoded.exp * 1000);
-        console.log("expires " + expire)
-        console.log(new Date(Date.now()))
-        if (Date.now() >= expire) {
+        let expire = new Date(decoded.exp);
+        if (Date.now() >= expire * 1000) {
             console.log("Token has Expired")
 
             return axios.post("/api/user/token", { refreshToken: refreshToken }).then(data => {
-                console.log('called token')
+                console.log(data.data)
                 dispatch(
                     {
                         type: "REFRESH_TOKEN", payload: {
-                            token: data.Content
+                            token: data.data.content
                         }
                     }
                 )
+                return Promise.resolve(data)
+            }).catch(err => {
+                console.log(err.response)
+                return Promise.reject(err)
             })
 
         }
     } else {
-        return Promise.resolve();
+        return Promise.resolve(true);
     }
 }

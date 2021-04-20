@@ -5,7 +5,7 @@ var store = require("../store");
 
 export const getAllPath = async (dispatch) => {
 
-    await refreshToken(dispatch)
+    let temp = await refreshToken(dispatch)
 
     let state = store.state.getState();
     let bodyParam = {
@@ -20,11 +20,12 @@ export const getAllPath = async (dispatch) => {
     return axios.post("http://localhost:8080/api/inventory/complete_paths", bodyParam, config)
         .then((res) => res.data).
         then(data => {
+            console.log(data)
             dispatch({ type: constant.INVENT_GET_ALL, payload: { location: data.content } })
             return Promise.resolve()
         }).catch((error) => {
             // 400+ errors normally if user doesnt exist
-            //console.log(error.response)
+            console.log(error.response)
             let msg = error.response?.data.message;
             dispatch({ type: constant.INVENT_ERROR, payload: { errorMsg: msg } })
             return Promise.reject()
