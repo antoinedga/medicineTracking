@@ -8,13 +8,40 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import { TextField, FormHelperText, CircularProgress, Grid } from '@material-ui/core'
+import { makeStyles } from '@material-ui/core/styles';
 import { useForm } from "react-hook-form";
 import { inviteUser } from '../../../../../../store/actions/userManagement'
 function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
+const useStyles = makeStyles((theme) => ({
+    root: {
+        flexGrow: 1,
+        backgroundColor: theme.palette.background.paper,
+        paddingTop: 10
+    }, backdrop: {
+        zIndex: theme.zIndex.drawer + 1,
+        color: '#fff',
+    },
+    buttonFont: {
+        fontSize: '.725rem',
+        textAlign: "center",
+        '@media (min-width:600px)': {
+            fontSize: '.650rem',
+        },
+
+        margin: theme.spacing(1),
+        height: '2.2rem'
+    },
+    buttonRow: {
+        marginBottom: 10,
+    },
+}));
+
+
 export default function InviteDialog(props) {
+    const classes = useStyles();
     const [open, setOpen] = React.useState(false);
     const [openAlert, setAlert] = React.useState(false);
     const [success, setSuccess] = React.useState(false);
@@ -60,7 +87,7 @@ export default function InviteDialog(props) {
 
     return (
         <>
-            <Button variant="outlined" color="primary" onClick={handleClickOpen}>
+            <Button className={classes.buttonFont} variant="outlined" color="primary" onClick={handleClickOpen}>
                 Invite New User
             </Button>
             <Dialog

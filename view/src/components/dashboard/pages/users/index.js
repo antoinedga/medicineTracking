@@ -33,7 +33,10 @@ const useStyles = makeStyles((theme) => ({
 
         margin: theme.spacing(1),
         height: '2.2rem'
-    }
+    },
+    buttonRow: {
+        marginBottom: 10,
+    },
 }));
 
 
@@ -54,13 +57,15 @@ export default function Users(props) {
                 direction="row"
                 alignItems="center"
                 justify="flex-start"
-                padding={2}>
-                <Grid container items>
-                    <Grid items xs={2}>
+                padding={2}
+                className={classes.buttonRow}
+            >
+                <Grid container item>
+                    <Grid item xs={2}>
                         <InviteBtn />
                     </Grid>
-                    <Grid items xs={2}>
-                        <Button variant="outlined" color="primary" onClick={(event) => setValue(3)}>New Roles</Button>
+                    <Grid item xs={2}>
+                        <Button className={classes.buttonFont} variant="outlined" color="primary" onClick={(event) => setValue(3)}>New Roles</Button>
                     </Grid>
                 </Grid>
             </Grid>
