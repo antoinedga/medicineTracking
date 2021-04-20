@@ -23,8 +23,10 @@ import { Redirect, Link } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import constant from '../../store/actions/actionType/login'
 import { loginPayload } from '../../store/actions/login.action'
+import { refreshToken } from '../../util/refreshTokenMethod'
 import Cookies from 'universal-cookie';
 const cookies = new Cookies();
+var jwt = require('jsonwebtoken');
 
 
 const useStyles = makeStyles((theme) => ({
@@ -115,11 +117,15 @@ export default function SignIn(props) {
 
     useEffect(() => {
         if (cookies.get("token") != "logged out" && cookies.get("token") != null && cookies.get("token") != undefined) {
-            dispatch({ type: constant.LOGIN_SUCCESS, payload: { token: cookies.get('token'), refresh: cookies.get("reFreshToken"), name: cookies.get("name") } })
+
+            dispatch({ type: constant.LOGIN_SUCCESS, payload: { token: cookies.get('token'), refresh: cookies.get("refreshToken"), name: cookies.get("name") } })
+            refreshToken(dispatch)
         }
+
         if (props.location.state?.msg) {
             setOpen(true)
         }
+
         if (localStorage.getItem("credential") != null && localStorage.getItem("credential") != "") {
             let credential = localStorage.getItem("credential");
             credential = JSON.parse(credential)

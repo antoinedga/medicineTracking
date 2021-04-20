@@ -1,8 +1,13 @@
 // import constant from './actionType/register'
+import { refreshToken } from '../../util/refreshTokenMethod';
 import axios from 'axios'
 var store = require("../store");
 
-export const getAllRoles = async () => {
+
+export const getAllRoles = async (dispatch) => {
+
+    await refreshToken(dispatch)
+
     let state = store.state.getState();
     let body = {
         path: state.inventory.selected,
@@ -25,7 +30,10 @@ export const getAllRoles = async () => {
 }
 
 
-export const deleteRole = async (roleID) => {
+export const deleteRole = async (dispatch, roleID) => {
+
+    await refreshToken(dispatch)
+
     let state = store.state.getState();
 
     return axios.delete(`http://localhost:8080/api/role/by_id`, {
@@ -44,7 +52,10 @@ export const deleteRole = async (roleID) => {
         })
 }
 
-export const createNewRoleConfig = async () => {
+export const createNewRoleConfig = async (dispatch) => {
+
+    await refreshToken(dispatch)
+
     let state = store.state.getState();
     let bodyParam = {
         action: "create",
@@ -64,7 +75,9 @@ export const createNewRoleConfig = async () => {
     })
 }
 
-export const getSubInventory = async (path) => {
+export const getSubInventory = async (dispatch, path) => {
+    await refreshToken(dispatch)
+
     let state = store.state.getState();
     let body = {
         path: path,
@@ -96,7 +109,9 @@ export const getSubInventory = async (path) => {
         })
 }
 
-export const submitCreateRole = async (roleData) => {
+export const submitCreateRole = async (dispatch, roleData) => {
+    await refreshToken(dispatch)
+
     let state = store.state.getState();
     let body = roleData
 
@@ -107,6 +122,29 @@ export const submitCreateRole = async (roleData) => {
         }
     }
     return axios.post(`http://localhost:8080/api/role`, body, config)
+        .then((res) => res.data).
+        then(data => {
+            console.log(data)
+            return Promise.resolve(data)
+        }).catch(error => {
+            console.log(error)
+            return Promise.reject(error)
+        })
+}
+
+export const updateRole = async (dispatch, roleData) => {
+    await refreshToken(dispatch)
+
+    let state = store.state.getState();
+    let body = roleData
+    console.log(roleData)
+    let config = {
+        headers: {
+            'Authorization':
+                `Bearer ${state.login.token}`,
+        }
+    }
+    return axios.put(`http://localhost:8080/api/role/by_id`, body, config)
         .then((res) => res.data).
         then(data => {
             console.log(data)

@@ -8,7 +8,6 @@ const initialState = {
     error: "",
     token: "",
     refresh: "",
-    name: ""
 }
 
 export default function loginReducer(state = initialState, action) {

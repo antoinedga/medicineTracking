@@ -1,8 +1,12 @@
 import constant from './actionType/inventory'
 import axios from 'axios'
+import { refreshToken } from '../../util/refreshTokenMethod';
 var store = require("../store");
 
-export const getAllPath = (dispatch) => {
+export const getAllPath = async (dispatch) => {
+
+    await refreshToken(dispatch)
+
     let state = store.state.getState();
     let bodyParam = {
         resource: "inventory",
@@ -13,19 +17,23 @@ export const getAllPath = (dispatch) => {
     };
     // console.log("CONFIGL " + config.headers.Authorization)
 
-    axios.post("http://localhost:8080/api/inventory/complete_paths", bodyParam, config)
+    return axios.post("http://localhost:8080/api/inventory/complete_paths", bodyParam, config)
         .then((res) => res.data).
         then(data => {
             dispatch({ type: constant.INVENT_GET_ALL, payload: { location: data.content } })
+            return Promise.resolve()
         }).catch((error) => {
             // 400+ errors normally if user doesnt exist
             //console.log(error.response)
             let msg = error.response?.data.message;
             dispatch({ type: constant.INVENT_ERROR, payload: { errorMsg: msg } })
+            return Promise.reject()
         })
 }
 
 export async function addNewInventory(dispatch, newPath) {
+    await refreshToken(dispatch)
+
     let state = store.state.getState();
     let bodyParam = {
         path: newPath.path + "/" + newPath.name

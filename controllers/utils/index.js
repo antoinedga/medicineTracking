@@ -1,8 +1,8 @@
 
 const config = require('../../config');
-const {User, Inventory, Token} = require('../../models');
-const {action} = require('../Role/enum/actions');
-const {resource} = require('../Role/enum/resources');
+const { User, Inventory, Token } = require('../../models');
+const { action } = require('../Role/enum/actions');
+const { resource } = require('../Role/enum/resources');
 const JWT = require('jsonwebtoken');
 
 /**
@@ -27,8 +27,8 @@ function flattenDBRoles(dbRoles) {
   dbRoles.forEach((role) => {
     role.permissions.forEach((permission) => {
       _grants.push(Object.assign(
-          {role: role.role, path: role.path},
-          permission,
+        { role: role.role, path: role.path },
+        permission,
       ));
     });
   });
@@ -44,7 +44,7 @@ function grantsToRolls(grants) {
   const _roles = [];
   Object.keys(grants).forEach((role) => {
     let path = role.split(':')[1];
-    const _role = {role: role, path: path, permissions: []};
+    const _role = { role: role, path: path, permissions: [] };
 
     Object.keys(grants[role]).forEach((resource) => {
       Object.keys(grants[role][resource]).forEach((action) => {
@@ -76,7 +76,7 @@ function objectToRolls(grants) {
       path: role.path,
       permissions: [],
     };
-
+    console.log("*******", JSON.stringify(grants, null, 1))
     role.permissions.forEach((resourceObj) => {
       const resource = `${resourceObj.resource}:${resourceObj.path}`;
       resourceObj.actions.forEach((actionObj) => {
@@ -123,11 +123,11 @@ function rollsToObjects(roles) {
         };
       }
       tmpPerm[permission.resource].actions.push(
-          {
-            action: action[0],
-            recursive: (action[1] == 'all') ? true : false,
-            attributes: permission.attributes,
-          },
+        {
+          action: action[0],
+          recursive: (action[1] == 'all') ? true : false,
+          attributes: permission.attributes,
+        },
       );
     });
 
@@ -192,39 +192,39 @@ function getPaths(_query, action, resource, regex = false) {
 async function getPathsObject(_query, action, resource) {
   const paths = getPaths(_query, action, resource, true);
   return await Inventory
-      .find({
-        'path': {
-          '$in': paths,
-        },
-      })
-      .then((invs) => {
-        const paths = invs.map((inv) => {
-          return inv.path;
-        });
-
-        const result = {};
-
-        paths.forEach((path) => {
-          let tmp = result;
-          path = path.split('/');
-          const len = path.length;
-          path.forEach((name, idx) => {
-            if (name) {
-              if (tmp[name] === undefined) {
-                tmp[name] = {can: false, next: {}};
-              } if (idx == len - 1) {
-                tmp[name].can = true;
-              }
-              tmp = tmp[name].next;
-            };
-          });
-        });
-        return result;
-      })
-      .catch((err) => {
-        console.log(err);
-        return null;
+    .find({
+      'path': {
+        '$in': paths,
+      },
+    })
+    .then((invs) => {
+      const paths = invs.map((inv) => {
+        return inv.path;
       });
+
+      const result = {};
+
+      paths.forEach((path) => {
+        let tmp = result;
+        path = path.split('/');
+        const len = path.length;
+        path.forEach((name, idx) => {
+          if (name) {
+            if (tmp[name] === undefined) {
+              tmp[name] = { can: false, next: {} };
+            } if (idx == len - 1) {
+              tmp[name].can = true;
+            }
+            tmp = tmp[name].next;
+          };
+        });
+      });
+      return result;
+    })
+    .catch((err) => {
+      console.log(err);
+      return null;
+    });
 }
 
 /**
@@ -236,21 +236,21 @@ async function getPathsObject(_query, action, resource) {
 async function getCompletePaths(_query, action, resource) {
   const paths = getPaths(_query, action, resource, true);
   return await Inventory
-      .find({
-        'path': {
-          '$in': paths,
-        },
-      })
-      .then((invs) => {
-        const paths = invs.map((inv) => {
-          return inv.path;
-        });
-        return paths;
-      })
-      .catch((err) => {
-        console.log(err);
-        return null;
+    .find({
+      'path': {
+        '$in': paths,
+      },
+    })
+    .then((invs) => {
+      const paths = invs.map((inv) => {
+        return inv.path;
       });
+      return paths;
+    })
+    .catch((err) => {
+      console.log(err);
+      return null;
+    });
 }
 
 /**
@@ -300,13 +300,13 @@ function requireAccess(action, resource) {
       if (doc.path && !can(req.auth.access, action, resource, doc.path)) {
         err = true;
         return res
-            .status(401)
-            .json({
-              response: false,
-              message:
+          .status(401)
+          .json({
+            response: false,
+            message:
               `Unauthorized: cannot ${action} ${resource} at ${doc.path}`,
-              content: null,
-            });
+            content: null,
+          });
       }
     });
     if (err) return;
@@ -353,26 +353,26 @@ function createAdminRole(name, path) {
  */
 async function createToken(userId) {
   const res = User
-      .findById(userId).populate('roles')
-      .then((user) => {
-        const access = combine(user.roles);
+    .findById(userId).populate('roles')
+    .then((user) => {
+      const access = combine(user.roles);
 
-        const token = JWT.sign(
-            {
-              user: {
-                _id: user._id,
-                name: user.name,
-              },
-              access,
-            },
-            config.secrets.jwtToken,
-            {expiresIn: config.exp.jwtToken});
+      const token = JWT.sign(
+        {
+          user: {
+            _id: user._id,
+            name: user.name,
+          },
+          access,
+        },
+        config.secrets.jwtToken,
+        { expiresIn: config.exp.jwtToken });
 
-        return token;
-      })
-      .catch(() => {
-        return null;
-      });
+      return token;
+    })
+    .catch(() => {
+      return null;
+    });
   return res;
 }
 
@@ -383,41 +383,41 @@ async function createToken(userId) {
  */
 async function createRefreshToken(userId) {
   const res = createToken(userId)
-      .then((token) => {
-        if (token == undefined) return null;
+    .then((token) => {
+      if (token == undefined) return null;
 
-        const refreshToken = JWT.sign(
-            {
-              user: {
-                _id: userId,
-              },
-            },
-            config.secrets.jwtRefreshToken,
-            {expiresIn: config.exp.jwtRefreshToken});
+      const refreshToken = JWT.sign(
+        {
+          user: {
+            _id: userId,
+          },
+        },
+        config.secrets.jwtRefreshToken,
+        { expiresIn: config.exp.jwtRefreshToken });
 
-        return Token
-            .findOneAndUpdate(
-                {user: userId},
-                {
-                  user: userId,
-                  refreshToken: refreshToken,
-                },
-                {
-                  upsert: true,
-                  setDefaultsOnInsert: true,
-                  useFindAndModify: false,
-                },
-            )
-            .then((doc) => {
-              return {token, refreshToken};
-            })
-            .catch(() => {
-              return null;
-            });
-      })
-      .catch(() => {
-        return null;
-      });
+      return Token
+        .findOneAndUpdate(
+          { user: userId },
+          {
+            user: userId,
+            refreshToken: refreshToken,
+          },
+          {
+            upsert: true,
+            setDefaultsOnInsert: true,
+            useFindAndModify: false,
+          },
+        )
+        .then((doc) => {
+          return { token, refreshToken };
+        })
+        .catch(() => {
+          return null;
+        });
+    })
+    .catch(() => {
+      return null;
+    });
   return res;
 }
 
@@ -428,26 +428,26 @@ async function createRefreshToken(userId) {
  */
 async function verifyRefreshToken(refreshToken) {
   return JWT.verify(
-      refreshToken,
-      config.secrets.jwtRefreshToken,
-      (err, decode) => {
-        return Token
-            .findOne({user: decode?.user?._id})
-            .then((doc) => {
-              if (doc?.refreshToken != refreshToken) return null;
+    refreshToken,
+    config.secrets.jwtRefreshToken,
+    (err, decode) => {
+      return Token
+        .findOne({ user: decode?.user?._id })
+        .then((doc) => {
+          if (doc?.refreshToken != refreshToken) return null;
 
-              return createToken(decode.user._id)
-                  .then((token) => {
-                    return token;
-                  })
-                  .catch((err) => {
-                    return null;
-                  });
+          return createToken(decode.user._id)
+            .then((token) => {
+              return token;
             })
             .catch((err) => {
               return null;
             });
-      });
+        })
+        .catch((err) => {
+          return null;
+        });
+    });
 }
 module.exports = {
   ...require('./checks'),

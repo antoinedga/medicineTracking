@@ -1,12 +1,14 @@
 import axios from 'axios'
 import constants from './actionType/order';
 import fs from 'fs'
-
+import { refreshToken } from '../../util/refreshTokenMethod';
 var store = require("../store");
 
-export const getOrders = (dispatch) => {
-    let state = store.state.getState();
+export const getOrders = async (dispatch) => {
 
+    await refreshToken(dispatch)
+
+    let state = store.state.getState();
     let config = {
         headers: { Authorization: `Bearer ${state.login.token}` }
     };
@@ -27,6 +29,9 @@ export const getOrders = (dispatch) => {
 }
 
 export const deleteOrder = async (dispatch, orderId) => {
+
+    await refreshToken(dispatch)
+
     let state = store.state.getState();
 
     let config = {
@@ -57,11 +62,13 @@ export const deleteOrder = async (dispatch, orderId) => {
 }
 
 export const getOrderByID = async (dispatch, orderId) => {
+
+    await refreshToken(dispatch)
+
     let state = store.state.getState();
-    const token =  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjExMTExMTExMTExMTExMTExMTExMTExMSIsIm5hbWUiOiJhZG1pbiJ9LCJhY2Nlc3MiOnsiY29uZmlnIjp7ImNyZWF0ZSI6eyIvIjp7fX0sInJlYWQiOnsiLyI6e319LCJ1cGRhdGUiOnsiLyI6e319LCJkZWxldGUiOnsiLyI6e319LCJncmFudCI6eyIvIjp7fX19LCJpbnZpdGF0aW9uIjp7ImNyZWF0ZSI6eyIvIjp7fX0sInJlYWQiOnsiLyI6e319LCJ1cGRhdGUiOnsiLyI6e319LCJkZWxldGUiOnsiLyI6e319LCJncmFudCI6eyIvIjp7fX19LCJpbnZlbnRvcnkiOnsiY3JlYXRlIjp7Ii8iOnt9fSwicmVhZCI6eyIvIjp7fX0sInVwZGF0ZSI6eyIvIjp7fX0sImRlbGV0ZSI6eyIvIjp7fX0sImdyYW50Ijp7Ii8iOnt9fX0sIml0ZW0iOnsiY3JlYXRlIjp7Ii8iOnt9fSwicmVhZCI6eyIvIjp7fX0sInVwZGF0ZSI6eyIvIjp7fX0sImRlbGV0ZSI6eyIvIjp7fX0sImdyYW50Ijp7Ii8iOnt9fX0sIm9yZGVyIjp7ImNyZWF0ZSI6eyIvIjp7fX0sInJlYWQiOnsiLyI6e319LCJ1cGRhdGUiOnsiLyI6e319LCJkZWxldGUiOnsiLyI6e319LCJncmFudCI6eyIvIjp7fX19LCJwcm9kdWN0Ijp7ImNyZWF0ZSI6eyIvIjp7fX0sInJlYWQiOnsiLyI6e319LCJ1cGRhdGUiOnsiLyI6e319LCJkZWxldGUiOnsiLyI6e319LCJncmFudCI6eyIvIjp7fX19LCJyb2xlIjp7ImNyZWF0ZSI6eyIvIjp7fX0sInJlYWQiOnsiLyI6e319LCJ1cGRhdGUiOnsiLyI6e319LCJkZWxldGUiOnsiLyI6e319LCJncmFudCI6eyIvIjp7fX19LCJlYWNoZXMiOnsiY3JlYXRlIjp7Ii8iOnt9fSwicmVhZCI6eyIvIjp7fX0sInVwZGF0ZSI6eyIvIjp7fX0sImRlbGV0ZSI6eyIvIjp7fX0sImdyYW50Ijp7Ii8iOnt9fX19LCJpYXQiOjE2MTgzNzAzNDUsImV4cCI6MTYyMDk2MjM0NX0.p7_GqcgteQlaS1Eed6HgxQEywGxEyjizJKe-L7ePdyw"
     let config = {
-        headers: { Authorization: `Bearer ${token}` }
-        //headers: { Authorization: `Bearer ${state.login.token}` }
+        //headers: { Authorization: `Bearer ${token}` }
+        headers: { Authorization: `Bearer ${state.login.token}` }
     };
     // console.log(config)
 
@@ -80,16 +87,17 @@ export const getOrderByID = async (dispatch, orderId) => {
                 response: false,
                 message: "Error while calling the api",
                 content: error
-                })
+            })
         })
 }
 
 export const getConfig = async (dispatch, configName) => {
+    await refreshToken(dispatch)
+
     let state = store.state.getState();
-    const token =  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjExMTExMTExMTExMTExMTExMTExMTExMSIsIm5hbWUiOiJhZG1pbiJ9LCJhY2Nlc3MiOnsiY29uZmlnIjp7ImNyZWF0ZSI6eyIvIjp7fX0sInJlYWQiOnsiLyI6e319LCJ1cGRhdGUiOnsiLyI6e319LCJkZWxldGUiOnsiLyI6e319LCJncmFudCI6eyIvIjp7fX19LCJpbnZpdGF0aW9uIjp7ImNyZWF0ZSI6eyIvIjp7fX0sInJlYWQiOnsiLyI6e319LCJ1cGRhdGUiOnsiLyI6e319LCJkZWxldGUiOnsiLyI6e319LCJncmFudCI6eyIvIjp7fX19LCJpbnZlbnRvcnkiOnsiY3JlYXRlIjp7Ii8iOnt9fSwicmVhZCI6eyIvIjp7fX0sInVwZGF0ZSI6eyIvIjp7fX0sImRlbGV0ZSI6eyIvIjp7fX0sImdyYW50Ijp7Ii8iOnt9fX0sIml0ZW0iOnsiY3JlYXRlIjp7Ii8iOnt9fSwicmVhZCI6eyIvIjp7fX0sInVwZGF0ZSI6eyIvIjp7fX0sImRlbGV0ZSI6eyIvIjp7fX0sImdyYW50Ijp7Ii8iOnt9fX0sIm9yZGVyIjp7ImNyZWF0ZSI6eyIvIjp7fX0sInJlYWQiOnsiLyI6e319LCJ1cGRhdGUiOnsiLyI6e319LCJkZWxldGUiOnsiLyI6e319LCJncmFudCI6eyIvIjp7fX19LCJwcm9kdWN0Ijp7ImNyZWF0ZSI6eyIvIjp7fX0sInJlYWQiOnsiLyI6e319LCJ1cGRhdGUiOnsiLyI6e319LCJkZWxldGUiOnsiLyI6e319LCJncmFudCI6eyIvIjp7fX19LCJyb2xlIjp7ImNyZWF0ZSI6eyIvIjp7fX0sInJlYWQiOnsiLyI6e319LCJ1cGRhdGUiOnsiLyI6e319LCJkZWxldGUiOnsiLyI6e319LCJncmFudCI6eyIvIjp7fX19LCJlYWNoZXMiOnsiY3JlYXRlIjp7Ii8iOnt9fSwicmVhZCI6eyIvIjp7fX0sInVwZGF0ZSI6eyIvIjp7fX0sImRlbGV0ZSI6eyIvIjp7fX0sImdyYW50Ijp7Ii8iOnt9fX19LCJpYXQiOjE2MTgzNzAzNDUsImV4cCI6MTYyMDk2MjM0NX0.p7_GqcgteQlaS1Eed6HgxQEywGxEyjizJKe-L7ePdyw"
     let config = {
-        headers: { Authorization: `Bearer ${token}` }
-        //headers: { Authorization: `Bearer ${state.login.token}` }
+        //headers: { Authorization: `Bearer ${token}` }
+        headers: { Authorization: `Bearer ${state.login.token}` }
     };
     // console.log(config)
 
@@ -105,11 +113,14 @@ export const getConfig = async (dispatch, configName) => {
                 response: false,
                 message: "Error while calling the api",
                 content: error
-                })
+            })
         })
 }
 
 export const uploadOrder = async (dispatch, file, orderNum) => {
+
+    await refreshToken(dispatch)
+
     let state = store.state.getState();
     var data = new FormData();
     data.append('orderData', file[0]);

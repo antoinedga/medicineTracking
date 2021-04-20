@@ -12,8 +12,8 @@ export const loginPayload = async (email, password, dispatch) => {
         .then(data => {
 
             if (data.response) {
-                cookies.set('token', data.content.token, { path: "/", expires: new Date(Date.now() + (60 * 1000 * 30)) })
-                cookies.set('reFreshToken', data.content.refresh, { path: "/", expires: new Date(Date.now() + (60 * 1000 * 30)) })
+                cookies.set('token', data.content.token, { path: "/", expires: new Date(Date.now() + (60 * 1000 * 5)) })
+                cookies.set('refreshToken', data.content.refresh, { path: "/", expires: new Date(Date.now() + (60 * 1000 * 60)) })
 
                 //sessionStorage.setItem('token', data.content.token);
                 let decoded = jwt.decode(data.content.token)

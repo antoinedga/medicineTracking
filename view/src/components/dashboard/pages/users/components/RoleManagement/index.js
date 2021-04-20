@@ -24,9 +24,8 @@ export default function RoleManagement(props) {
     const [rowDataEdit, setRowEdit] = useState({})
 
     useEffect(() => {
-        console.log("ROLE is Loaded")
         dispatch({ type: constants.ADMIN_LOADING })
-        getAllRoles().then(data => {
+        getAllRoles(dispatch).then(data => {
             console.log(data)
 
             dispatch({ type: constants.ADMIN_ROLES, payload: data.content })
@@ -34,7 +33,7 @@ export default function RoleManagement(props) {
             dispatch({ type: constants.ADMIN_ERROR })
 
         })
-    }, [rowDataDelete])
+    }, [selected, rowDataDelete, rowDataEdit])
 
 
     const handleOpenDelete = (row) => {
@@ -75,11 +74,6 @@ export default function RoleManagement(props) {
                 icons={icons}
                 actions={[
                     {
-                        icon: icons.Info,
-                        tooltip: 'View Detail User',
-                        onClick: (event, rowData) => alert("You saved " + rowData.name)
-                    },
-                    {
                         icon: icons.Edit,
                         tooltip: 'Edit User',
                         onClick: (event, rowData) => handleOpenEdit(rowData)
@@ -107,7 +101,7 @@ export default function RoleManagement(props) {
 }
 
 function DetailPanel({ data }) {
-    console.log(data)
+    //console.log(data)
     return (
         <>
             <div style={{ height: '450px', overflow: 'auto' }}>

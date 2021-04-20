@@ -10,8 +10,8 @@ import CloseIcon from '@material-ui/icons/Close';
 import { useForm } from "react-hook-form";
 import DeleteIcon from "@material-ui/icons/Delete";
 import _, { truncate } from 'lodash'
-import {useDispatch} from "react-redux"
-import { Grid, List, ListItem, ListItemAvatar, ListItemText, MenuItem, Select,} from '@material-ui/core'
+import { useDispatch } from "react-redux"
+import { Grid, List, ListItem, ListItemAvatar, ListItemText, MenuItem, Select, } from '@material-ui/core'
 import { getConfig, getOrderByID } from '../../../../../store/actions/order.action';
 import { set } from 'mongoose';
 import MyInput from './item';
@@ -46,36 +46,36 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export default function EditOrderForm({orderId}) {
+export default function EditOrderForm({ orderId }) {
     const dispatch = useDispatch();
     const classes = useStyles();
     const [orderData, setOrderData] = useState({});
-    const [orderStatusOptions,setOrderStatusOptions] = useState([])
+    const [orderStatusOptions, setOrderStatusOptions] = useState([])
 
     orderId = "60662f89a37f721134c89f51"
 
 
     useEffect(() => {
         console.log("useEffect")
-        getOrderByID(dispatch,orderId)
-        .then( data => {
-            if (!data.response) throw data
-            setOrderData(data.content)
-        })
-        .then(() => {
-            getConfig(dispatch,"orderStatusOptions")
-            .then( data => {
+        getOrderByID(dispatch, orderId)
+            .then(data => {
                 if (!data.response) throw data
-                setOrderStatusOptions(data.content)
+                setOrderData(data.content)
+            })
+            .then(() => {
+                getConfig(dispatch, "orderStatusOptions")
+                    .then(data => {
+                        if (!data.response) throw data
+                        setOrderStatusOptions(data.content)
+                    })
+                    .catch(err => {
+                        alert("config " + err.message + "\n" + err.content)
+                    })
             })
             .catch(err => {
-                alert("config " +err.message + "\n" + err.content)
+                alert("order " + err.message + "\n" + err.content)
             })
-        })
-        .catch(err => {
-            alert("order " + err.message + "\n" + err.content)
-        })
-    },[dispatch, orderId]);
+    }, [orderId]);
 
     const onSubmit = (e) => {
         alert(JSON.stringify(orderData));
@@ -87,7 +87,7 @@ export default function EditOrderForm({orderId}) {
         }
     }
 
-    
+
 
     return (
         <form onSubmit={onSubmit}>
@@ -101,7 +101,7 @@ export default function EditOrderForm({orderId}) {
                                 fieldName="orderNumber"
                                 InputProps={{
                                     readOnly: true,
-                                  }}
+                                }}
                             />
                         </ListItem>
                         <ListItem>
@@ -111,7 +111,7 @@ export default function EditOrderForm({orderId}) {
                                 fieldName="name"
                                 InputProps={{
                                     readOnly: true,
-                                  }}
+                                }}
                             />
                         </ListItem>
                         <ListItem>
@@ -123,7 +123,7 @@ export default function EditOrderForm({orderId}) {
                                 convertBack={str => new Date(str)}
                                 InputProps={{
                                     readOnly: true,
-                                  }}
+                                }}
                             />
                         </ListItem>
                         <ListItem>
@@ -133,7 +133,7 @@ export default function EditOrderForm({orderId}) {
                                 fieldName="path"
                                 InputProps={{
                                     readOnly: true,
-                                  }}
+                                }}
                             />
                         </ListItem>
                         <ListItem>
@@ -144,16 +144,16 @@ export default function EditOrderForm({orderId}) {
                     </List>
                     {`Status: `}
                     <MyList dataObject={orderData} fieldName="log"
-                        addObject={()=>{return {message:'asd'}}}
-                        listItem={(data)=>{console.log("listItem"); return<ListItem key={generateKey("log")}>{data.message}</ListItem>}}
-                        />
+                        addObject={() => { return { message: 'asd' } }}
+                        listItem={(data) => { return <ListItem key={generateKey("log")}>{data.message}</ListItem> }}
+                    />
                 </Grid>
                 <Grid item xs={9}>
-                    
+
                 </Grid>
-                
+
             </Grid>
         </form>
-                
+
     );
 }

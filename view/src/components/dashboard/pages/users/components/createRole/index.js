@@ -57,7 +57,7 @@ export default function CreateRole(props) {
     useEffect(() => {
         reset({ name: "", path: "" })
         dispatch({ type: constants.ADMIN_LOADING })
-        createNewRoleConfig().then(data => {
+        createNewRoleConfig(dispatch).then(data => {
             console.log(data)
             let payload = {
                 paths: data[0],
@@ -219,7 +219,7 @@ function configLocation(title, resource, actions, formMethod, base, length) {
                                         <FormControlLabel
                                             control={
                                                 <Checkbox
-                                                    name={`permissions[${resIndex}].actions[${actionIndex}].action`}
+                                                    name={`permissions[${resIndex + (length * base)}].actions[${actionIndex}].action`}
                                                     color="primary"
                                                     onChange={(e) => {
                                                         if (e.target.checked) {

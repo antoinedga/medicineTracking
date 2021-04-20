@@ -34,7 +34,7 @@ export default function DeleteDialog(props) {
     const deleteRoleEvent = () => {
         setDisable(true)
 
-        deleteRole(rowData._id).then(data => {
+        deleteRole(dispatch, rowData._id).then(data => {
             console.log(data)
             handleAlertClose();
         }).catch(err => {

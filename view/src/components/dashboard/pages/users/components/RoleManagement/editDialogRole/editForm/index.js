@@ -6,7 +6,7 @@ import {
     Card, CardHeader, Button, Typography, Switch
 } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux'
-import { createNewRoleConfig, getSubInventory, submitCreateRole } from '../../../../../../../../store/actions/role.action'
+import { createNewRoleConfig, getSubInventory, submitCreateRole, updateRole } from '../../../../../../../../store/actions/role.action'
 import constants from '../../../../../../../../store/actions/actionType/admin'
 import { useForm } from "react-hook-form";
 import Snackbar from '@material-ui/core/Snackbar';
@@ -42,6 +42,7 @@ export default function EditRole(props) {
     const dispatch = useDispatch();
     const listOfPaths = useSelector(state => state.admin.paths)
     const [selected, setSelected] = React.useState("")
+    const [name, setName] = React.useState("");
     const [listToSelect, setListToSelect] = React.useState([])
     const [listToConfig, setListToConfig] = React.useState([])
     const [success, setSuccess] = React.useState(false)
@@ -49,14 +50,17 @@ export default function EditRole(props) {
     const [openSnackBar, setSnackBar] = React.useState(false)
     const resource = useSelector(state => state.admin.resource)
     const actions = useSelector(state => state.admin.actions)
-
     const formStuff = useForm({ mode: 'onTouched' });
     const { register, errors, handleSubmit, setError, clearErrors, getValues, setValue, reset } = formStuff;
-    let data = props.rowData;
+    const [data, setData] = React.useState({})
+    const [length, setLength] = React.useState(0)
+
+    const [myMap, setMyMap] = React.useState(new Map());
+
     useEffect(() => {
-        console.log(data)
+        setData(props.rowData)
         dispatch({ type: constants.ADMIN_LOADING })
-        createNewRoleConfig().then(data => {
+        createNewRoleConfig(dispatch).then(data => {
             //console.log(data)
             let payload = {
                 paths: data[0],
@@ -67,10 +71,16 @@ export default function EditRole(props) {
             dispatch({ type: constants.ADMIN_CREATE_CONFIG, payload: payload })
 
         }).then(() => {
-            reset({ name: data.name, path: data.path })
+            //reset({ name: data.name, path: data.path })
+            setValue("name", data.name)
+            setName(data.name)
+            setValue("path", data.path)
             setSelected(data.path)
-            setValue('path', data.path)
-            getPathAndConfig(data)
+            let temp = getPathAndConfig(data)
+            // console.log("33", temp)
+            setListToConfig(temp)
+            console.log(listToConfig)
+
         })
     }, [data])
 
@@ -86,25 +96,64 @@ export default function EditRole(props) {
         }
         //console.log(parse)
         setListToSelect(parse)
+        initializeChecked(data)
     }, [selected])
 
-    const onSubmit = (data, e) => {
+
+    const initializeChecked = (data) => {
+        //console.log(data)
+        data?.permissions?.forEach(perm => {
+            perm.actions.forEach(act => {
+                updateMap(perm.resource, act.action, perm.path)
+                let action = act.action;
+                let resIndex = resource.indexOf(perm.resource)
+                let res = perm.resource
+                let actionIndex = actions.indexOf(act.action)
+                let title = perm.path
+                let base = listToConfig.indexOf(title)
+                register(`permissions[${resIndex + (length * base)}].actions[${actionIndex}].action`)
+                setValue(`permissions[${resIndex + (length * base)}].actions[${actionIndex}].action`, action)
+                register(`permissions[${resIndex + (length * base)}].resource`)
+                setValue(`permissions[${resIndex + (length * base)}].resource`, res)
+                register(`permissions[${resIndex + (length * base)}].path`)
+                setValue(`permissions[${resIndex + (length * base)}].path`, title)
+
+                if (act.recursive) {
+                    register(`permissions[${resIndex + (length * base)}].actions[${actionIndex}].recursive`)
+                    setValue(`permissions[${resIndex + (length * base)}].actions[${actionIndex}].recursive`, true)
+                    updateMap(perm.resource, act.action, perm.path, "recursive")
+                }
+
+            })
+        })
+    }
+
+    const updateMap = (res, action, path, recursive = "") => {
+        let str = path + res + action + recursive;
+        setMyMap(new Map(myMap.set(str, true)));
+    }
+    const removeMap = (str) => {
+        let temp = myMap;
+        temp.delete(str)
+        setMyMap(new Map(temp))
+    }
+
+
+    const onSubmit = (dataLocal, e) => {
         let form = getValues();
-        console.log(JSON.stringify(form, null, 1))
+        form._id = data._id
         // filters the null section if leaps around the form
-        form.permissions = form.permissions.filter(Boolean)
+        form.permissions = form?.permissions.filter(Boolean)
         for (var i = 0; i < form.permissions.length; i++) {
             let temp = form.permissions[i];
             temp.actions = temp.actions.filter(Boolean)
         }
-        //  console.log(JSON.stringify(form, null, 1))
         dispatch({ type: constants.ADMIN_LOADING })
-        submitCreateRole(form).then(res => {
-            console.log(res)
+        updateRole(dispatch, form).then(res => {
             if (res.response) {
                 setSuccess(true)
                 setSnackBar(true)
-                setErrMessage("Successfully Created New Role(s)!")
+                setErrMessage("Successfully Updated Role!")
             } else {
                 setSuccess(false)
                 setSnackBar(true)
@@ -132,6 +181,7 @@ export default function EditRole(props) {
     const onError = (error, e) => {
         console.log(error)
     }
+
     return (
         <React.Fragment>
             <Container maxWidth="md">
@@ -141,7 +191,13 @@ export default function EditRole(props) {
                         <Grid item xs={6}>
                             <TextField required label="Name" name="name" fullWidth inputRef={register({
                                 required: "Must have a name"
-                            })} />
+
+                            })}
+                                onChange={(e) => {
+                                    setName(e.target.value)
+                                    setValue('name', e.target.value)
+                                }}
+                                value={name} />
                         </Grid>
                         <Grid item xs={6}>
                             <FormControl className={classes.formControl}>
@@ -167,11 +223,12 @@ export default function EditRole(props) {
                             </FormControl>
                         </Grid>
                         <Grid item xs={12}>
-                            <TransferList list={listToSelect} setConfig={setListToConfig} configs={listToConfig} />
+                            <TransferList listToSelect={listToSelect} setConfig={setListToConfig} configs={listToConfig} />
                         </Grid>
                         <Grid container item xs={12} style={{ maxHeight: '50vh', overflow: 'auto' }}>
-                            {listToConfig.map(name =>
-                                configLocation(name, resource, actions, formStuff)
+                            {listToConfig.map((name, index) =>
+                                configLocation(name, resource, actions, formStuff, index, listToConfig.length, updateMap, removeMap, myMap)
+                                //configLocation(title, resource, actions, formMethod, base, length, checked, setChecked) 
                             )}
                         </Grid>
                     </Grid>
@@ -197,7 +254,7 @@ function Alert(props) {
 }
 
 
-function configLocation(title, resource, actions, formMethod) {
+function configLocation(title, resource, actions, formMethod, base, length, updateMap, removeMap, mapData) {
     const { register, errors, handleSubmit, setError, clearErrors, getValues, setValue, watch, unregister } = formMethod;
 
     return (
@@ -219,38 +276,46 @@ function configLocation(title, resource, actions, formMethod) {
                                     <FormControlLabel
                                         control={
                                             <Checkbox
-                                                name={`permissions[${resIndex}].actions[${actionIndex}].action`}
+                                                name={`permissions[${resIndex + (length * base)}].actions[${actionIndex}].action`}
                                                 color="primary"
                                                 onChange={(e) => {
                                                     if (e.target.checked) {
-                                                        register(`permissions[${resIndex}].actions[${actionIndex}].action`)
-                                                        setValue(`permissions[${resIndex}].actions[${actionIndex}].action`, action)
-                                                        register(`permissions[${resIndex}].resource`)
-                                                        setValue(`permissions[${resIndex}].resource`, res)
-                                                        register(`permissions[${resIndex}].path`)
-                                                        setValue(`permissions[${resIndex}].path`, title)
+                                                        register(`permissions[${resIndex + (length * base)}].actions[${actionIndex}].action`)
+                                                        setValue(`permissions[${resIndex + (length * base)}].actions[${actionIndex}].action`, action)
+                                                        register(`permissions[${resIndex + (length * base)}].resource`)
+                                                        setValue(`permissions[${resIndex + (length * base)}].resource`, res)
+                                                        register(`permissions[${resIndex + (length * base)}].path`)
+                                                        setValue(`permissions[${resIndex + (length * base)}].path`, title)
+                                                        updateMap(res, action, title)
                                                     } else {
-                                                        unregister(`permissions[${resIndex}].actions[${actionIndex}].action`)
-                                                        unregister(`permissions[${resIndex}].actions[${actionIndex}].recursive`)
+                                                        unregister(`permissions[${resIndex + (length * base)}].actions[${actionIndex}].action`)
+                                                        unregister(`permissions[${resIndex + (length * base)}].actions[${actionIndex}].recursive`)
+                                                        removeMap(title + res + action)
                                                     }
-                                                    console.log(e.target.checked)
-
                                                 }}
+                                                checked={mapData.has(title + res + action)}
                                                 value={action}
                                                 type="checkBox"
                                             />
                                         }
-                                        label={action}
+                                        label={action + " " + ((base * length) + ((resource.length * resIndex) + actionIndex))}
                                     />
                                 </Grid>
                                 <Grid item xs={6}>
                                     {
-                                        (!!watch(`permissions[${resIndex}].actions[${actionIndex}].action`)) ? (<FormControlLabel
+                                        (!!watch(`permissions[${resIndex + (length * base)}].actions[${actionIndex}].action`)) ? (<FormControlLabel
                                             control={<Switch />}
                                             label="Recursive"
-                                            name={`permissions[${resIndex}].actions[${actionIndex}].recursive`}
+                                            name={`permissions[${resIndex + (length * base)}].actions[${actionIndex}].recursive`}
                                             inputRef={register}
-
+                                            onChange={(e) => {
+                                                if (e.target.checked) {
+                                                    updateMap(res, action, title, "recursive")
+                                                } else {
+                                                    removeMap(title + res + action + "recursive")
+                                                }
+                                            }}
+                                            checked={mapData.has(title + res + action + "recursive")}
                                         />) : null
                                     }
 
@@ -276,7 +341,7 @@ function union(a, b) {
     return [...a, ...not(b, a)];
 }
 
-function TransferList(props) {
+function TransferList({ listToSelect, setConfig, configs }) {
     const classes = useStyles();
     const [checked, setChecked] = React.useState([]);
     const [left, setLeft] = React.useState([]);
@@ -321,22 +386,22 @@ function TransferList(props) {
     };
 
     useEffect(() => {
-        props.setConfig(right)
+        setConfig(right)
     }, [right])
 
     useEffect(() => {
-        setList(props.list)
-        if (props.list != undefined && Object.is(props.list, list)) {
-            setLeft(props.list)
+
+        setList(listToSelect)
+        if (listToSelect != undefined && Object.is(listToSelect, list)) {
+            setLeft(listToSelect)
         }
 
-        if (!Object.is(props.list, list)) {
-            setLeft(props.list);
-            setRight([]);
-            props.setConfig([])
+        if (!Object.is(listToSelect, list)) {
+            setLeft(listToSelect);
         }
+
         //setLeft(props.list)
-    }, [props.list])
+    }, [listToSelect])
 
     const customList = (title, items) => (
         <Card>
@@ -419,5 +484,6 @@ function getPathAndConfig(rowData) {
         permissionResource.add(element.path)
     });
 
-    console.log(permissionResource)
+
+    return Array.from(permissionResource);
 }
