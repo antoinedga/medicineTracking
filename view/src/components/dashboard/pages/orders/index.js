@@ -117,9 +117,6 @@ export default function Orders(props) {
             >
                 <Grid container item >
                     <Grid item xs={2}>
-                        <PlaceOrder />
-                    </Grid>
-                    <Grid item xs={2}>
                         <ImportExcel open={importToggle} handleOpen={handleImportOpen} handleClose={handleImportClose} />
                     </Grid>
                 </Grid>
