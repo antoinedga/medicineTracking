@@ -1,5 +1,5 @@
 const config = require('../../config');
-const {Inventory} = require('../../models');
+const {Inventory, Role, Order, Item} = require('../../models');
 const {callback} = require('../Callbacks');
 const {getPathsObject, getCompletePaths, inventoryExists} = require('../utils');
 
@@ -90,6 +90,12 @@ exports.findByID = (req, res) => {
 };
 
 exports.deleteRecursivelyByPath = (req, res) => {
+  Order
+      .deleteMany({path: new RegExp('^'+req.body.path)}).exec();
+  Role
+      .deleteMany({path: new RegExp('^'+req.body.path)}).exec();
+  Item
+      .deleteMany({path: new RegExp('^'+req.body.path)}).exec();
   Inventory
       .deleteMany({path: new RegExp('^'+req.body.path)})
       .exec(callback(req, res, 'delete inventories by path'));
