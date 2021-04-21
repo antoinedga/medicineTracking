@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
-
+import Backdrop from '@material-ui/core/Backdrop';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
@@ -35,6 +36,10 @@ const useStyles = makeStyles((theme) => ({
         marginLeft: theme.spacing(1),
         marginRight: theme.spacing(1),
     },
+    backdrop: {
+        zIndex: theme.zIndex.drawer + 1,
+        color: '#fff',
+    },
 
 }));
 
@@ -47,12 +52,18 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 export default function FullScreenDialog({ orderId, open, handleClose }) {
     const classes = useStyles();
     const [onSaveRef, setOnSaveRef] = useState({ onSave: () => { } })
+    const [loading, setLoading] = useState(false);
 
     const onclose = (e) => {
+        setLoading(true)
         onSaveRef.onSave()
-        .then(()=> {
-            handleClose()
-        })
+            .then(() => {
+                setLoading(false)
+                handleClose()
+            })
+    }
+    const setLoadingEvent = (boolean) => {
+        setLoading(boolean)
     }
 
     return (
@@ -71,8 +82,12 @@ export default function FullScreenDialog({ orderId, open, handleClose }) {
                 </Toolbar>
             </AppBar>
             <DialogContent>
-                <EditOrderForm onSaveRef={onSaveRef} orderId={orderId} />
+                <EditOrderForm setLoading={setLoadingEvent} onSaveRef={onSaveRef} orderId={orderId} />
             </DialogContent>
+            <Backdrop className={classes.backdrop} open={loading}>
+                <p>Grabbing Data, Please Wait</p>
+                <CircularProgress color="inherit" />
+            </Backdrop>
         </Dialog>
     );
 }

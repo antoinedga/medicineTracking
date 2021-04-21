@@ -30,14 +30,14 @@ export default function StatusPill(props) {
         }} icon={<CancelIcon />} />
         )
     } else if (status == "DELAYED") {
-        return (<Chip color="secondary" label="Canceled" style={{
-            backgroundColor: 'Red'
+        return (<Chip color="secondary" label="Delayed" style={{
+            backgroundColor: 'Orange'
         }} icon={<ErrorIcon />} />
         )
     }
 
-    return (<Chip color="secondary" label="Canceled" style={{
-        backgroundColor: 'Red'
+    return (<Chip color="secondary" label="UNDEFINED" style={{
+        backgroundColor: 'Grey'
     }} icon={<CancelIcon />} />
     )
 

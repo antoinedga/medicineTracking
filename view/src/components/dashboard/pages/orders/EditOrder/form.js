@@ -9,8 +9,8 @@ import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import { useForm } from "react-hook-form";
 import DeleteIcon from "@material-ui/icons/Delete";
-import {useDispatch} from "react-redux"
-import { Box, FormControl, Grid, List, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText, ListSubheader, MenuItem, Select, TextField,} from '@material-ui/core'
+import { useDispatch } from "react-redux"
+import { Box, FormControl, Grid, List, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText, ListSubheader, MenuItem, Select, TextField, } from '@material-ui/core'
 import { getConfig, getEachesUnits, getOrderByID, updateOrder } from '../../../../../store/actions/order.action';
 import { set } from 'mongoose';
 import MyInput from './item';
@@ -67,66 +67,71 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export default function EditOrderForm({ orderId, onSaveRef }) {
+export default function EditOrderForm({ orderId, onSaveRef, setLoading }) {
     const dispatch = useDispatch();
     const classes = useStyles();
     const [orderData, setOrderData] = useState(null);
-    const [orderStatusOptions,setOrderStatusOptions] = useState(null)
-    const [eachesUnitsOptions,setEachesUnitsOptions] = useState(null)
-    const [dataLoaded,setDataLoaded] = useState(false)
+    const [orderStatusOptions, setOrderStatusOptions] = useState(null)
+    const [eachesUnitsOptions, setEachesUnitsOptions] = useState(null)
+    const [dataLoaded, setDataLoaded] = useState(false)
 
     orderId = "60662f89a37f721134c89f51"
 
-    useEffect(()=>{
+    useEffect(() => {
         setDataLoaded(!!(orderData && orderStatusOptions && eachesUnitsOptions))
-        onSaveRef.onSave= () => {
-            return updateOrder(dispatch,orderData)
-            .then(result => {
-                return result
-            })
-            .catch(error => {
-                return error
-        })
-    } 
-    },[dispatch, eachesUnitsOptions, onSaveRef, orderData, orderId, orderStatusOptions])
+
+
+        onSaveRef.onSave = () => {
+
+            return updateOrder(dispatch, orderData)
+                .then(result => {
+                    return result
+                })
+                .catch(error => {
+                    return error
+                })
+        }
+    }, [dispatch, eachesUnitsOptions, onSaveRef, orderData, orderId, orderStatusOptions])
 
 
     useEffect(() => {
         console.log("useEffect")
-
+        setLoading(true)
         // get order data
-        getOrderByID(dispatch,orderId)
-        .then( data => {
-            if (!data.response) throw data
-            console.log(data.content,"zx2")
-            setOrderData(data.content)
-        })
-        .then(() => {
-            // get status options
-            getConfig(dispatch,"orderStatusOptions")
-            .then( data => {
+        getOrderByID(dispatch, orderId)
+            .then(data => {
                 if (!data.response) throw data
-                setOrderStatusOptions(data.content)
+                console.log(data.content, "zx2")
+                setOrderData(data.content)
+            })
+            .then(() => {
+                // get status options
+                getConfig(dispatch, "orderStatusOptions")
+                    .then(data => {
+                        if (!data.response) throw data
+                        setOrderStatusOptions(data.content)
+                    }).then(data => {
+                        // get eaches unit options
+                        getEachesUnits(dispatch)
+                            .then(data => {
+                                if (!data.response) throw data
+                                setEachesUnitsOptions(data.content.map(obj => obj.name))
+                                console.log(data.content.map(obj => obj.name).sort())
+                                setLoading(false)
+                            })
+                            .catch(err => {
+                                alert("config " + err.message + "\n" + err.content)
+                            })
+                    })
+                    .catch(err => {
+                        alert("order " + err.message + "\n" + err.content)
+                    })
+
             })
             .catch(err => {
                 alert("order " + err.message + "\n" + err.content)
             })
-
-            // get eaches unit options
-            getEachesUnits(dispatch)
-            .then( data => {
-                if (!data.response) throw data
-                setEachesUnitsOptions(data.content.map(obj=> obj.name))
-                console.log(data.content.map(obj=> obj.name).sort())
-            })
-            .catch(err => {
-                alert("config " +err.message + "\n" + err.content)
-            })
-        })
-        .catch(err => {
-            alert("order " + err.message + "\n" + err.content)
-        })
-    },[dispatch, orderId]);
+    }, [dispatch, orderId]);
 
     const onSubmit = (e) => {
         alert(JSON.stringify(orderData));
@@ -149,7 +154,7 @@ export default function EditOrderForm({ orderId, onSaveRef }) {
                             fieldName="orderNumber"
                             InputProps={{
                                 readOnly: true,
-                                }}
+                            }}
                         />
                     </ListItem>
                     <ListItem key="name">
@@ -159,7 +164,7 @@ export default function EditOrderForm({ orderId, onSaveRef }) {
                             fieldName="name"
                             InputProps={{
                                 readOnly: true,
-                                }}
+                            }}
                         />
                     </ListItem>
                     <ListItem key="orderDate">
@@ -171,7 +176,7 @@ export default function EditOrderForm({ orderId, onSaveRef }) {
                             convertBack={str => new Date(str)}
                             InputProps={{
                                 readOnly: true,
-                                }}
+                            }}
                         />
                     </ListItem>
                     <ListItem key="path">
@@ -181,7 +186,7 @@ export default function EditOrderForm({ orderId, onSaveRef }) {
                             fieldName="path"
                             InputProps={{
                                 readOnly: true,
-                                }}
+                            }}
                         />
                     </ListItem>
                     <ListItem key="status">
@@ -191,53 +196,53 @@ export default function EditOrderForm({ orderId, onSaveRef }) {
                 </List>
                 <MyLabel>{`Logs:`}</MyLabel>
                 <MyList className={classes.list_logs} dataObject={orderData} fieldName="log"
-                    addObject={()=>{return {message:'new log'}}}
-                    listItem={(data,index, delEvent)=>(
-                        <ListItem key={giveKey(data,"_logKey")}>
+                    addObject={() => { return { message: 'new log' } }}
+                    listItem={(data, index, delEvent) => (
+                        <ListItem key={giveKey(data, "_logKey")}>
                             <MyTextField
-                            dataObject={data}
-                            fieldName="message"
-                            multiline
-                        />
+                                dataObject={data}
+                                fieldName="message"
+                                multiline
+                            />
                             <ListItemSecondaryAction>
                                 <IconButton aria-label="delete" size="small" onClick={delEvent}>
                                     <DeleteIcon fontSize="small" />
                                 </IconButton>
                             </ListItemSecondaryAction>
                         </ListItem>)}
-                    />
+                />
             </Grid>
             <Grid item xs={9}>
-            <MyList className={classes.list} dataObject={orderData} fieldName="items"
-                    addObject={()=>{return {product: {identifiers:[],eaches:{}}}}}
-                    listItem={(data, index)=>(
-                        <ListItem key={giveKey(data,"_productRowKey")}>
+                <MyList className={classes.list} dataObject={orderData} fieldName="items"
+                    addObject={() => { return { product: { identifiers: [], eaches: {} } } }}
+                    listItem={(data, index) => (
+                        <ListItem key={giveKey(data, "_productRowKey")}>
                             <Grid container>
                                 {/* <ListSubheader style={{ width: '100%' ,fontSize: '16px', padding:'0px'}}> */}
-                                        <MyItemHeader data={data} itemNumber={index+1}/>
+                                <MyItemHeader data={data} itemNumber={index + 1} />
                                 {/* </ListSubheader> */}
                                 <Grid item xs={6}>
-                                    <EditProduct 
+                                    <EditProduct
                                         dataObject={data}
                                         fieldName='product'
                                         label="Ordered Product"
-                                        optionsRef={{options:eachesUnitsOptions}}
+                                        optionsRef={{ options: eachesUnitsOptions }}
                                     />
                                 </Grid>
                                 <Grid item xs={6}>
-                                <EditProduct 
+                                    <EditProduct
                                         dataObject={data}
                                         fieldName='desired'
                                         label="Desired Product"
-                                        optionsRef={{options:eachesUnitsOptions}}
+                                        optionsRef={{ options: eachesUnitsOptions }}
                                         addLabel="Add Desired Product"
                                     />
                                 </Grid>
                             </Grid>
                         </ListItem>
-                        )}
-                    />
+                    )}
+                />
             </Grid>
-        </Grid>           
+        </Grid>
     );
 }
