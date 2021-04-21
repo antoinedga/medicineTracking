@@ -5,9 +5,10 @@ import Delete from '@material-ui/icons/Delete'
 import Eaches from "./eaches"
 import { useEffect, useState } from "react"
 import { giveKey } from "./helpers"
+import MyLabel from "./MyLabel"
 
 export default function EditProduct(props) {
-const {dataObject, fieldName, optionsRef, addLabel} = props
+const {dataObject, fieldName, optionsRef, label, addLabel} = props
 
     const [product, setProduct] = useState(undefined);
 
@@ -29,6 +30,7 @@ const {dataObject, fieldName, optionsRef, addLabel} = props
         <Button key={giveKey(dataObject,`_add_${fieldName}`,`_add_${fieldName}`)} onClick={handleAddProduct}>{addLabel||'Add New Product'}</Button>
         :
         <Box>
+            <MyLabel h={2}>{label}</MyLabel>
             <MyList dataObject={product} fieldName={`identifiers`}
                 addObject={()=>{return {key:'',value:''}}}
                 listItem={(data,index,delEvent) => (

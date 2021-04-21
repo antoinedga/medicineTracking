@@ -25,14 +25,13 @@ export default function MyList(props) {
   const classes = useStyles();
   const { dataObject, fieldName, listItem, addObject } = props;
   const [list, setList] = useState([]);
-  const [render, setRender] = useState(false);
 
   useEffect(() => {
     if (dataObject?.[fieldName] !== undefined) {
-      //setList(dataObject?.[fieldName]);
+      setList(dataObject?.[fieldName]);
       console.log("xx", dataObject?.[fieldName]);
     }
-  }, []);
+  }, [dataObject, fieldName]);
 
   useEffect(() => {
     console.log(list)

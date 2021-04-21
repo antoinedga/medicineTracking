@@ -1,4 +1,4 @@
-import React, { } from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -44,40 +44,33 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 
 
-export default function FullScreenDialog({ orderId }) {
+export default function FullScreenDialog({ orderId, open, handleClose }) {
     const classes = useStyles();
-    const [open, setOpen] = React.useState(false);
+    const [onSaveRef,setOnSaveRef] = useState({onSave:()=>{}})
 
-    const handleClickOpen = () => {
-        setOpen(true);
-    };
-
-    const handleClose = () => {
-        setOpen(false);
-    };
+    const onclose = (e) => {
+        onSaveRef.onSave()
+        handleClose(e)
+    }
 
     return (
-        <div>
-
-            <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
-                <AppBar className={classes.appBar}>
-                    <Toolbar>
-                        <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
-                            <CloseIcon />
-                        </IconButton>
-                        <Typography variant="h6" className={classes.title}>
-                            Edit Order
-                        </Typography>
-                        <Button autoFocus color="inherit" onClick={handleClose}>
-                            save
-                        </Button>
-                    </Toolbar>
-                </AppBar>
-                <DialogContent>
-                    <EditOrderForm orderId={orderId} />
-                </DialogContent>
-
-            </Dialog>
-        </div >
+        <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
+            <AppBar className={classes.appBar}>
+                <Toolbar>
+                    <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
+                        <CloseIcon />
+                    </IconButton>
+                    <Typography variant="h6" className={classes.title}>
+                        Edit Order
+                    </Typography>
+                    <Button autoFocus color="inherit" onClick={onclose}>
+                        save
+                    </Button>
+                </Toolbar>
+            </AppBar>
+            <DialogContent>
+                <EditOrderForm onSaveRef={onSaveRef} orderId={orderId} />
+            </DialogContent>
+        </Dialog>
     );
 }

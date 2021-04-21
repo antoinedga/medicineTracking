@@ -1,9 +1,10 @@
-import { Box, Button, IconButton, makeStyles } from "@material-ui/core";
+import { Box, Button, IconButton, makeStyles, Typography } from "@material-ui/core";
 import { useEffect, useState } from "react";
 import MyList from "./MyList";
 import MySelect from "./MySelect";
 import MyTextField from "./MyTextField";
 import Delete from "@material-ui/icons/Delete";
+import MyLabel from "./MyLabel";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -16,6 +17,9 @@ eachesHeading: {
     fontSize: 18,
     alignItems: 'flex-start',
     justifyContent: 'center',
+},
+labelContainer: {
+    my:'auto'
 },
 listItemKey: {
     fontSize: 16,
@@ -55,7 +59,7 @@ export default function Eaches(props) {
             : 
         <div style={{ marginLeft:15}}>
             <Box display="flex" justifyContent="flex-start">
-                <Box className={classes.listItemKey}>Quantity: </Box>
+                <MyLabel h={2}>Quantity:</MyLabel>
                 <MyTextField 
                     dataObject={eaches}
                     fieldName="quantity"
@@ -66,7 +70,7 @@ export default function Eaches(props) {
                 </IconButton>
             </Box>
             <Box display="flex" justifyContent="flex-start">
-                <Box className={classes.listItemKey}>Unit: </Box>
+                <MyLabel h={2}>Unit:</MyLabel>
                 <MySelect 
                     dataObject={eaches}
                     fieldName="unit"

@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 
 const useStyles = makeStyles((theme) => ({
     textField: {
-        paddingLeft: '10px',
+        paddingLeft: '5px',
     },
 }));
 
@@ -11,7 +11,7 @@ export default function MyTextField(props) {
     const classes = useStyles();
     const {dataObject,fieldName, convert= (o) => o, convertBack= (o) => o} = props
     const [value, setValue] = useState('');
-
+    
     useEffect(() => {
         setValue(dataObject?.[fieldName]);
     }, [convert, dataObject, fieldName]);

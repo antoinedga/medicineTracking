@@ -1,7 +1,14 @@
-import { MenuItem, Select } from "@material-ui/core";
+import { makeStyles, MenuItem, Select } from "@material-ui/core";
 import { useEffect, useState } from "react";
 
+const useStyles = makeStyles((theme) => ({
+    select: {
+        paddingLeft: '5px',
+    },
+}));
+
 export default function MySelect(props) {
+    const classes = useStyles();
     const {dataObject,fieldName,options} = props
     const [status, setStatus] = useState('');
 
@@ -18,6 +25,7 @@ export default function MySelect(props) {
         <Select
             // defaultValue={status}
             onChange={handleChange}
+            className={classes.select}
             value={status}
             {...props}
             >

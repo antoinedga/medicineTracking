@@ -1,4 +1,5 @@
 import { Box, Grid } from "@material-ui/core"
+import MyLabel from "./MyLabel"
 import MyTextField from "./MyTextField"
 
 export default function MyItemHeader(props) {
@@ -7,19 +8,16 @@ export default function MyItemHeader(props) {
     return (
         <div style={{ width: '100%' }}>
             <Box display="flex">
-                <Box p={1} flexGrow={10}>
-                    {`Item ${itemNumber}`}
+                <Box flexGrow={1}>
+                    <MyLabel>{`Item ${itemNumber}`}</MyLabel>
                 </Box>
-                <Box p={1}>
+                <MyLabel>
                     {`Quantity: `}
-                </Box>
+                </MyLabel>
                 <Box p={0}>
                     <MyTextField
                     dataObject={data}
                     fieldName="quantity"
-                    InputProps={{
-                        readOnly: true,
-                    }}
                     />
                 </Box>
             </Box>

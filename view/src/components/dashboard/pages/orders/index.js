@@ -180,7 +180,7 @@ export default function Orders(props) {
                         {
                             icon: EditIcon,
                             tooltip: 'Edit Order',
-                            onClick: (event, rowData) => alert("das")
+                            onClick: (event, rowData) => handleOpenEdit(rowData)
                         },
                         {
                             icon: DeleteForeverIcon,
@@ -191,7 +191,7 @@ export default function Orders(props) {
 
                 />
             </div>
-            <EditOrder handleOpen={handleOpenEdit} handleClose={handleCloseEdit} orderId={rowDataEdit?._id} />
+            <EditOrder open={viewEditToggle} handleClose={handleCloseEdit} orderId={rowDataEdit?._id} />
             <DeleteDialog open={deleteToggle} handleClose={handleDeleteClose} rowData={rowDataDelete} />
             <ViewDetail open={viewDetailToggle} data={rowDataView} handleClose={handleDetailClose} />
             <Backdrop className={classes.backdrop} open={loading}>
