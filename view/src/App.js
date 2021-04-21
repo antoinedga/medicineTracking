@@ -29,8 +29,7 @@ function App() {
             <Router>
                 <Switch>
 
-                    <Route exact path="/">
-                        <EditView />
+                    <Route exact path="/" component={Login}>
                     </Route>
 
                     <Route path="/signup/:token?" component={Register}>
@@ -41,6 +40,7 @@ function App() {
 
                     <Route exact path="/password_reset" component={Password}>
                     </Route>
+
                     <Route exact path="/reset/:token?" component={ResetPassword}
                     ></Route>
 

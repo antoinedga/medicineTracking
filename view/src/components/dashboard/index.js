@@ -168,7 +168,7 @@ function Dashboard(props) {
                             <MenuIcon />
                         </IconButton>
 
-                        <Link to="/dashboard" style={{ textDecoration: "none" }}>
+                        <Link to="/dashboard/inventory" style={{ textDecoration: "none" }}>
                             <Button>
                                 <Typography className={classes.header} variant="h6">
                                     Medicine Tracking
@@ -203,14 +203,14 @@ function Dashboard(props) {
                     <Divider />
                     <List>
 
-                        <ListItem button component={Link} to="/dashboard">
+                        {/* <ListItem button component={Link} to="/dashboard">
                             <ListItemIcon>
                                 <Tooltip title="Dashboard" arrow>
                                     <HomeIcon />
                                 </Tooltip>
                             </ListItemIcon>
                             <ListItemText primary={"Dashboard"} />
-                        </ListItem>
+                        </ListItem> */}
 
                         <ListItem button component={Link} to="/dashboard/inventory">
                             <ListItemIcon>
@@ -273,8 +273,8 @@ function Dashboard(props) {
                         </Grid>
                     </Grid>
 
-                    <Route exact path={`${url}/`} render={() => (location == "None") ? <NoLocationAccess /> : <HomePage />} />
-                    <Route exact path={`${url}/inventory`} render={() => (location == "None") ? <NoLocationAccess /> : <Inventory />} />
+                    {/* <Route exact path={`${url}/`} render={() => (location == "None") ? <NoLocationAccess /> : <HomePage />} /> */}
+                    <Route exact path={[`${url}/inventory`, `${url}/`]} render={() => (location == "None") ? <NoLocationAccess /> : <Inventory />} />
                     <Route exact path={`${url}/orders`} render={() => (location == "None") ? <NoLocationAccess /> : <Orders />} />
                     <Route exact path={`${url}/users`} render={() => (location == "None") ? <NoLocationAccess /> : <Users />} />
                 </main>
