@@ -40,7 +40,7 @@ export async function addNewInventory(dispatch, newPath) {
         path: newPath.path + "/" + newPath.name
     }
     let config = {
-        headers: { Authorization: `Bearer ${state.login.token.token}` }
+        headers: { Authorization: `Bearer ${state.login.token}` }
     };
     return axios.post("/api/inventory", bodyParam, config)
         .then((res) => res.data).
