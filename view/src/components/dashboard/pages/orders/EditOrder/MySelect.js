@@ -6,8 +6,9 @@ export default function MySelect(props) {
     const [status, setStatus] = useState('');
 
     useEffect(() => {
+        if (dataObject?.[fieldName] !== undefined)
         setStatus(dataObject?.[fieldName]);
-    }, [dataObject, fieldName]);
+    }, [dataObject, fieldName,options]);
 
     function handleChange(e) {
         setStatus(e.target.value);
@@ -15,13 +16,13 @@ export default function MySelect(props) {
     }
     return (
         <Select
-            defaultValue={status}
+            // defaultValue={status}
             onChange={handleChange}
             value={status}
             {...props}
             >
-            {options.map((option) => (
-                <MenuItem value={option} {...props?.childProps}>{option}</MenuItem>
+            {options?.map((option) => (
+                <MenuItem key={option} value={option} {...props?.childProps}>{option}</MenuItem>
             ))}
         </Select>
     )

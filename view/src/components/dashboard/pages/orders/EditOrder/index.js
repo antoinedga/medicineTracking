@@ -68,7 +68,7 @@ export default function FullScreenDialog({orderId}) {
                             <CloseIcon />
                         </IconButton>
                         <Typography variant="h6" className={classes.title}>
-                            Sound
+                            Edit Order
                         </Typography>
                         <Button autoFocus color="inherit" onClick={handleClose}>
                             save

@@ -7,9 +7,9 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function MyTextField(props) {
+export default function MyInputField(props) {
     const classes = useStyles();
-    const {dataObject,fieldName, convert= (o) => o, convertBack= (o) => o} = props
+    const {dataObject,fieldName, inputComponent={component: TextField}, convert= (o) => o, convertBack= (o) => o} = props
     const [value, setValue] = useState('');
 
     useEffect(() => {
@@ -22,13 +22,14 @@ export default function MyTextField(props) {
         dataObject[fieldName] = newValue;
     }
     return (
-        <TextField
-            //defaultValue={convert(value)}
+        <inputComponent.component
+            // defaultValue={convert(value)}
             onChange={handleChange}
             value={convert(value)}
             className={classes.textField}
             {...props}
             >
-        </TextField>
+                {convert(value)}
+        </inputComponent.component>
     )
 }

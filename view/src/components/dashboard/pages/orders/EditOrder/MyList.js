@@ -53,21 +53,18 @@ export default function MyList(props) {
   }
 
   return (
-    <List className={classes.root}>
-      {(true) ? console.log(list) : null}
-      {
-        list.map((item) =>
-          listItem(item)
-        )
-      }
-      {addObject && <IconButton
-        aria-label="add"
-        size="small"
-        onClick={
-          handleAdd}
-      >
-        <Add fontSize="small" />
-      </IconButton>}
-    </List>
+      <List {...props}>
+        {list.map((item, index) => (
+                listItem(item,index,(e) => handleDelete(index))
+        ))}
+        {addObject &&<IconButton
+          aria-label="add"
+          size="small"
+          onClick={
+            handleAdd}
+        >
+          <Add fontSize="small" />
+        </IconButton>}
+      </List>
   );
 }
