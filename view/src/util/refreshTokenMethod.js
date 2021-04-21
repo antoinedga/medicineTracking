@@ -9,14 +9,14 @@ export const refreshToken = async (dispatch) => {
     const refreshToken = store.login.refresh;
     const token = store.login.token;
 
-    if (token != null || token != undefined) {
+    if (token != null && token != undefined) {
         let decoded = jwt.decode(token)
         let expire = new Date(decoded.exp);
         if (Date.now() >= expire * 1000) {
             console.log("Token has Expired")
-
+            console.log(refreshToken)
             return axios.post("/api/user/token", { refreshToken: refreshToken }).then(data => {
-                console.log(data.data)
+                console.log("Successfully got refresh token")
                 dispatch(
                     {
                         type: "REFRESH_TOKEN", payload: {

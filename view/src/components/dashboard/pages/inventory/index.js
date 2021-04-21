@@ -16,7 +16,11 @@ import Remove from '@material-ui/icons/Remove';
 import SaveAlt from '@material-ui/icons/SaveAlt';
 import Search from '@material-ui/icons/Search';
 import ViewColumn from '@material-ui/icons/ViewColumn';
-import { Grid } from '@material-ui/core'
+import { Grid, Backdrop, CircularProgress } from '@material-ui/core'
+
+import constant from "../../../../store/actions/actionType/inventory";
+import { getAllPath } from "../../../../store/actions/inventory.action";
+import { state } from '../../../../store/store'
 
 import ViewDetail from './viewDetail'
 import DeleteDialog from './deleteDialog'
@@ -24,7 +28,7 @@ import ImportExcel from './importExcel'
 import AddInventory from './addInventory'
 import AddItem from './addItem'
 
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 const tableIcons = {
     Add: AddBox,
     Check: Check,
@@ -58,29 +62,28 @@ const useStyles = makeStyles((theme) => ({
         },
         "& .MuiTableRow-root": {
             borderBottom: "2px solid rgb(69,69,69) "
-        }
+        },
+        backdrop: {
+            zIndex: theme.zIndex.drawer + 1,
+            color: '#fff',
+        },
     }
 }));
 
 export default function Inventory(props) {
 
-
+    const [openNewInv, setNewInv] = useState(false);
     const [openDelete, setDeleteOpen] = useState(false);
+
     const [deleteData, setDeleteData] = useState({});
-    const [detailData, setDetailData] = useState({});
-    const [openDetail, setDetailOpen] = useState(false);
+    const [tableData, setTableData] = useState([])
+
     const title = useSelector(state => state.inventory.selected)
-    const classes = useStyles();
+    const loading = useSelector(state => state.inventory.loading)
     const theme = useTheme();
+    const classes = useStyles(theme);
+    const dispatch = useDispatch()
 
-    const handleDetailOpen = (rowData) => {
-        setDetailData(rowData);
-        setDetailOpen(true);
-    };
-
-    const handleDetailClose = () => {
-        setDetailOpen(false);
-    };
 
     const handleDeleteOpen = (rowData) => {
         setDeleteData(rowData);
@@ -88,8 +91,40 @@ export default function Inventory(props) {
     };
 
     const handleDeleteClose = () => {
+        setDeleteData({})
         setDeleteOpen(false);
     };
+
+    useEffect(() => {
+        dispatch({ type: constant.LOADING })
+        getAllPath(dispatch).then((data) => {
+            var DataSet = []
+            data.forEach(path => {
+                var count = 0;
+                for (var i = 0; i < data.length; i++) {
+                    if (data[i] == path)
+                        continue;
+
+                    if (data[i].startsWith(path))
+                        count++;
+                }
+                DataSet.push({
+                    name: path,
+                    subInv: count
+                })
+            })
+            return DataSet
+        }).then(data => {
+            console.log(data)
+            setTableData(data)
+            console.log(tableData)
+            dispatch({ type: constant.DONE })
+
+        }).catch(err => {
+            dispatch({ type: constant.DONE })
+
+        });
+    }, [title, openNewInv, deleteData])
 
     return (
         <>
@@ -103,51 +138,38 @@ export default function Inventory(props) {
             >
                 <Grid container items>
                     <Grid items xs={2}>
-                        <AddInventory />
-                    </Grid>
-                    <Grid items xs={2}>
-                        <ImportExcel />
-                    </Grid>
-                    <Grid items xs={2}>
-                        <AddItem />
+                        <AddInventory open={openNewInv} handleOpen={() => setNewInv(true)} handleClose={() => setNewInv(false)} />
                     </Grid>
                 </Grid>
             </Grid>
-            <div className={classes.root}>
+            <div>
                 <MaterialTable
-                    title={title}
                     columns={[
-                        { title: 'Item', field: 'item', type: "string" },
-                        { title: 'Drug', field: 'drug', type: "string" },
-                        { title: 'Quantity', field: 'quantity', type: "numeric" },
-                        { title: 'AAA', field: 'ds', type: "string" },
-
+                        { title: 'Inventory Name', field: 'name', type: "string" },
+                        { title: 'Sub-Inventory', field: 'subInv', type: "number" },
                     ]}
 
-                    data={
-                        [
-                            { item: 'uwu', drug: 'uwu', quantity: 69 },
-                        ]
-                    }
+                    data={tableData}
 
                     icons={tableIcons}
 
                     options={{
                         exportButton: true,
+                        actionsColumnIndex: -1,
+                        maxBodyHeight: '50vh',
+                        minBodyHeight: '50vh',
+                        pageSizeOptions: [10, 15, 25, 50],
+                        pageSize: 10,
+                        showTitle: false
                     }}
 
                     actions={[
-                        {
-                            icon: tableIcons.Edit,
-                            tooltip: 'View Detail ',
-                            onClick: (event, rowData) => {
-                                handleDetailOpen(rowData);
-                            }
-                        },
+
                         {
                             icon: tableIcons.Delete,
                             tooltip: 'Delete Item',
                             onClick: (event, rowData) => {
+                                console.log(rowData)
                                 handleDeleteOpen(rowData);
                             }
                         }
@@ -155,9 +177,10 @@ export default function Inventory(props) {
                 />
             </div>
 
-            <ViewDetail onClose={handleDetailClose} open={openDetail} data={detailData} />
-
             <DeleteDialog onClose={handleDeleteClose} open={openDelete} data={deleteData} />
+            <Backdrop className={classes.backdrop} open={loading}>
+                <CircularProgress color="inherit" />
+            </Backdrop>
         </>
     );
 }

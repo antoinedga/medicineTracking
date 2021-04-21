@@ -1,16 +1,20 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
-import {DialogTitle, Dialog, DialogContent, DialogContentText, DialogActions  } from '@material-ui/core';
+import { DialogTitle, Dialog, DialogContent, DialogContentText, DialogActions } from '@material-ui/core';
 
 
 export default function SimpleDialog(props) {
 
-    const { onClose, open, data} = props;
-
+    const { onClose, open, data } = props;
+    const [state, setState] = React.useState({})
     const handleClose = () => {
         onClose();
     };
+
+    useEffect(() => {
+        setState(data)
+    }, [open])
 
 
     return (
@@ -23,7 +27,7 @@ export default function SimpleDialog(props) {
             <DialogTitle id="alert-dialog-title">{"Use Google's location service?"}</DialogTitle>
             <DialogContent>
                 <DialogContentText id="alert-dialog-description">
-                    Are you sure you want to delete item: {} from inventory {} ?
+                    Are you sure you want to delete inventory: {state?.name} ?
                 </DialogContentText>
             </DialogContent>
             <DialogActions>

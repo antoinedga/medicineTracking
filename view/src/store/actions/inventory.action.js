@@ -22,7 +22,7 @@ export const getAllPath = async (dispatch) => {
         then(data => {
             console.log(data)
             dispatch({ type: constant.INVENT_GET_ALL, payload: { location: data.content } })
-            return Promise.resolve()
+            return Promise.resolve(data.content)
         }).catch((error) => {
             // 400+ errors normally if user doesnt exist
             console.log(error.response)

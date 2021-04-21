@@ -162,7 +162,8 @@ export default function FullScreenDialog() {
                                         sorting: false,
                                         search: false,
                                         paging: false,
-                                        maxBodyHeight: 500,
+                                        maxBodyHeight: '50vh',
+                                        minBodyHeight: '50vh',
                                         headerStyle: { position: "sticky", top: 0 }
                                     }}
 
@@ -203,6 +204,8 @@ export default function FullScreenDialog() {
                                         sorting: true,
                                         fixedColumns: true,
                                         paging: false,
+                                        maxBodyHeight: '50vh',
+                                        minBodyHeight: '50vh',
                                     }}
 
 

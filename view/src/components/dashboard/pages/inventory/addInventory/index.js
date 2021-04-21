@@ -15,6 +15,7 @@ const useStyles = makeStyles((theme) => ({
     drawer: {
         width: drawerWidth,
         flexShrink: 0,
+        zIndex: theme.zIndex.drawer + 1,
     },
     drawerPaper: {
         width: drawerWidth,
@@ -44,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
         minWidth: 120,
     },
     backdrop: {
-        zIndex: theme.zIndex.drawer + 1,
+        zIndex: theme.zIndex.drawer + 2,
         color: '#fff',
     },
 
@@ -63,27 +64,18 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export default function SwipeableTemporaryDrawer() {
+export default function SwipeableTemporaryDrawer({ open, handleOpen, handleClose }) {
 
     const classes = useStyles();
     const theme = useTheme();
     const dispatch = useDispatch();
     const { register, handleSubmit, errors, control, getValues } = useForm('onTouched');
-    const [open, setOpen] = React.useState(false);
     const [openAlert, setAlertOpen] = React.useState(false);
     const [success, setSuccess] = React.useState(false);
     const location = useSelector(state => state.inventory.location);
     const loading = useSelector(state => state.inventory.add_loading);
     const errorMsg = useSelector(state => state.inventory.add_error)
-    const openInventory = () => {
 
-        if (open) {
-            setOpen(false);
-        } else {
-            setOpen(true);
-        }
-
-    }
 
     const onSubmit = () => {
         console.log(getValues())
@@ -104,10 +96,17 @@ export default function SwipeableTemporaryDrawer() {
             console.log(error)
         })
     }
+    const handleButtonEvent = () => {
+        if (open) {
+            handleClose()
+        } else {
+            handleOpen()
+        }
+    }
 
     return (
         <React.Fragment>
-            <Button variant="outlined" color="primary" className={classes.buttonFont} onClick={openInventory}>Create New Inventory</Button>
+            <Button variant="outlined" color="primary" className={classes.buttonFont} onClick={handleButtonEvent}>Create New Inventory</Button>
             <Drawer
                 className={classes.drawer}
                 variant="persistent"
@@ -118,7 +117,7 @@ export default function SwipeableTemporaryDrawer() {
                 }}
             >
                 <div className={classes.toolbar}>
-                    <IconButton onClick={() => setOpen(false)}>
+                    <IconButton onClick={() => handleClose()}>
                         <ChevronRightIcon />
                     </IconButton>
                 </div>

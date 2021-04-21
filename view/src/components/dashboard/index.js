@@ -26,7 +26,6 @@ import { Link } from 'react-router-dom';
 import HomePage from './pages/MainPage'
 import Inventory from "./pages/inventory";
 import Orders from "./pages/orders";
-import Locations from './pages/locations'
 import Users from "./pages/users";
 import NoLocationAccess from './pages/noAccessPage'
 import IdleTimer from "./pages/idle-timer";

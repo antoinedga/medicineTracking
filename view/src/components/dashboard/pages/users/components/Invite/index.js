@@ -11,6 +11,7 @@ import { TextField, FormHelperText, CircularProgress, Grid } from '@material-ui/
 import { makeStyles } from '@material-ui/core/styles';
 import { useForm } from "react-hook-form";
 import { inviteUser } from '../../../../../../store/actions/userManagement'
+import { useDispatch } from 'react-redux';
 function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
@@ -48,7 +49,7 @@ export default function InviteDialog(props) {
     const [loading, setLoading] = React.useState(false);
     const [errorMsg, setErrorMsg] = React.useState(false);
     const { register, errors, handleSubmit, setError, clearErrors, getValues } = useForm({ mode: 'onTouched' });
-
+    const dispatch = useDispatch()
     const handleClickOpen = () => {
         setOpen(true);
     };
@@ -64,7 +65,7 @@ export default function InviteDialog(props) {
     const handleOnSubmit = () => {
         let email = getValues();
         setLoading(true)
-        inviteUser(email).then((data) => {
+        inviteUser(dispatch, email).then((data) => {
             console.log(data)
             if (data.response) {
                 setLoading(false)

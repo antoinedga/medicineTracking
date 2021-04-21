@@ -6,7 +6,7 @@ var store = require("../store");
 
 export const getOrders = async (dispatch) => {
 
-    await refreshToken(dispatch)
+    let temp = await refreshToken(dispatch)
 
     let state = store.state.getState();
     let config = {
@@ -30,7 +30,7 @@ export const getOrders = async (dispatch) => {
 
 export const deleteOrder = async (dispatch, orderId) => {
 
-    await refreshToken(dispatch)
+    let temp = await refreshToken(dispatch)
 
     let state = store.state.getState();
 
@@ -63,7 +63,7 @@ export const deleteOrder = async (dispatch, orderId) => {
 
 export const getOrderByID = async (dispatch, orderId) => {
 
-    await refreshToken(dispatch)
+    let temp = await refreshToken(dispatch)
 
     let state = store.state.getState();
     let config = {
@@ -92,7 +92,7 @@ export const getOrderByID = async (dispatch, orderId) => {
 }
 
 export const getConfig = async (dispatch, configName) => {
-    await refreshToken(dispatch)
+    let temp = await refreshToken(dispatch)
 
     let state = store.state.getState();
     let config = {
@@ -119,7 +119,7 @@ export const getConfig = async (dispatch, configName) => {
 
 export const uploadOrder = async (dispatch, file, orderNum) => {
 
-    await refreshToken(dispatch)
+    let temp = await refreshToken(dispatch)
 
     let state = store.state.getState();
     var data = new FormData();

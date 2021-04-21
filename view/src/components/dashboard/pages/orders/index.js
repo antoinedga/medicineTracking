@@ -154,7 +154,9 @@ export default function Orders(props) {
                             actionsColumnIndex: -1,
                             exportButton: true,
                             pageSize: 10,
-                            pageSizeOptions: [10, 15, 20, 25, 50]
+                            pageSizeOptions: [10, 15, 20, 25, 50],
+                            maxBodyHeight: '50vh',
+                            minBodyHeight: '50vh',
                         }
                     }
                     actions={[

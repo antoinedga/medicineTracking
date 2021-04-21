@@ -6,7 +6,7 @@ var store = require("../store");
 
 export const getAllRoles = async (dispatch) => {
 
-    await refreshToken(dispatch)
+    let temp = await refreshToken(dispatch)
 
     let state = store.state.getState();
     let body = {
@@ -32,7 +32,7 @@ export const getAllRoles = async (dispatch) => {
 
 export const deleteRole = async (dispatch, roleID) => {
 
-    await refreshToken(dispatch)
+    let temp = await refreshToken(dispatch)
 
     let state = store.state.getState();
 
@@ -54,7 +54,7 @@ export const deleteRole = async (dispatch, roleID) => {
 
 export const createNewRoleConfig = async (dispatch) => {
 
-    await refreshToken(dispatch)
+    let temp = await refreshToken(dispatch)
 
     let state = store.state.getState();
     let bodyParam = {
@@ -76,7 +76,7 @@ export const createNewRoleConfig = async (dispatch) => {
 }
 
 export const getSubInventory = async (dispatch, path) => {
-    await refreshToken(dispatch)
+    let temp = await refreshToken(dispatch)
 
     let state = store.state.getState();
     let body = {
@@ -110,7 +110,7 @@ export const getSubInventory = async (dispatch, path) => {
 }
 
 export const submitCreateRole = async (dispatch, roleData) => {
-    await refreshToken(dispatch)
+    let temp = await refreshToken(dispatch)
 
     let state = store.state.getState();
     let body = roleData
@@ -133,7 +133,7 @@ export const submitCreateRole = async (dispatch, roleData) => {
 }
 
 export const updateRole = async (dispatch, roleData) => {
-    await refreshToken(dispatch)
+    let temp = await refreshToken(dispatch)
 
     let state = store.state.getState();
     let body = roleData

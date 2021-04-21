@@ -1,7 +1,12 @@
 import axios from 'axios'
+import { refreshToken } from '../../util/refreshTokenMethod'
+
 const store = require('../store')
 
-export const inviteUser = (email) => {
+export const inviteUser = async (dispatch, email) => {
+
+    let temp = await refreshToken(dispatch)
+
     let state = store.state.getState();
     let bodyParam = {
         email: email,
