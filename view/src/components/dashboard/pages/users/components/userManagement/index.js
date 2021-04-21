@@ -1,30 +1,74 @@
-import React from 'react';
-import { Grid } from '@material-ui/core'
+import React, { useEffect, useState } from 'react';
+import { Grid, Button, Menu, MenuItem } from '@material-ui/core'
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import icons from '../../../../../material-table-icon/index'
 import MaterialTable from 'material-table'
+import Moment from 'react-moment'
 import { makeStyles } from '@material-ui/core/styles';
+import { useDispatch } from 'react-redux'
+import { getAllUsersByRole } from '../../../../../../store/actions/userManagement'
 
+const RoleColumn = (roles) => {
+    const [anchorEl, setAnchorEl] = React.useState(null);
 
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
 
-export default function UserManagement(props) {
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
 
+    return (
+        <>
+            <Button>
+                {roles[0]}
+            </Button>
+            <Menu>
+                {
+                    roles.map(role => {
+                        return (<MenuItem>{role}</MenuItem>)
+                    })
+                }
+            </Menu>
+        </>
+    )
+}
+
+export default function UserManagement({ }) {
+
+    const dispatch = useDispatch();
+    const [listOfUsers, setListOfUser] = React.useState([]);
+
+    useEffect(() => {
+        getAllUsersByRole(dispatch).then(data => {
+            console.log(data.content[8])
+            setListOfUser(data.content)
+        }).catch(err => {
+            console.log(err.response)
+        })
+    }, [])
 
     return (
         <div>
             <MaterialTable
                 title="List of Users"
                 columns={[
-                    { title: 'Name', field: 'orderNumber' },
+                    { title: 'Name', field: 'name' },
                     {
-                        title: 'Email', field: 'orderDate',
+                        title: 'Email', field: 'email',
                     },
                     {
-                        title: 'Roles', field: 'orderDate',
+                        title: 'Roles', field: 'asd',
+                    },
+                    {
+                        title: 'CreatedAt', field: 'createdAt',
+                        render: rowData => <Moment date={rowData.createdAt} format="MMM-D-YYYY hh:mm a" />
+
                     }
                 ]}
-                data={[]}
+                data={listOfUsers}
                 icons={icons}
                 actions={[
                     {

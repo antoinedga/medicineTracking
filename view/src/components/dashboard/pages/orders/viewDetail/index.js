@@ -202,7 +202,7 @@ export default function CustomizedDialogs(props) {
 }
 
 function ListIdentifier(item) {
-    console.log(item)
+
     return (
         <>
             {item?.map(key => {

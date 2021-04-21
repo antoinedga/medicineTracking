@@ -24,3 +24,21 @@ export const inviteUser = async (dispatch, email) => {
             return Promise.reject(error)
         })
 }
+
+export const getAllUsersByRole = async (dispatch) => {
+
+    let temp = await refreshToken(dispatch)
+    let state = store.state.getState();
+
+    let config = {
+        headers: { Authorization: `Bearer ${state.login.token}` }
+    };
+
+    return axios.get("/api/role/user", config)
+        .then((res) => res.data).
+        then(data => {
+            return Promise.resolve(data)
+        }).catch((error) => {
+            return Promise.reject(error)
+        })
+}
