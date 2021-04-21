@@ -46,11 +46,11 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 export default function FullScreenDialog({ orderId, open, handleClose }) {
     const classes = useStyles();
-    const [onSaveRef,setOnSaveRef] = useState({onSave:()=>{}})
+    const [onSaveRef, setOnSaveRef] = useState({ onSave: () => { } })
 
     const onclose = (e) => {
         onSaveRef.onSave()
-        handleClose(e)
+        handleClose()
     }
 
     return (

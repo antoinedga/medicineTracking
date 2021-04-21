@@ -68,7 +68,7 @@ export default function Orders(props) {
             dispatch({ type: constants.ORDER_DONE })
 
         })
-    }, [selected, deleteToggle, importToggle, viewDetailToggle])
+    }, [selected, deleteToggle, importToggle, viewDetailToggle, viewEditToggle])
 
     const handleOpenDelete = (row) => {
         setRowData(row)
