@@ -101,7 +101,7 @@ export default function Orders(props) {
         setEditToggle(true)
     }
 
-    const handleCloseEdit = () {
+    const handleCloseEdit = () => {
         setRowDataEdit({})
         setEditToggle(false)
     }
