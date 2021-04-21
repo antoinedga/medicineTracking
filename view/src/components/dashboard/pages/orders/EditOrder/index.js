@@ -1,4 +1,4 @@
-import React, {  } from 'react';
+import React, { } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -8,7 +8,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 
-import {Typography, Slide, DialogContent}
+import { Typography, Slide, DialogContent }
     from '@material-ui/core'
 import EditOrderForm from './form';
 
@@ -44,7 +44,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 
 
-export default function FullScreenDialog({orderId}) {
+export default function FullScreenDialog({ orderId }) {
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
 
@@ -58,9 +58,7 @@ export default function FullScreenDialog({orderId}) {
 
     return (
         <div>
-            <Button variant="outlined" color="primary" onClick={handleClickOpen}>
-                Open full-screen dialog
-            </Button>
+
             <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
                 <AppBar className={classes.appBar}>
                     <Toolbar>
@@ -76,7 +74,7 @@ export default function FullScreenDialog({orderId}) {
                     </Toolbar>
                 </AppBar>
                 <DialogContent>
-                    <EditOrderForm orderId={orderId}/>
+                    <EditOrderForm orderId={orderId} />
                 </DialogContent>
 
             </Dialog>

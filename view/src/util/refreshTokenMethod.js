@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { useDispatch } from 'react-redux'
 import { state } from '../store/store'
 var jwt = require('jsonwebtoken');
 
@@ -24,6 +23,7 @@ export const refreshToken = async (dispatch) => {
                         }
                     }
                 )
+                console.log("reached")
                 return Promise.resolve(data)
             }).catch(err => {
                 console.log(err.response)

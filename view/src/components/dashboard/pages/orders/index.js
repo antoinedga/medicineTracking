@@ -15,6 +15,7 @@ import InfoIcon from '@material-ui/icons/Info';
 import EditIcon from '@material-ui/icons/Edit';
 import ImportExcel from './importExcel'
 import ViewDetail from "./viewDetail"
+import EditOrder from './EditOrder'
 
 const useStyles = makeStyles((theme) => ({
     detailPanel: {
@@ -53,6 +54,9 @@ export default function Orders(props) {
 
     const [importToggle, setImportToggle] = useState(false)
 
+    const [rowDataEdit, setRowDataEdit] = useState({});
+    const [viewEditToggle, setEditToggle] = useState(false);
+
     useEffect(() => {
         dispatch({ type: constants.ORDER_LOADING })
 
@@ -79,6 +83,7 @@ export default function Orders(props) {
         setRowDataView(row)
         setViewDetail(true)
     }
+
     const handleDetailClose = () => {
         setViewDetail(false)
     }
@@ -89,6 +94,16 @@ export default function Orders(props) {
 
     const handleImportOpen = () => {
         setImportToggle(true)
+    }
+
+    const handleOpenEdit = (row) => {
+        setRowDataEdit(row)
+        setEditToggle(true)
+    }
+
+    const handleCloseEdit = () {
+        setRowDataEdit({})
+        setEditToggle(false)
     }
 
     return (
@@ -179,6 +194,7 @@ export default function Orders(props) {
 
                 />
             </div>
+            <EditOrder handleOpen={handleOpenEdit} handleClose={handleCloseEdit} orderId={rowDataEdit?._id} />
             <DeleteDialog open={deleteToggle} handleClose={handleDeleteClose} rowData={rowDataDelete} />
             <ViewDetail open={viewDetailToggle} data={rowDataView} handleClose={handleDetailClose} />
             <Backdrop className={classes.backdrop} open={loading}>
