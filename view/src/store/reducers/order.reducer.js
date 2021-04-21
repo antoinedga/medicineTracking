@@ -26,7 +26,8 @@ export default function orderReducer(state = initialState, action) {
         case constant.ORDER_PATH_SET: {
             return {
                 ...state,
-                orders: action.payload.orders
+                orders: action.payload.orders,
+                loading: false
             }
         }
         default:

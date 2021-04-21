@@ -24,6 +24,8 @@ export const getOrders = async (dispatch) => {
             dispatch({ type: constants.ORDER_PATH_SET, payload: { orders: data.content } })
             return data
         }).catch((error) => {
+            dispatch({ type: constants.ORDER_DONE })
+
             return error
         })
 }
@@ -46,6 +48,7 @@ export const updateOrder = async (dispatch, order) => {
             dispatch({ type: constants.ORDER_PATH_SET, payload: { orders: data.content } })
             return data
         }).catch((error) => {
+            dispatch({ type: constants.ORDER_DONE })
             return error
         })
 }
@@ -76,8 +79,10 @@ export const deleteOrder = async (dispatch, orderId) => {
     )
         .then((res) => res.data)
         .then(data => {
+            dispatch({ type: constants.ORDER_DONE })
             return Promise.resolve(data)
         }).catch((error) => {
+            dispatch({ type: constants.ORDER_DONE })
 
             return Promise.reject(error)
         })
@@ -102,8 +107,12 @@ export const getOrderByID = async (dispatch, orderId) => {
         .then((res) => res.data)
         .then(data => {
             console.log(data)
+            dispatch({ type: constants.ORDER_DONE })
+
             return Promise.resolve(data)
         }).catch((error) => {
+            dispatch({ type: constants.ORDER_DONE })
+
             return Promise.reject({
                 response: false,
                 message: "Error while calling the api",
@@ -124,13 +133,16 @@ export const getEachesUnits = async (dispatch) => {
         .then((res) => res.data)
         .then(data => {
             console.log(data)
+            dispatch({ type: constants.ORDER_DONE })
             return Promise.resolve(data)
         }).catch((error) => {
+            dispatch({ type: constants.ORDER_DONE })
+
             return Promise.reject({
                 response: false,
                 message: "Error while calling the api",
                 content: error
-                })
+            })
         })
 }
 
@@ -149,8 +161,10 @@ export const getConfig = async (dispatch, configName) => {
         .then((res) => res.data)
         .then(data => {
             console.log(data)
+            dispatch({ type: constants.ORDER_DONE })
             return Promise.resolve(data)
         }).catch((error) => {
+            dispatch({ type: constants.ORDER_DONE })
             return Promise.reject({
                 response: false,
                 message: "Error while calling the api",
@@ -183,10 +197,14 @@ export const uploadOrder = async (dispatch, file, orderNum) => {
 
     return axios(config)
         .then(function (response) {
+            dispatch({ type: constants.ORDER_DONE })
+
             return Promise.resolve(response.data)
         })
         .catch(function (error) {
             console.log(error.response);
+            dispatch({ type: constants.ORDER_DONE })
+
             return Promise.reject(error.data)
         });
 }
