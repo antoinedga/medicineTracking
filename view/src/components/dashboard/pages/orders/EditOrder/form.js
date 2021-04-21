@@ -80,13 +80,12 @@ export default function EditOrderForm({ orderId, onSaveRef }) {
     useEffect(()=>{
         setDataLoaded(!!(orderData && orderStatusOptions && eachesUnitsOptions))
         onSaveRef.onSave= () => {
-            console.log('saving!')
-            updateOrder(dispatch,orderData)
+            return updateOrder(dispatch,orderData)
             .then(result => {
-                console.log('saving!',result)
+                return result
             })
             .catch(error => {
-                console.log('saving!',error)
+                return error
         })
     } 
     },[dispatch, eachesUnitsOptions, onSaveRef, orderData, orderId, orderStatusOptions])

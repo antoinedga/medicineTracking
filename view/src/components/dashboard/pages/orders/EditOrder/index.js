@@ -50,7 +50,9 @@ export default function FullScreenDialog({ orderId, open, handleClose }) {
 
     const onclose = (e) => {
         onSaveRef.onSave()
-        handleClose()
+        .then(()=> {
+            handleClose()
+        })
     }
 
     return (
