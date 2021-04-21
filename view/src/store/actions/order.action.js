@@ -122,6 +122,8 @@ export const getOrderByID = async (dispatch, orderId) => {
 }
 
 export const getEachesUnits = async (dispatch) => {
+    let temp = await refreshToken(dispatch)
+
     let state = store.state.getState();
     let config = {
         headers: { Authorization: `Bearer ${state.login.token}` }
