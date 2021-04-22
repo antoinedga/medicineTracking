@@ -9,13 +9,13 @@ const useStyles = makeStyles((theme) => ({
 
 export default function MySelect(props) {
     const classes = useStyles();
-    const {dataObject,fieldName,options} = props
+    const { dataObject, fieldName, options } = props
     const [status, setStatus] = useState('');
 
     useEffect(() => {
         if (dataObject?.[fieldName] !== undefined)
-        setStatus(dataObject?.[fieldName]);
-    }, [dataObject, fieldName,options]);
+            setStatus(dataObject?.[fieldName]);
+    }, [dataObject, fieldName, options]);
 
     function handleChange(e) {
         setStatus(e.target.value);
@@ -28,7 +28,7 @@ export default function MySelect(props) {
             className={classes.select}
             value={status}
             {...props}
-            >
+        >
             {options?.map((option) => (
                 <MenuItem key={option} value={option} {...props?.childProps}>{option}</MenuItem>
             ))}

@@ -29,7 +29,6 @@ export default function MyList(props) {
   useEffect(() => {
     if (dataObject?.[fieldName] !== undefined) {
       setList(dataObject?.[fieldName]);
-      console.log("xx", dataObject?.[fieldName]);
     }
   }, [dataObject, fieldName]);
 
@@ -45,25 +44,23 @@ export default function MyList(props) {
 
   function handleAdd() {
     const newItems = addObject();
-    console.log(newItems)
     setList([...list, newItems]);
     dataObject[fieldName] = list;
-    console.log(list)
   }
 
   return (
-      <List {...props}>
-        {list.map((item, index) => (
-                listItem(item,index,(e) => handleDelete(index))
-        ))}
-        {addObject &&<IconButton
-          aria-label="add"
-          size="small"
-          onClick={
-            handleAdd}
-        >
-          <Add fontSize="small" />
-        </IconButton>}
-      </List>
+    <List {...props}>
+      {list.map((item, index) => (
+        listItem(item, index, (e) => handleDelete(index))
+      ))}
+      {addObject && <IconButton
+        aria-label="add"
+        size="small"
+        onClick={
+          handleAdd}
+      >
+        <Add fontSize="small" />
+      </IconButton>}
+    </List>
   );
 }

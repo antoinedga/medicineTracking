@@ -6,7 +6,6 @@ export const registration = async (formData, dispatch) => {
     return axios.post(`http://localhost:8080/api/user/signup/${formData.token}`, formData)
         .then((res) => res.data).
         then(data => {
-            console.log(data)
             if (data.response) {
                 dispatch({ type: constant.REG_SUCCESS })
             }
@@ -15,7 +14,6 @@ export const registration = async (formData, dispatch) => {
             }
             return Promise.resolve(data)
         }).catch(error => {
-            console.log(error);
             return Promise.reject(error)
         })
 }

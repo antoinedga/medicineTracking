@@ -62,7 +62,6 @@ export const deleteOrder = async (dispatch, orderId) => {
     let config = {
         headers: { Authorization: `Bearer ${state.login.token}` }
     };
-    console.log(config)
 
     let bodyParam = {
         _id: orderId,
@@ -106,7 +105,6 @@ export const getOrderByID = async (dispatch, orderId) => {
     return axios.post("http://localhost:8080/api/order/by_id", bodyParam, config)
         .then((res) => res.data)
         .then(data => {
-            console.log(data)
             dispatch({ type: constants.ORDER_DONE })
 
             return Promise.resolve(data)
@@ -134,7 +132,6 @@ export const getEachesUnits = async (dispatch) => {
     return axios.get("http://localhost:8080/api/product/units", config)
         .then((res) => res.data)
         .then(data => {
-            console.log(data)
             dispatch({ type: constants.ORDER_DONE })
             return Promise.resolve(data)
         }).catch((error) => {

@@ -116,15 +116,15 @@ export default function FullScreenDialog() {
     };
 
     const activeStyle = {
-        borderColor: '#2196f3'
+        borderColor: 'blue'
     };
 
     const acceptStyle = {
-        borderColor: '#00e676'
+        borderColor: 'green'
     };
 
     const rejectStyle = {
-        borderColor: '#ff1744'
+        borderColor: 'red'
     };
 
     const style = useMemo(() => ({

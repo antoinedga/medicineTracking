@@ -124,10 +124,10 @@ export const submitCreateRole = async (dispatch, roleData) => {
     return axios.post(`http://localhost:8080/api/role`, body, config)
         .then((res) => res.data).
         then(data => {
-            console.log(data)
+
             return Promise.resolve(data)
         }).catch(error => {
-            console.log(error)
+
             return Promise.reject(error)
         })
 }
@@ -137,7 +137,6 @@ export const updateRole = async (dispatch, roleData) => {
 
     let state = store.state.getState();
     let body = roleData
-    console.log(roleData)
     let config = {
         headers: {
             'Authorization':
@@ -147,10 +146,8 @@ export const updateRole = async (dispatch, roleData) => {
     return axios.put(`http://localhost:8080/api/role/by_id`, body, config)
         .then((res) => res.data).
         then(data => {
-            console.log(data)
             return Promise.resolve(data)
         }).catch(error => {
-            console.log(error)
             return Promise.reject(error)
         })
 }

@@ -53,10 +53,10 @@ export const editUserForRoles = async (dispatch, data) => {
     };
     return axios.post("/api/role/user", data, config)
         .then(res => {
-            console.log(res)
+
             return Promise.resolve(res.data)
         }).catch(err => {
-            console.log(err.response)
+
             return Promise.reject(err.response)
         })
 }

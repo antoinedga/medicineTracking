@@ -94,7 +94,6 @@ export default function EditOrderForm({ orderId, onSaveRef, setLoading }) {
 
 
     useEffect(() => {
-        console.log("useEffect")
         setLoading(true)
         // get order data
         getOrderByID(dispatch, orderId)
@@ -115,7 +114,6 @@ export default function EditOrderForm({ orderId, onSaveRef, setLoading }) {
                             .then(data => {
                                 if (!data.response) throw data
                                 setEachesUnitsOptions(data.content.map(obj => obj.name))
-                                console.log(data.content.map(obj => obj.name).sort())
                                 setLoading(false)
                             })
                             .catch(err => {

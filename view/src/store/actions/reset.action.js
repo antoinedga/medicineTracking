@@ -14,11 +14,9 @@ export async function sendResetPassword(dispatch, data) {
     let result = axios.post(`/api/user/reset/${token}`, bodyParam)
         .then((res) => res.data).
         then(data => {
-            console.log(data)
             return data
         }).catch((error) => {
             // 400+ errors normally if user doesnt exist
-            console.log(error)
             let msg = error.response?.data.message;
             return error
         });
