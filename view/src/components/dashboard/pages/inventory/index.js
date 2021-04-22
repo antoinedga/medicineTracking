@@ -19,7 +19,7 @@ import ViewColumn from '@material-ui/icons/ViewColumn';
 import { Grid, Backdrop, CircularProgress } from '@material-ui/core'
 
 import constant from "../../../../store/actions/actionType/inventory";
-import { getAllPath } from "../../../../store/actions/inventory.action";
+import { getAllPath, getAllPathPrefix } from "../../../../store/actions/inventory.action";
 import { state } from '../../../../store/store'
 
 import ViewDetail from './viewDetail'
@@ -102,7 +102,7 @@ export default function Inventory(props) {
 
     useEffect(() => {
         dispatch({ type: constant.LOADING })
-        getAllPath(dispatch).then((data) => {
+        getAllPathPrefix(dispatch).then((data) => {
             var DataSet = []
             data.forEach(path => {
                 var count = 0;

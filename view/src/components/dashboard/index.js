@@ -141,7 +141,11 @@ function Dashboard(props) {
 
     useEffect(() => {
         console.log("dashboard")
-        inventAction.getAllPath(dispatch).then((data) => { });
+        inventAction.getAllPath(dispatch).then((data) => {
+            console.log(data)
+        }).catch(err => {
+            console.log(err)
+        });
     }, [url])
 
     return (
