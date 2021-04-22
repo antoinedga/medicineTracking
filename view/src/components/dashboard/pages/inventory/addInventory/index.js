@@ -78,9 +78,11 @@ export default function SwipeableTemporaryDrawer({ open, handleOpen, handleClose
 
 
     const onSubmit = () => {
-        console.log(getValues())
+        let data = getValues()
+        let tempPath = data.path.split("~")[1]
+        data.path = tempPath;
         dispatch({ type: constants.ADD_LOADING })
-        addNewInventory(dispatch, getValues()).then(
+        addNewInventory(dispatch, data).then(
             (data) => {
                 console.log(data.response)
                 if (data.response) {
@@ -136,12 +138,12 @@ export default function SwipeableTemporaryDrawer({ open, handleOpen, handleClose
                                 }}
                                 as={
                                     <Select>
-                                        <MenuItem key={"/"} value={"/"}>
-                                            {"/"}
+                                        <MenuItem key={"/"} value={"~"}>
+                                            {"~/"}
                                         </MenuItem>
                                         {location.map((element) => (
-                                            <MenuItem key={element} value={element}>
-                                                {element}
+                                            <MenuItem key={element} value={"~" + element}>
+                                                {"~" + element}
                                             </MenuItem>
                                         ))
                                         }

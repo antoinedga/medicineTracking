@@ -124,7 +124,7 @@ export default function Inventory(props) {
             dispatch({ type: constant.DONE })
 
         });
-    }, [title, openNewInv, deleteData])
+    }, [title, openNewInv, openDelete])
 
     return (
         <>

@@ -52,3 +52,28 @@ export async function addNewInventory(dispatch, newPath) {
             return error.response.data;
         })
 }
+
+export async function deleteInventory(dispatch, path) {
+
+    await refreshToken(dispatch)
+
+    let state = store.state.getState();
+
+    alert(path)
+
+    return axios.delete("/api/inventory/by_path/recursive", {
+        headers: {
+            Authorization: `Bearer ${state.login.token}`
+        }, data: {
+            path
+        }
+    })
+        .then((res) => res.data).
+        then(data => {
+            return data;
+        }).catch((error) => {
+            console.log(error.response.data)
+            dispatch({ type: constant.ADD_ERROR, payload: { msg: error.response.data.message } })
+            return error.response.data;
+        })
+}
