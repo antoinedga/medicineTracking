@@ -59,6 +59,7 @@ exports.getAll = (req, res) => {
     /mlc1/Outgoing|Orders|Inv|Outposts
 */
 exports.create = (req, res) => {
+  console.log(JSON.stringify(req.body, null, 1), 'zz');
   roles = objectToRolls(req.body);
 
   Role.insertMany(roles, callback(req, res, 'create role(s)'));
@@ -76,7 +77,7 @@ exports.grantUserRole = (req, res) => {
   User
       .updateMany(
           {_id: {$in: utils.toArray(grant.user)}},
-          {$addToSet: {roles: utils.toArray(grant.role)}},
+          {$set: {roles: utils.toArray(grant.role)}},
           callback(req, res, 'grant role(s)'),
       );
 };
