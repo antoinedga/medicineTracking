@@ -88,7 +88,7 @@ export default function Inventory(props) {
 
     const refresh = () => {
         setReloadToggle(!reloadToggle)
-        handleDashboardToggle()
+        props.handleDashboardToggle()
     }
 
     const handleDeleteOpen = (rowData) => {
@@ -99,7 +99,7 @@ export default function Inventory(props) {
     const handleDeleteClose = () => {
         setDeleteData({})
         setDeleteOpen(false);
-        handleDashboardToggle()
+        props.handleDashboardToggle()
     };
 
     useEffect(() => {
