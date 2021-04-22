@@ -8,6 +8,7 @@ import Moment from 'react-moment'
 import { makeStyles } from '@material-ui/core/styles';
 import { useDispatch } from 'react-redux'
 import { getAllUsersByRole } from '../../../../../../store/actions/userManagement'
+import constants from '../../../../../../store/actions/actionType/admin'
 import EditUser from './editUser'
 
 export default function UserManagement({ }) {
@@ -27,10 +28,14 @@ export default function UserManagement({ }) {
     }
 
     useEffect(() => {
+        dispatch({ type: constants.ADMIN_LOADING })
+
         getAllUsersByRole(dispatch).then(data => {
             console.log(data.content)
             setListOfUser(data.content)
+            dispatch({ type: constants.ADMIN_SUCCESS })
         }).catch(err => {
+            dispatch({ type: constants.ADMIN_SUCCESS })
             console.log(err)
         })
     }, [])
