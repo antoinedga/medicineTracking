@@ -175,7 +175,6 @@ function getPaths(_query, action, resource, regex = false, prefix='') {
   if (!_query[resource] || !_query[resource][action]) return [];
 
   const paths = Object.keys(_query[resource][action]);
-  paths = paths.filter(((path) => path.startsWith(prefix)));
   if (regex) {
     return paths.map((path) => {
       return new RegExp('^' + path);
