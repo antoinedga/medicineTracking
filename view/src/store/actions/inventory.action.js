@@ -90,8 +90,6 @@ export async function deleteInventory(dispatch, path) {
 
     let state = store.state.getState();
 
-    alert(path)
-
     return axios.delete("/api/inventory/by_path/recursive", {
         headers: {
             Authorization: `Bearer ${state.login.token}`
