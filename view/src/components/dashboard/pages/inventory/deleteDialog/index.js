@@ -61,7 +61,7 @@ export default function SimpleDialog(props) {
             aria-labelledby="alert-dialog-title"
             aria-describedby="alert-dialog-description"
         >
-            <DialogTitle id="alert-dialog-title">{"Use Google's location service?"}</DialogTitle>
+            <DialogTitle id="alert-dialog-title">{`Deleting Inventory ${state?.name}`}</DialogTitle>
             {(loading) ? (
                 <>
                     <CircularProgress />
