@@ -34,6 +34,7 @@ export default function SimpleDialog(props) {
         setState(data)
         setAlert(false)
         setSuccess(false)
+        setDisableBtns(false)
     }, [open])
 
     const onSubmit = () => {
