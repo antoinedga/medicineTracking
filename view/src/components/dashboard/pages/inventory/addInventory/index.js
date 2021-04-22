@@ -183,23 +183,23 @@ export default function SwipeableTemporaryDrawer({ open, handleOpen, handleClose
                             Submit
                         </Button>
                     </form>
-                    <Snackbar open={openAlert} autoHideDuration={6000} onClose={() => setAlertOpen(false)}>
-                        {(success) ? (
-                            <Alert onClose={() => setAlertOpen(false)} severity="success">
-                                Successfully added new inventory!
-                            </Alert>)
-                            :
-                            (
-                                <Alert severity="error">
-                                    {errorMsg}
-                                </Alert>
-                            )}
-                    </Snackbar>
-                    <Backdrop className={classes.backdrop} open={loading}>
-                        <CircularProgress color="inherit" />
-                    </Backdrop>
                 </Container>
             </Drawer>
+            <Snackbar open={openAlert} autoHideDuration={6000} onClose={() => setAlertOpen(false)}>
+                {(success) ? (
+                    <Alert onClose={() => setAlertOpen(false)} severity="success">
+                        Successfully added new inventory!
+                    </Alert>)
+                    :
+                    (
+                        <Alert severity="error">
+                            {errorMsg}
+                        </Alert>
+                    )}
+            </Snackbar>
+            <Backdrop className={classes.backdrop} open={loading}>
+                <CircularProgress color="inherit" />
+            </Backdrop>
         </React.Fragment>
     );
 }

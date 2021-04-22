@@ -261,7 +261,6 @@ function Dashboard(props) {
                                 onChange={handleLocationChange}
                                 inputProps={{ 'aria-label': 'Without label' }}
                                 fullWidth={true}
-                                displayEmpty={false}
                                 MenuProps={{
                                     PaperProps: {
                                         style: {
@@ -270,6 +269,9 @@ function Dashboard(props) {
                                     }
                                 }}
                             >
+                                <MenuItem value={"/"}>
+                                    /
+                                </MenuItem>
                                 {
                                     location.map(loc =>
                                         <MenuItem key={loc} value={loc}>

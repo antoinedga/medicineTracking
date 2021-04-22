@@ -32,7 +32,7 @@ export default function loginReducer(state = initialState, action) {
                 ...state,
                 loading: false,
                 location: action.payload.location,
-                selected: action.payload.location[0],
+                selected: "",
                 errorMsg: ""
             }
         }

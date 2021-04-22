@@ -15,6 +15,7 @@ export default function SimpleDialog(props) {
     const [openAlert, setAlert] = React.useState(false);
     const [message, setMessage] = React.useState("");
     const [success, setSuccess] = React.useState(false)
+    const [disableBtns, setDisableBtns] = React.useState(false)
     const dispatch = useDispatch();
 
     const handleClose = () => {
@@ -37,6 +38,7 @@ export default function SimpleDialog(props) {
 
     const onSubmit = () => {
         setLoading(true)
+        setDisableBtns(true)
         deleteInventory(dispatch, state.name)
             .then(data => {
                 setLoading(false)
@@ -44,12 +46,14 @@ export default function SimpleDialog(props) {
                 setAlert(true)
                 setMessage("Successfully Deleted Inventory")
                 setSuccess(true)
+                props.refresh()
             })
             .catch(err => {
                 setLoading(false)
                 setAlert(true)
                 setMessage("Error while Deleting Inventory")
                 setSuccess(false)
+                setDisableBtns(false)
                 console.log(err)
             })
     }
@@ -73,10 +77,10 @@ export default function SimpleDialog(props) {
                 </DialogContentText>
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleClose} color="secondary">
+                <Button disabled={disableBtns} onClick={handleClose} color="secondary">
                     No
                 </Button>
-                <Button onClick={onSubmit} color="primary">
+                <Button disabled={disableBtns} onClick={onSubmit} color="primary">
                     Yes
                 </Button>
             </DialogActions>

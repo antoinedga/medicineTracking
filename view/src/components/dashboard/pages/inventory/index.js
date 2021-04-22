@@ -99,7 +99,6 @@ export default function Inventory(props) {
     const handleDeleteClose = () => {
         setDeleteData({})
         setDeleteOpen(false);
-        props.handleDashboardToggle()
     };
 
     useEffect(() => {
