@@ -42,3 +42,21 @@ export const getAllUsersByRole = async (dispatch) => {
             return Promise.reject(error)
         })
 }
+
+export const editUserForRoles = async (dispatch, data) => {
+
+    let temp = await refreshToken(dispatch)
+    let state = store.state.getState();
+
+    let config = {
+        headers: { Authorization: `Bearer ${state.login.token}` }
+    };
+    return axios.post("/api/role/user", data, config)
+        .then(res => {
+            console.log(res)
+            return Promise.resolve(res.data)
+        }).catch(err => {
+            console.log(err.response)
+            return Promise.reject(err.response)
+        })
+}

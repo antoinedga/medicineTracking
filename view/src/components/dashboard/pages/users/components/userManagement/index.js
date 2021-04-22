@@ -5,15 +5,26 @@ import Box from '@material-ui/core/Box';
 import icons from '../../../../../material-table-icon/index'
 import MaterialTable from 'material-table'
 import Moment from 'react-moment'
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 import { useDispatch } from 'react-redux'
 import { getAllUsersByRole } from '../../../../../../store/actions/userManagement'
 import constants from '../../../../../../store/actions/actionType/admin'
 import EditUser from './editUser'
 
+const useStyles = makeStyles((theme) => ({
+    menuItems: {
+        background: "",
+        '&:hover': {
+            background: "",
+        },
+    }
+}));
+
 export default function UserManagement({ }) {
 
     const dispatch = useDispatch();
+    const classes = useStyles();
+    const theme = useTheme();
     const [listOfUsers, setListOfUser] = React.useState([]);
     const [openEdit, setOpenEdit] = React.useState(false);
     const [editData, setEditData] = React.useState({});
@@ -40,6 +51,48 @@ export default function UserManagement({ }) {
             console.log(err)
         })
     }, [openEdit])
+
+
+    const RoleColumn = (props) => {
+        const roles = props.roles
+        const [anchorEl, setAnchorEl] = React.useState(null);
+
+        const handleClick = (event) => {
+            setAnchorEl(event.currentTarget);
+        };
+
+        const handleClose = () => {
+            setAnchorEl(null);
+        };
+
+        return (
+            <>
+                {(roles == undefined || roles.length == 0)
+                    ? (<>Not Assigned</>) : (
+                        (roles.length == 1) ? (
+                            <>
+                                {roles[0].name}
+                            </>)
+                            :
+                            (<>
+                                <Button onClick={handleClick}>
+                                    {roles[0].name + "..."}
+                                </Button>
+                                <Menu anchorEl={anchorEl}
+                                    keepMounted
+                                    open={Boolean(anchorEl)}
+                                    onClose={handleClose}>
+                                    {roles.map(role => {
+                                        return <MenuItem className={classes.menuItems}>{role.name}</MenuItem>
+                                    }
+                                    )}
+                                </Menu>
+                            </>)
+                    )
+                }
+            </>
+        )
+    }
 
 
     return (<>
@@ -90,40 +143,3 @@ export default function UserManagement({ }) {
     )
 }
 
-const RoleColumn = (props) => {
-    const roles = props.roles
-    const [anchorEl, setAnchorEl] = React.useState(null);
-
-    const handleClick = (event) => {
-        setAnchorEl(event.currentTarget);
-    };
-
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
-
-    return (
-        <>
-            {(roles == undefined || roles.length == 0)
-                ? (<>Not Assigned</>) : (
-                    (roles.length == 1) ? (
-                        <>
-                            {roles[0].name}
-                        </>)
-                        :
-                        (<>
-                            <Button onClick={handleClick}>
-                                {roles[0].name + "..."}
-                            </Button>
-                            <Menu>
-                                {roles.map(role => {
-                                    return <MenuItem>{role.name}</MenuItem>
-                                }
-                                )}
-                            </Menu>
-                        </>)
-                )
-            }
-        </>
-    )
-}
