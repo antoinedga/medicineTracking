@@ -87,7 +87,7 @@ export default function CustomizedDialogs(props) {
             }).catch(error => console.log(error.response))
             dispatch({ type: constants.ORDER_DONE })
         }
-    }, [dataId]).
+    }, [dataId])
 
 
         return(
@@ -141,46 +141,6 @@ export default function CustomizedDialogs(props) {
                                     dataView.items?.map((item) => {
                                         return (
                                             <Grid item container>
-                                                <Grid item xs={12}>
-                                                    <Typography>
-                                                        Quantity: {item.quantity}
-                                                    </Typography>
-                                                    <Divider />
-                                                </Grid>
-                                                <Grid item xs={6}>
-                                                    <ListItem>
-                                                        <ListItemText primary={
-                                                            ListIdentifier(item.product?.identifiers)
-                                                        }
-                                                        />
-                                                    </ListItem>
-                                                </Grid>
-                                                <Grid item xs={6}>
-                                                    <ListItem>
-                                                        <ListItemText primary={ListIdentifier(item.desired?.identifiers)
-                                                        }
-                                                        />
-                                                    </ListItem>
-                                                </Grid>
-
-                                            </Grid>
-                                        )
-                                    })
-                                }
-                            </Grid>
-
-                        </Grid>
-
-
-                        <Typography variant="h6">
-                            Logs:
-                    </Typography>
-                        <Divider />
-                        <List dense={true} style={{ maxHeight: 200, overflow: 'auto' }}>
-                            {
-                                dataView.log?.map((log) => {
-                                    return (
-                                        <Grid item container>
                                             <Grid item xs={12}>
                                                 <Typography>
                                                     Quantity: {item.quantity}
@@ -212,6 +172,29 @@ export default function CustomizedDialogs(props) {
                                             </Grid>
 
                                         </Grid>
+                                        )
+                                    })
+                                }
+                            </Grid>
+
+                        </Grid>
+
+
+                        <Typography variant="h6">
+                            Logs:
+                    </Typography>
+                        <Divider />
+                        <List dense={true} style={{ maxHeight: 200, overflow: 'auto' }}>
+                            {
+                                dataView.log?.map((log) => {
+                                    return (
+                                        <ListItem key={log._id}>
+                                             <ListItemText primary={log.message} secondary={<Moment format="MMM-D-YYYY h:mm a" >
+                                                 {
+                                                     log.date
+                                                 }
+                                             </Moment>} />
+                                         </ListItem>
                                     )
                                 })
                             }
