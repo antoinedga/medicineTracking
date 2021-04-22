@@ -19,6 +19,7 @@ import Divider from '@material-ui/core/Divider';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
+import MyEaches from './eaches';
 
 
 const styles = (theme) => ({
@@ -95,7 +96,8 @@ export default function CustomizedDialogs(props) {
                 scroll={"paper"}
                 open={open}
                 fullWidth={true}
-                maxWidth={"lg"}>
+                maxWidth={"xl"}
+                >
                 <DialogTitle id="customized-dialog-title" onClose={handleClose}>
                     Order
                 </DialogTitle>
@@ -145,7 +147,7 @@ export default function CustomizedDialogs(props) {
                                                 </Typography>
                                                 <Divider />
                                             </Grid>
-                                            <Grid item xs={6}>
+                                            <Grid item xs={3}>
                                                 <ListItem>
                                                     <ListItemText primary={
                                                         ListIdentifier(item.product?.identifiers)
@@ -153,14 +155,22 @@ export default function CustomizedDialogs(props) {
                                                     />
                                                 </ListItem>
                                             </Grid>
-                                            <Grid item xs={6}>
+                                            <Grid item xs={3}>
+                                                <Typography>Eaches:</Typography>
+                                                <MyEaches eaches={item.product?.eaches}/>
+                                            </Grid>
+                                            <Grid item xs={3}>
                                                 <ListItem>
                                                     <ListItemText primary={ListIdentifier(item.desired?.identifiers)
                                                     }
                                                     />
                                                 </ListItem>
                                             </Grid>
-
+                                            <Grid item xs={3}>
+                                                <Typography>Eaches:</Typography>
+                                                <MyEaches eaches={item.desired?.eaches}/>
+                                            </Grid>
+                                        
                                         </Grid>
                                     )
                                 })
