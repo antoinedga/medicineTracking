@@ -19,7 +19,8 @@ export default function UserManagement({ }) {
     const [editData, setEditData] = React.useState({});
 
     const handleOpenEdit = (data) => {
-
+        setEditData(data)
+        setOpenEdit(true)
     }
 
     const handleEditClose = () => {
@@ -38,7 +39,8 @@ export default function UserManagement({ }) {
             dispatch({ type: constants.ADMIN_SUCCESS })
             console.log(err)
         })
-    }, [])
+    }, [openEdit])
+
 
     return (<>
         <div>
@@ -63,14 +65,9 @@ export default function UserManagement({ }) {
                 icons={icons}
                 actions={[
                     {
-                        icon: icons.Info,
-                        tooltip: 'View Detail User',
-                        onClick: (event, rowData) => alert("You saved " + rowData.name)
-                    },
-                    {
                         icon: icons.Edit,
                         tooltip: 'Edit User',
-                        onClick: (event, rowData) => alert("You saved " + rowData.name)
+                        onClick: (event, rowData) => handleOpenEdit(rowData)
                     },
                     {
                         icon: icons.Delete,
@@ -95,7 +92,6 @@ export default function UserManagement({ }) {
 
 const RoleColumn = (props) => {
     const roles = props.roles
-    console.log(props)
     const [anchorEl, setAnchorEl] = React.useState(null);
 
     const handleClick = (event) => {
@@ -105,9 +101,6 @@ const RoleColumn = (props) => {
     const handleClose = () => {
         setAnchorEl(null);
     };
-    useEffect(() => {
-        console.log(roles)
-    })
 
     return (
         <>
@@ -124,7 +117,6 @@ const RoleColumn = (props) => {
                             </Button>
                             <Menu>
                                 {roles.map(role => {
-                                    console.log(role)
                                     return <MenuItem>{role.name}</MenuItem>
                                 }
                                 )}
