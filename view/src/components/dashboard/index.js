@@ -121,6 +121,7 @@ function Dashboard(props) {
     const theme = useTheme();
     const dispatch = useDispatch();
     const [open, setOpen] = React.useState(false);
+    const [refreshDashboard, setRefreshDashboard] = React.useState(false)
     let { url } = useRouteMatch();
     const location = useSelector(state => state.inventory.location)
     const selectedLocation = useSelector(state => state.inventory.selected)
@@ -138,6 +139,10 @@ function Dashboard(props) {
         dispatch({ type: constants.CHANGE_LOCATION, payload: { selected: event.target.value } })
     }
 
+    const handleDashboardToggle = () => {
+        setRefreshDashboard(!refreshDashboard)
+    }
+
 
     useEffect(() => {
         console.log("dashboard")
@@ -146,7 +151,7 @@ function Dashboard(props) {
         }).catch(err => {
             console.log(err)
         });
-    }, [url])
+    }, [url, refreshDashboard])
 
     return (
         <>
@@ -278,7 +283,7 @@ function Dashboard(props) {
                     </Grid>
 
                     {/* <Route exact path={`${url}/`} render={() => (location == "None") ? <NoLocationAccess /> : <HomePage />} /> */}
-                    <Route exact path={[`${url}/inventory`, `${url}/`]} render={() => (location == "None") ? <NoLocationAccess /> : <Inventory />} />
+                    <Route exact path={[`${url}/inventory`, `${url}/`]} render={() => (location == "None") ? <NoLocationAccess /> : <Inventory handleDashboardToggle={handleDashboardToggle} />} />
                     <Route exact path={`${url}/orders`} render={() => (location == "None") ? <NoLocationAccess /> : <Orders />} />
                     <Route exact path={`${url}/users`} render={() => (location == "None") ? <NoLocationAccess /> : <Users />} />
                 </main>
