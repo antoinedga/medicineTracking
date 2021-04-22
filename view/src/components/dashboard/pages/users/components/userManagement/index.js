@@ -86,7 +86,9 @@ export default function UserManagement({ }) {
                                 <Menu anchorEl={anchorEl}
                                     keepMounted
                                     open={Boolean(anchorEl)}
-                                    onClose={handleClose}>
+                                    onClose={handleClose}
+                                    anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+                                >
                                     {roles.map(role => {
                                         return <Typography className={classes.menuItems} disabled>{role.name}</Typography>
                                     }
