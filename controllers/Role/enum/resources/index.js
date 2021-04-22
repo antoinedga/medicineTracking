@@ -4,7 +4,7 @@ exports.resource = createEnum([
   'CONFIG',
   'INVITATION',
   'INVENTORY',
-  'ITEM',
+  // 'ITEM',
   'ORDER',
   'PRODUCT',
   'ROLE',
