@@ -235,7 +235,7 @@ async function getPathsObject(_query, action, resource) {
  * @param {*} resource
  * @param {*} prefix
  */
-async function getCompletePaths(_query, action, resource, prefix) {
+async function getCompletePaths(_query, action, resource, prefix='') {
   const paths = getPaths(_query, action, resource, true);
   return await Inventory
       .find({
