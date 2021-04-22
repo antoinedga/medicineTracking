@@ -20,6 +20,8 @@ const useStyles = makeStyles((theme) => ({
         "&.Mui-disabled": {
             fontColor: "rgba(0, 0, 0,0.0)"
         },
+        width: '10rem',
+        textAlign: 'center'
     }
 }));
 
@@ -86,7 +88,7 @@ export default function UserManagement({ }) {
                                     open={Boolean(anchorEl)}
                                     onClose={handleClose}>
                                     {roles.map(role => {
-                                        return <MenuItem className={classes.menuItems} disabled>{role.name}</MenuItem>
+                                        return <Typography className={classes.menuItems} disabled>{role.name}</Typography>
                                     }
                                     )}
                                 </Menu>
