@@ -166,7 +166,7 @@ export default function CreateRole(props) {
                         <Grid item xs={12}>
                             <TransferList list={listToSelect} setConfig={setListToConfig} configs={listToConfig} />
                         </Grid>
-                        <Grid container item xs={12} style={{ maxHeight: '50vh', overflow: 'auto' }}>
+                        <Grid container item xs={12} style={{ maxHeight: '50vh', overflow: 'auto', marginTop: '50px', marginBottom: '40px' }}>
                             {
                                 listToConfig.map((name, index) =>
                                     configLocation(name, resource, actions, formStuff, index, listToConfig.length)
