@@ -75,7 +75,6 @@ export default function EditOrderForm({ orderId, onSaveRef, setLoading }) {
     const [eachesUnitsOptions, setEachesUnitsOptions] = useState(null)
     const [dataLoaded, setDataLoaded] = useState(false)
 
-    orderId = "60662f89a37f721134c89f51"
 
     useEffect(() => {
         setDataLoaded(!!(orderData && orderStatusOptions && eachesUnitsOptions))
