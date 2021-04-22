@@ -96,6 +96,7 @@ export default function SwipeableTemporaryDrawer({ open, handleOpen, handleClose
                 } else {
                     setAlertOpen(true)
                     setSuccess(false)
+                    setErrorMsg(data.msg)
                     dispatch({ type: constants.ADD_DONE })
                 }
                 dispatch({ type: constants.ADD_DONE })
