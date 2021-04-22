@@ -62,7 +62,7 @@ const DialogActions = withStyles((theme) => ({
     },
 }))(MuiDialogActions);
 
-export default function CustomizedDialogs(props) {
+export default function CustomizedDialogs({handleClose:hc,open:o,data}) {
     const [open, setOpen] = React.useState(false);
     const [dataId, setDataId] = React.useState({});
     const [dataView, setDataView] = React.useState({});
@@ -71,13 +71,13 @@ export default function CustomizedDialogs(props) {
         setOpen(true);
     };
     const handleClose = () => {
-        props.handleClose()
+        hc()
         setDataId(0)
     };
 
     useEffect(() => {
-        setOpen(props.open)
-        setDataId(props.data._id)
+        setOpen(o)
+        setDataId(data._id)
     })
 
     useEffect(() => {
@@ -88,7 +88,7 @@ export default function CustomizedDialogs(props) {
             }).catch(error => console.log(error.response))
             dispatch({ type: constants.ORDER_DONE })
         }
-    }, [dataId])
+    }, [dataId, dispatch, open])
 
 
     return (
@@ -157,7 +157,6 @@ export default function CustomizedDialogs(props) {
                                                 </ListItem>
                                             </Grid>
                                             <Grid item xs={3}>
-                                                <Typography>Eaches:</Typography>
                                                 <MyEaches eaches={item.product?.eaches} />
                                             </Grid>
                                             <Grid item xs={3}>
@@ -168,7 +167,6 @@ export default function CustomizedDialogs(props) {
                                                 </ListItem>
                                             </Grid>
                                             <Grid item xs={3}>
-                                                <Typography>Eaches:</Typography>
                                                 <MyEaches eaches={item.desired?.eaches} />
                                             </Grid>
 

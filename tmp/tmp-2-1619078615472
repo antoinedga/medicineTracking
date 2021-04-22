@@ -1,0 +1,21 @@
+amount,product_ndc,name,brand_name,supplier,product_type,route
+1,0002-7516-59,Insulin lispro,Humalog,Eli Lilly and Company,HUMAN PRESCRIPTION DRUG,INTRAVENOUS or SUBCUTANEOUS
+1,0088-2219-00,insulin glargine,Lantus Solostar,sanofi-aventis U.S. LLC,HUMAN PRESCRIPTION DRUG,SUBCUTANEOUS
+1,72833-678-00,Testosterone Cypionate,Testosterone Cypionate,ASP Cares,HUMAN PRESCRIPTION DRUG,INTRAVENOUS or SUBCUTANEOUS
+1,59448-001-02,ETHYL ALCOHOL,Instant Hand Antiseptic,"ASP Global, LLc",HUMAN OTC DRUG,TOPICAL
+1,47682-126-13,Acetaminophen,MEDI-FIRST Non-Aspirin Extra Strength,Unifirst First Aid Corporation,HUMAN OTC DRUG,ORAL
+1,47682-126-50,Acetaminophen,MEDI-FIRST Non-Aspirin Extra Strength,Unifirst First Aid Corporation,HUMAN OTC DRUG,ORAL
+1,47682-126-99,Acetaminophen,MEDI-FIRST Non-Aspirin Extra Strength,Unifirst First Aid Corporation,HUMAN OTC DRUG,ORAL
+1,47682-126,Acetaminophen,MEDI-FIRST Non-Aspirin Extra Strength,Unifirst First Aid Corporation,HUMAN OTC DRUG,ORAL
+1,63940-609-32,Aspirin,Aspirin Low Dose,Harmon Store Inc.,HUMAN OTC DRUG,ORAL
+1,63940-609-62,Aspirin,Aspirin Low Dose,Harmon Store Inc.,HUMAN OTC DRUG,ORAL
+1,0049-0430-20,penicillin G potassium,Pfizerpen,Roerig,HUMAN PRESCRIPTION DRUG,INTRAVENOUS
+1,0924-5605-01,"Bacitracin zinc, Polymyxin B Sulfate, Neomycin Sulfate",First Aid Only Triple Antibiotic,Acme united Corporation,HUMAN OTC DRUG,TOPICAL
+1,0924-5605-04,"Bacitracin zinc, Polymyxin B Sulfate, Neomycin Sulfate",First Aid Only Triple Antibiotic,Acme united Corporation,HUMAN OTC DRUG,TOPICAL
+1,37808-552,Loperamide HCl,Anti Diarrheal,H E B,HUMAN OTC DRUG,ORAL
+1,44911-0444-1,Influenzinum,Influenzinum,"Energique, Inc.",HUMAN OTC DRUG,ORAL
+1,70461-120-03,"influenza vaccine, adjuvanted",FLUAD QUADRIVALENT,"Seqirus, Inc.",VACCINE,INTRAMUSCULAR
+1,76045-007-10,Morphine Sulfate,Morphine Sulfate,"Fresenius Kabi USA, LLC",HUMAN PRESCRIPTION DRUG,INTRAMUSCULAR or INTRAVENOUS
+1,61919-618-20,HYDROCODONE /APAP,HYDROCODONE /APAP,Direct_Rx,HUMAN PRESCRIPTION DRUG,ORAL
+1,63481-629-70,oxycodone hydrochloride and acetaminophen,PERCOCET,Endo Pharmaceuticals Inc.,HUMAN PRESCRIPTION DRUG,ORAL
+1,59779-385-03,Liquid Bandage,Benzethonium chloride Plus Dyclonine hydrochloride,CVS Pharmacy,HUMAN OTC DRUG,TOPICAL

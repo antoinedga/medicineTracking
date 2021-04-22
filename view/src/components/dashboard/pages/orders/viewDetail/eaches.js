@@ -2,6 +2,8 @@ import { Box, Typography } from "@material-ui/core"
 
 export default function MyEaches({eaches}) {
     return eaches ? (
+        <>
+        <Typography>Eaches:</Typography>
         <Box style={{ marginLeft:15}}>
             <Typography>{`Quantity: ${eaches.quantity}`}</Typography>
             <Typography>{`Unit: ${eaches.unit}`}</Typography>
@@ -14,5 +16,6 @@ export default function MyEaches({eaches}) {
             null
             }
         </Box>
+        </>
     ) : null
 }
