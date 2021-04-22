@@ -198,7 +198,7 @@ export default function DeleteDialog(props) {
                         </Typography>
                     </div>
                     <FormControl className={classes.formControl}>
-                        <InputLabel id="demo-mutiple-chip-label">Chip</InputLabel>
+                        <InputLabel id="demo-mutiple-chip-label">Roles</InputLabel>
                         <Select style={{ width: "500px" }}
                             labelId="demo-mutiple-chip-label"
                             id="demo-mutiple-chip"

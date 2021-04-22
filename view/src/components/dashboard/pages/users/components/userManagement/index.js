@@ -17,6 +17,9 @@ const useStyles = makeStyles((theme) => ({
         '&:hover': {
             background: "",
         },
+        "&.Mui-disabled": {
+            fontColor: "rgba(0, 0, 0,0.0)"
+        },
     }
 }));
 
@@ -83,7 +86,7 @@ export default function UserManagement({ }) {
                                     open={Boolean(anchorEl)}
                                     onClose={handleClose}>
                                     {roles.map(role => {
-                                        return <MenuItem className={classes.menuItems}>{role.name}</MenuItem>
+                                        return <MenuItem className={classes.menuItems} disabled>{role.name}</MenuItem>
                                     }
                                     )}
                                 </Menu>
@@ -121,11 +124,6 @@ export default function UserManagement({ }) {
                         icon: icons.Edit,
                         tooltip: 'Edit User',
                         onClick: (event, rowData) => handleOpenEdit(rowData)
-                    },
-                    {
-                        icon: icons.Delete,
-                        tooltip: 'Delete User',
-                        onClick: (event, rowData) => alert("You saved " + rowData.name)
                     }
                 ]}
                 options={{
