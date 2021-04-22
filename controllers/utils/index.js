@@ -77,7 +77,7 @@ function objectToRolls(grants) {
       permissions: [],
     };
     console.log('*******', JSON.stringify(grants, null, 1));
-    role.permissions.forEach((resourceObj) => {
+    role.permissions?.forEach((resourceObj) => {
       const resource = `${resourceObj.resource}:${resourceObj.path}`;
       resourceObj.actions.forEach((actionObj) => {
         _role.permissions.push({
