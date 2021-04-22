@@ -60,6 +60,10 @@ export default function InviteDialog(props) {
 
     const handleAlertClose = () => {
         setAlert(false)
+        if (success) {
+            setOpen(false)
+        }
+
     }
 
     const handleOnSubmit = () => {
@@ -137,7 +141,7 @@ export default function InviteDialog(props) {
                         Send Invitation
                     </Button>
                 </DialogActions>
-                <Snackbar open={openAlert} autoHideDuration={6000} onClose={handleAlertClose}>
+                <Snackbar open={openAlert} autoHideDuration={1500} onClose={handleAlertClose}>
                     {
                         (success) ? (
                             <Alert onClose={handleAlertClose} severity="success">

@@ -64,7 +64,7 @@ const useStyles = makeStyles((theme) => ({
             borderBottom: "2px solid rgb(69,69,69) "
         },
         backdrop: {
-            zIndex: theme.zIndex.drawer + 1,
+            zIndex: theme.zIndex.drawer + 999999999999999999999,
             color: '#fff',
         },
     }
