@@ -247,7 +247,8 @@ async function getCompletePaths(_query, action, resource, prefix) {
         const paths = invs.map((inv) => {
           return inv.path;
         });
-        return paths;
+
+        return paths.filter((path) => path.startsWith(prefix));
       })
       .catch((err) => {
         console.log(err);

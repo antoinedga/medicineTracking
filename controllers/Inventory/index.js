@@ -51,7 +51,12 @@ exports.getPaths = (req, res) => {
 };
 
 exports.getCompletePaths = (req, res) => {
-  getCompletePaths(req.auth.access, req.body.action, req.body.resource)
+  getCompletePaths(
+      req.auth.access,
+      req.body.action,
+      req.body.resource,
+      req.body.prefix,
+  )
       .then((paths) => {
         return res
             .status(200)
