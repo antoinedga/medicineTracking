@@ -92,11 +92,11 @@ export default function CreateRole(props) {
         console.log(JSON.stringify(form, null, 1))
         for (var i = 0; i < form.permissions.length; i++) {
             let temp = form.permissions[i];
-            temp.actions = temp.actions.filter((ele) => { return ele != null })
+            temp.actions = temp.actions?.filter((ele) => { return ele != null })
         }
         console.log(JSON.stringify(form, null, 1))
         dispatch({ type: constants.ADMIN_LOADING })
-        submitCreateRole(form).then(res => {
+        submitCreateRole(dispatch, form).then(res => {
             console.log(res)
             if (res.response) {
                 setSuccess(true)
