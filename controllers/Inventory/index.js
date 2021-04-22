@@ -1,6 +1,6 @@
 const config = require('../../config');
 const {Inventory, Role, Order, Item} = require('../../models');
-const {callback} = require('../Callbacks');
+const {callback, sendError} = require('../Callbacks');
 const {getPathsObject, getCompletePaths, inventoryExists} = require('../utils');
 
 
