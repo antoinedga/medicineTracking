@@ -8,49 +8,34 @@ import Moment from 'react-moment'
 import { makeStyles } from '@material-ui/core/styles';
 import { useDispatch } from 'react-redux'
 import { getAllUsersByRole } from '../../../../../../store/actions/userManagement'
-
-const RoleColumn = (roles) => {
-    const [anchorEl, setAnchorEl] = React.useState(null);
-
-    const handleClick = (event) => {
-        setAnchorEl(event.currentTarget);
-    };
-
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
-
-    return (
-        <>
-            <Button>
-                {roles[0]}
-            </Button>
-            <Menu>
-                {
-                    roles.map(role => {
-                        return (<MenuItem>{role}</MenuItem>)
-                    })
-                }
-            </Menu>
-        </>
-    )
-}
+import EditUser from './editUser'
 
 export default function UserManagement({ }) {
 
     const dispatch = useDispatch();
     const [listOfUsers, setListOfUser] = React.useState([]);
+    const [openEdit, setOpenEdit] = React.useState(false);
+    const [editData, setEditData] = React.useState({});
+
+    const handleOpenEdit = (data) => {
+
+    }
+
+    const handleEditClose = () => {
+        setEditData({})
+        setOpenEdit(false)
+    }
 
     useEffect(() => {
         getAllUsersByRole(dispatch).then(data => {
-            console.log(data.content[8])
+            console.log(data.content)
             setListOfUser(data.content)
         }).catch(err => {
-            console.log(err.response)
+            console.log(err)
         })
     }, [])
 
-    return (
+    return (<>
         <div>
             <MaterialTable
                 title="List of Users"
@@ -60,7 +45,8 @@ export default function UserManagement({ }) {
                         title: 'Email', field: 'email',
                     },
                     {
-                        title: 'Roles', field: 'asd',
+                        title: 'Roles',
+                        render: rowData => <RoleColumn roles={rowData.roles} />
                     },
                     {
                         title: 'CreatedAt', field: 'createdAt',
@@ -97,5 +83,50 @@ export default function UserManagement({ }) {
                 }}
             />
         </div>
+        <EditUser open={openEdit} handleClose={handleEditClose} data={editData} />
+    </>
+    )
+}
+
+const RoleColumn = (props) => {
+    const roles = props.roles
+    console.log(props)
+    const [anchorEl, setAnchorEl] = React.useState(null);
+
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+    useEffect(() => {
+        console.log(roles)
+    })
+
+    return (
+        <>
+            {(roles == undefined || roles.length == 0)
+                ? (<>Not Assigned</>) : (
+                    (roles.length == 1) ? (
+                        <>
+                            {roles[0].name}
+                        </>)
+                        :
+                        (<>
+                            <Button onClick={handleClick}>
+                                {roles[0].name + "..."}
+                            </Button>
+                            <Menu>
+                                {roles.map(role => {
+                                    console.log(role)
+                                    return <MenuItem>{role.name}</MenuItem>
+                                }
+                                )}
+                            </Menu>
+                        </>)
+                )
+            }
+        </>
     )
 }
