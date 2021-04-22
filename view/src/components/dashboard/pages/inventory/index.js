@@ -78,12 +78,17 @@ export default function Inventory(props) {
     const [deleteData, setDeleteData] = useState({});
     const [tableData, setTableData] = useState([])
 
+    const [reloadToggle, setReloadToggle] = useState(false);
+
     const title = useSelector(state => state.inventory.selected)
     const loading = useSelector(state => state.inventory.loading)
     const theme = useTheme();
     const classes = useStyles(theme);
     const dispatch = useDispatch()
 
+    const refresh = () => {
+        setReloadToggle(!reloadToggle)
+    }
 
     const handleDeleteOpen = (rowData) => {
         setDeleteData(rowData);
@@ -124,7 +129,7 @@ export default function Inventory(props) {
             dispatch({ type: constant.DONE })
 
         });
-    }, [title, openNewInv, openDelete])
+    }, [title, openNewInv, openDelete, reloadToggle])
 
     return (
         <>
@@ -138,7 +143,7 @@ export default function Inventory(props) {
             >
                 <Grid container items>
                     <Grid items xs={2}>
-                        <AddInventory open={openNewInv} handleOpen={() => setNewInv(true)} handleClose={() => setNewInv(false)} />
+                        <AddInventory open={openNewInv} handleOpen={() => setNewInv(true)} handleClose={() => setNewInv(false)} refresh={refresh} />
                     </Grid>
                 </Grid>
             </Grid>
@@ -146,7 +151,7 @@ export default function Inventory(props) {
                 <MaterialTable
                     columns={[
                         { title: 'Inventory Name', field: 'name', type: "string" },
-                        { title: 'Sub-Inventory', field: 'subInv', type: "number" },
+                        { title: 'Sub-Inventory Count', field: 'subInv', type: "number" },
                     ]}
 
                     data={tableData}
@@ -177,7 +182,7 @@ export default function Inventory(props) {
                 />
             </div>
 
-            <DeleteDialog onClose={handleDeleteClose} open={openDelete} data={deleteData} />
+            <DeleteDialog onClose={handleDeleteClose} open={openDelete} data={deleteData} refresh={refresh} />
             <Backdrop className={classes.backdrop} open={loading}>
                 <CircularProgress color="inherit" />
             </Backdrop>

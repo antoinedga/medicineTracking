@@ -64,17 +64,17 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export default function SwipeableTemporaryDrawer({ open, handleOpen, handleClose }) {
+export default function SwipeableTemporaryDrawer({ open, handleOpen, handleClose, refresh }) {
 
     const classes = useStyles();
     const theme = useTheme();
     const dispatch = useDispatch();
-    const { register, handleSubmit, errors, control, getValues } = useForm('onTouched');
+    const { register, handleSubmit, errors, control, getValues, reset } = useForm('onTouched');
     const [openAlert, setAlertOpen] = React.useState(false);
     const [success, setSuccess] = React.useState(false);
+    const [errorMsg, setErrorMsg] = React.useState("")
     const location = useSelector(state => state.inventory.location);
     const loading = useSelector(state => state.inventory.add_loading);
-    const errorMsg = useSelector(state => state.inventory.add_error)
 
 
     const onSubmit = () => {
@@ -88,14 +88,24 @@ export default function SwipeableTemporaryDrawer({ open, handleOpen, handleClose
                 if (data.response) {
                     setAlertOpen(true)
                     setSuccess(true)
+                    dispatch({ type: constants.ADD_DONE })
+                    reset()
+                    console.log(refresh)
+                    refresh()
+
                 } else {
                     setAlertOpen(true)
                     setSuccess(false)
+                    dispatch({ type: constants.ADD_DONE })
                 }
                 dispatch({ type: constants.ADD_DONE })
             }
         ).catch((error) => {
             console.log(error)
+            setAlertOpen(true)
+            setSuccess(false)
+            setErrorMsg("error on our end")
+            dispatch({ type: constants.ADD_DONE })
         })
     }
     const handleButtonEvent = () => {
