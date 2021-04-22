@@ -72,6 +72,7 @@ export default function CustomizedDialogs(props) {
     };
     const handleClose = () => {
         props.handleClose()
+        setDataId(0)
     };
 
     useEffect(() => {
@@ -90,57 +91,57 @@ export default function CustomizedDialogs(props) {
     }, [dataId])
 
 
-        return(
-            <div>
-                <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title"
-                    scroll={"paper"}
-                    open={open}
-                    fullWidth={true}
-                    maxWidth={"xl"}
-                >
-                    <DialogTitle id="customized-dialog-title" onClose={handleClose}>
-                        Order
+    return (
+        <div>
+            <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title"
+                scroll={"paper"}
+                open={open}
+                fullWidth={true}
+                maxWidth={"xl"}
+            >
+                <DialogTitle id="customized-dialog-title" onClose={handleClose}>
+                    Order
                 </DialogTitle>
-                    <DialogContent dividers>
+                <DialogContent dividers>
 
-                        <Typography gutterBottom>
-                            Order Number: {dataView.orderNumber}
-                        </Typography>
-                        <Typography gutterBottom>
-                            Order Date:
+                    <Typography gutterBottom>
+                        Order Number: {dataView.orderNumber}
+                    </Typography>
+                    <Typography gutterBottom>
+                        Order Date:
                         <Moment format="MMM-D-YYYY h:mm a" >
-                                {dataView.orderDate}
-                            </Moment>
-                        </Typography>
-                        <Typography gutterBottom>
-                            Path: {dataView.path}
-                        </Typography>
-                        <Typography gutterBottom>
-                            Last Updated at: <Moment format="MMM-D-YYYY h:mm a" >
-                                {
-                                    dataView.updatedAt
-                                }
-                            </Moment>
-                        </Typography>
-                        <Grid container>
-                            <Grid item container>
-                                <Grid item xs={6}>
-                                    <Typography variant="h6">
-                                        Products:
+                            {dataView.orderDate}
+                        </Moment>
+                    </Typography>
+                    <Typography gutterBottom>
+                        Path: {dataView.path}
+                    </Typography>
+                    <Typography gutterBottom>
+                        Last Updated at: <Moment format="MMM-D-YYYY h:mm a" >
+                            {
+                                dataView.updatedAt
+                            }
+                        </Moment>
+                    </Typography>
+                    <Grid container>
+                        <Grid item container>
+                            <Grid item xs={6}>
+                                <Typography variant="h6">
+                                    Products:
                                 </Typography>
-                                </Grid>
-                                <Grid item xs={6}>
-                                    <Typography variant="h6">
-                                        Desired Products:
-                                </Typography>
-                                </Grid>
                             </Grid>
+                            <Grid item xs={6}>
+                                <Typography variant="h6">
+                                    Desired Products:
+                                </Typography>
+                            </Grid>
+                        </Grid>
 
-                            <Grid item container style={{ maxHeight: 300, overflow: 'auto' }}>
-                                {
-                                    dataView.items?.map((item) => {
-                                        return (
-                                            <Grid item container>
+                        <Grid item container style={{ maxHeight: 300, overflow: 'auto' }}>
+                            {
+                                dataView.items?.map((item) => {
+                                    return (
+                                        <Grid item container>
                                             <Grid item xs={12}>
                                                 <Typography>
                                                     Quantity: {item.quantity}
@@ -172,43 +173,43 @@ export default function CustomizedDialogs(props) {
                                             </Grid>
 
                                         </Grid>
-                                        )
-                                    })
-                                }
-                            </Grid>
-
-                        </Grid>
-
-
-                        <Typography variant="h6">
-                            Logs:
-                    </Typography>
-                        <Divider />
-                        <List dense={true} style={{ maxHeight: 200, overflow: 'auto' }}>
-                            {
-                                dataView.log?.map((log) => {
-                                    return (
-                                        <ListItem key={log._id}>
-                                             <ListItemText primary={log.message} secondary={<Moment format="MMM-D-YYYY h:mm a" >
-                                                 {
-                                                     log.date
-                                                 }
-                                             </Moment>} />
-                                         </ListItem>
                                     )
                                 })
                             }
+                        </Grid>
 
-                        </List>
-                    </DialogContent>
-                    <DialogActions>
-                        <Button autoFocus onClick={handleClose} color="primary">
-                            Close
+                    </Grid>
+
+
+                    <Typography variant="h6">
+                        Logs:
+                    </Typography>
+                    <Divider />
+                    <List dense={true} style={{ maxHeight: 200, overflow: 'auto' }}>
+                        {
+                            dataView.log?.map((log) => {
+                                return (
+                                    <ListItem key={log._id}>
+                                        <ListItemText primary={log.message} secondary={<Moment format="MMM-D-YYYY h:mm a" >
+                                            {
+                                                log.date
+                                            }
+                                        </Moment>} />
+                                    </ListItem>
+                                )
+                            })
+                        }
+
+                    </List>
+                </DialogContent>
+                <DialogActions>
+                    <Button autoFocus onClick={handleClose} color="primary">
+                        Close
                     </Button>
-                    </DialogActions>
-                </Dialog>
-            </div>
-        );
+                </DialogActions>
+            </Dialog>
+        </div>
+    );
 }
 
 function ListIdentifier(item) {

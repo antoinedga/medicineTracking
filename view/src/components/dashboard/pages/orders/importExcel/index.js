@@ -72,6 +72,10 @@ export default function FullScreenDialog(props) {
 
     const handleDialogClose = () => {
         props.handleClose();
+        setFiles([])
+        setOrderNumber("")
+        setSnackBar(false);
+        setLoading(false)
     };
 
     const {
