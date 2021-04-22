@@ -298,7 +298,7 @@ function configLocation(title, resource, actions, formMethod, base, length, upda
                                                 type="checkBox"
                                             />
                                         }
-                                        label={action + " " + ((base * length) + ((resource.length * resIndex) + actionIndex))}
+                                        label={action}
                                     />
                                 </Grid>
                                 <Grid item xs={6}>
